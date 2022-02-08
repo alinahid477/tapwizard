@@ -2,11 +2,12 @@
 *.nogit*
 .bash_history
 *.crt
-.tanzu
 .local
 .azure
 .bak
 .nogit
+.cache/
+.config/
 
 .ssh/*
 !.ssh/.gitkeep
@@ -20,3 +21,4 @@ binaries/*
 !binaries/init.sh
 .vmware-cna-saas
 tanzu-cluster-essentials
+.cache/tanzu/catalog.yaml

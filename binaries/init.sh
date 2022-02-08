@@ -6,14 +6,6 @@ unset doinstall
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l /root/binaries/*.sh | awk '{print $9}' | xargs chmod +x
 
-printf "\n\nChecking dependencies...\n\n"
-isexist=$(ls ~/binaries | grep '^kp$')
-if [[ -z $isexist ]]
-then
-    printf "\nError: required binary kp not found in ~/binaries dir."
-    exit
-fi
-
 if [[ -n $BASTION_HOST ]]
 then
     isexists=$(ls -l /root/.ssh/id_rsa)
@@ -33,12 +25,12 @@ then
             printf "\n\nPlease rebuild the docker image and run again (or ./start.sh tbs forcebuild).\n\n"
             exit 1
         fi
+    else
+        printf "\nERROR: Bastion host input provided but no id_rsa present in .ssh directory.\n"
+        printf "You must place the private key called \"id_rsa\" in .ssh directory and add the public key to the bastion host server.\n"
+        printf "exit 1...\n"
+        exit
     fi
-else
-    printf "\nERROR: Bastion host input provided but no id_rsa present in .ssh directory.\n"
-    printf "You must place the private key called \"id_rsa\" in .ssh directory and add the public key to the bastion host server.\n"
-    printf "exit 1...\n"
-    exit
 fi
 
 
@@ -75,7 +67,7 @@ fi
 
 
 printf "\n\n\n***********Checking kubeconfig...*************\n"
-
+sleep 2
 
 if [[ -n $TKG_VSPHERE_SUPERVISOR_ENDPOINT ]]
 then
@@ -118,7 +110,7 @@ then
     fi
 
     printf "\n\n\n**********vSphere Cluster login...*************\n"
-    
+    sleep 2
     export KUBECTL_VSPHERE_PASSWORD=$(echo $TKG_VSPHERE_PASSWORD | xargs)
 
 
@@ -134,6 +126,7 @@ then
     if [ "$CURRENT_DATE" -gt "$EXISTING_JWT_EXP" ]
     then
         printf "\n\n\n***********Login into cluster...*************\n"
+        sleep 1
         rm /root/.kube/config
         rm -R /root/.kube/cache
         if [[ -z $BASTION_HOST ]]
@@ -145,30 +138,37 @@ then
             ssh-keyscan $BASTION_HOST > /root/.ssh/known_hosts
             printf "\nssh -i /root/.ssh/id_rsa -4 -fNT -L 443:$TKG_VSPHERE_SUPERVISOR_ENDPOINT:443 $BASTION_USERNAME@$BASTION_HOST\n"
             ssh -i /root/.ssh/id_rsa -4 -fNT -L 443:$TKG_VSPHERE_SUPERVISOR_ENDPOINT:443 $BASTION_USERNAME@$BASTION_HOST
-                        
+            sleep 1
             printf "\n\n\n***********Authenticating to cluster $TKG_VSPHERE_CLUSTER_NAME-->IP:$TKG_VSPHERE_CLUSTER_ENDPOINT  ...*************\n"
             kubectl vsphere login --tanzu-kubernetes-cluster-name $TKG_VSPHERE_CLUSTER_NAME --server kubernetes --insecure-skip-tls-verify -u $TKG_VSPHERE_USERNAME
-            
+            sleep 1
             printf "\n\n\n***********Adjusting your kubeconfig...*************\n"
             sed -i 's/kubernetes/'$TKG_VSPHERE_SUPERVISOR_ENDPOINT'/g' ~/.kube/config
             kubectl config use-context $TKG_VSPHERE_CLUSTER_NAME
 
             sed -i '0,/'$TKG_VSPHERE_CLUSTER_ENDPOINT'/s//kubernetes/' ~/.kube/config
             ssh -i /root/.ssh/id_rsa -4 -fNT -L 6443:$TKG_VSPHERE_CLUSTER_ENDPOINT:6443 $BASTION_USERNAME@$BASTION_HOST
+            printf "DONE\n\n\n"
+            sleep 2
         fi
     else
         printf "\n\n\nCuurent kubeconfig has not expired. Using the existing one found at .kube/config\n"
         if [[ -n $BASTION_HOST ]]
         then
             printf "\n\n\n***********Creating K8s endpoint Tunnel through bastion $BASTION_USERNAME@$BASTION_HOST ...*************\n"
+            sleep 1
             ssh -i /root/.ssh/id_rsa -4 -fNT -L 6443:$TKG_VSPHERE_CLUSTER_ENDPOINT:6443 $BASTION_USERNAME@$BASTION_HOST
+            printf "DONE\n\n\n"
+            sleep 2
         fi
     fi
 else
     printf "\n\n\n**********login based on kubeconfig...*************\n"
+    sleep 1
     if [[ -n $BASTION_HOST ]]
     then
         printf "Bastion host specified...\n"
+        sleep 1
         printf "Extracting server url...\n"
         serverurl=$(awk '/server/ {print $NF;exit}' /root/.kube/config | awk -F/ '{print $3}' | awk -F: '{print $1}')
         printf "server url: $serverurl\n"
@@ -181,6 +181,8 @@ else
         printf "port: $port\n"
         printf "\n\n\n***********Creating K8s endpoint Tunnel through bastion $BASTION_USERNAME@$BASTION_HOST ...*************\n"
         ssh -i /root/.ssh/id_rsa -4 -fNT -L $port:$serverurl:$port $BASTION_USERNAME@$BASTION_HOST
+        printf "DONE\n\n\n"
+        sleep 2
     fi
 fi
 
@@ -188,7 +190,8 @@ fi
 
 
 
-printf "\n\nChecking connected k8s cluster\n\n"
+printf "\n\n************Checking connected k8s cluster**************\n\n"
+sleep 1
 kubectl get ns
 printf "\n"
 while true; do
@@ -201,14 +204,15 @@ while true; do
 done
 
 
-printf "\n\nChecking if TAP is already installed on k8s cluster"
+printf "\n\n************Checking if TAP is already installed on k8s cluster**********\n"
+sleep 1
 isexist=$(kubectl get ns | grep -w tap-install)
 if [[ -z $isexist ]]
 then
     printf "\n\nTAP is not found in the k8s cluster.\n\n"
     if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
     then
-        isexist="n"    
+        isexist="n"
     fi
 else
     printf "\n\nNamespace tap-install found in the k8s cluster.\n\n"
@@ -219,6 +223,8 @@ else
         printf "\nCOMPLETE=YES" >> /root/.env
     fi
 fi
+printf "DONE\n\n\n"
+sleep 2
 
 if [[ $isexist == "n" ]]
 then
@@ -234,17 +240,7 @@ fi
 
 if [[ $doinstall == "y" ]] 
 then
-    source ~/binaries/tapinstall.sh
-    unset inp
-    while true; do
-        read -p "Confirm if TAP deployment/installation successfully completed and cluster builder list is displayed [y/n]: " yn
-        case $yn in
-            [Yy]* ) inp="y"; printf "\nyou confirmed yes\n"; break;;
-            [Nn]* ) printf "\n\nYou said no.\n"; break;;
-            * ) echo "Please answer y or n.";;
-        esac
-    done
-    
+    source ~/binaries/tapinstall.sh    
 fi
 
 printf "\nYour available wizards are:\n"
