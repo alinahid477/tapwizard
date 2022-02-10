@@ -221,6 +221,9 @@ else
         printf "\n\n.env is not marked as complete. Marking as complete.\n\n"
         sed -i '/COMPLETE/d' /root/.env
         printf "\nCOMPLETE=YES" >> /root/.env
+        export COMPLETE=YES
+    else
+        printf "\nCOMPLETE=$COMPLETE\n"
     fi
 fi
 printf "DONE\n\n\n"
@@ -241,6 +244,36 @@ fi
 if [[ $doinstall == "y" ]] 
 then
     source ~/binaries/tapinstall.sh    
+fi
+
+
+if [[ $COMPLETE == 'YES' ]]
+then
+    DIR="$HOME/tanzu-cluster-essentials"
+    if [ -d "$DIR" ]
+    then
+        if [ "$(ls -A $DIR)" ]; then
+            printf "\nFound cluster essential dir $DIR. Linking kapp..\n"
+            cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp
+            chmod +x /usr/local/bin/kapp
+            sleep 2
+            kapp --version
+            sleep 1
+        fi
+    fi
+
+    DIR="$HOME/tanzu"
+    if [ -d "$DIR" ]
+    then
+        if [ "$(ls -A $DIR)" ]; then
+            printf "\nFound tanzu dir $DIR. Linking tanzu..\n"
+            install $HOME/tanzu/cli/core/v0.10.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+            chmod +x /usr/local/bin/tanzu
+            tanzu version
+            sleep 2            
+        fi
+    fi
+
 fi
 
 printf "\nYour available wizards are:\n"

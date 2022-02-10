@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+export $(cat /root/.env | xargs)
+
 isreturnorexit='n'
 returnOrexit()
 {
@@ -21,7 +24,7 @@ installTap()
     printf "\n\n\n********* Checking pre-requisites *************\n\n\n"
     sleep 1
     printf "\nChecking Access to Tanzu Net...\n"
-    if [[ -z $TANZUNET_USERNAME || -z $TANZUNET_PASSWORD ]]
+    if [[ -z $INSTALL_REGISTRY_USERNAME || -z $INSTALL_REGISTRY_PASSWORD ]]
     then
         printf "\nERROR: Tanzu Net username or password missing.\n"
         returnOrexit || return 1
@@ -136,10 +139,6 @@ installTap()
 
         printf "\nInstalling cluster essential in k8s cluster...\n"
         sleep 1
-        export INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:82dfaf70656b54dcba0d4def85ccae1578ff27054e7533d08320244af7fb0343
-        export INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com
-        export INSTALL_REGISTRY_USERNAME=$TANZUNET_USERNAME
-        export INSTALL_REGISTRY_PASSWORD=$TANZUNET_PASSWORD
         cd $HOME/tanzu-cluster-essentials
         source ./install.sh
         cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp || returnOrexit
@@ -193,7 +192,6 @@ installTap()
 
         printf "\nClean install tanzu cli...\n"
         sleep 1
-        export TANZU_CLI_NO_INIT=true
         cd $HOME/tanzu || returnOrexit
         install cli/core/v0.10.0/tanzu-core-linux_amd64 /usr/local/bin/tanzu || returnOrexit
         chmod +x /usr/local/bin/tanzu || returnOrexit
@@ -221,10 +219,6 @@ installTap()
         return 1
     fi
 
-    export INSTALL_REGISTRY_USERNAME=$TANZUNET_USERNAME
-    export INSTALL_REGISTRY_PASSWORD=$TANZUNET_PASSWORD
-    export INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com
-
     printf "\nCreate namespace tap-install in k8s...\n"
     kubectl create ns tap-install
     printf "\nDONE\n\n"
@@ -238,9 +232,70 @@ installTap()
 
     printf "\nWaiting 3m before checking...\n"
     sleep 3m
+    printf "\nChecking tanzu-tap-repository status...\n"
     tanzu package repository get tanzu-tap-repository --namespace tap-install
     printf "\nDONE\n\n"
 
+    printf "\nListing available packages...\n"
+    tanzu package available list --namespace tap-install
+    printf "\nDONE\n\n"
 }
 
-installTap
+
+installProfile() 
+{
+    export notifyfile=/tmp/merlin-tap-notifyfile
+    if [ -f "$notifyfile" ]; then
+        rm $notifyfile
+    fi
+    unset profilefilename
+    source $HOME/read-params-profile.sh
+    if [ -f "$notifyfile" ]; then
+        profilefilename=$(cat $notifyfile)
+    fi
+    if [[ -n $profilefilename && -f $profilefilename && $SILENTMODE != 'y' ]]
+    then
+        confirmed='n'
+        while true; do
+            read -p "Review the file and confirm to continue? [y/n] " yn
+            case $yn in
+                [Yy]* ) printf "\nyou confirmed yes\n"; confirmed='y' break;;
+                [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; break;;
+                * ) echo "Please answer yes or no.";
+            esac
+        done
+
+        if [[ $confirmed == 'n' ]]
+        then
+            returnOrexit || return 1
+        fi
+
+
+        printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
+        tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install
+
+        printf "\nwait 1m...\n"
+        sleep 1m
+
+        printf "\nCheck installation status....\n"
+        tanzu package installed get tap -n tap-install
+
+        printf "\nVerify that necessary packages are installed....\n"
+        tanzu package installed list -A
+
+
+        while true; do
+            read -p "Confirm to proceed further? [y/n]: " yn
+            case $yn in
+                [Yy]* ) printf "\nyou confirmed yes\n"; break;;
+                [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; returnOrexit || return 1;;
+                * ) echo "Please answer y or n.";;
+            esac
+        done
+
+        
+    fi
+}
+
+# installTap
+installProfile

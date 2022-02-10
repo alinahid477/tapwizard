@@ -9,3 +9,6 @@
 .ssh
 .kube-tkg
 .images
+.config
+tanzu
+tanzu-cluster-essentials

@@ -18,6 +18,7 @@
 binaries/*
 !binaries/.gitkeep
 !binaries/tapinstall.sh
+!binaries/read-params-profile.sh
 !binaries/init.sh
 .vmware-cna-saas
 tanzu-cluster-essentials
