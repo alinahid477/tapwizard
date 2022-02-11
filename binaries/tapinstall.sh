@@ -249,7 +249,7 @@ installProfile()
         rm $notifyfile
     fi
     unset profilefilename
-    source $HOME/generate-profile-file.sh
+    source $HOME/binaries/generate-profile-file.sh
     if [ -f "$notifyfile" ]; then
         profilefilename=$(cat $notifyfile)
     fi

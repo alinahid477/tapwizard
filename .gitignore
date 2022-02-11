@@ -10,6 +10,8 @@
 .config/
 .vmware-cna-saas
 .docker
+tanzu-cluster-essentials
+tanzu
 
 .ssh/*
 !.ssh/.gitkeep
@@ -20,5 +22,6 @@ binaries/*
 !binaries/tapinstall.sh
 !binaries/generate-profile-file.sh
 !binaries/init.sh
-!binaries/taptemplates
-tanzu-cluster-essentials
+!binaries/templates
+tapconfigs/*
+!tapconfigs/.gitkeep

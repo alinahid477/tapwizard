@@ -14,7 +14,7 @@ containsElement () {
 
 # read what to prompt for user input from a json file.
 buildProfileFile () {
-
+    baseProfileFile=$1
     # iterate over array in json file (json file starts with array)
     # base64 decode is needed so that jq format is per line. Otherwise gettting value from the formatted item object becomes impossible 
     for promptItem in $(jq -r '.[] | @base64' $taptemplateDIR/$promptsForFilesJSON); do
@@ -87,8 +87,8 @@ buildProfileFile () {
 
             # append the content of the chunked file to the profile file.
             printf "\nadding configs for $promptName...."
-            cat $taptemplateDIR/$filename >> /tmp/profile-$profilename.yaml && printf "ok." || printf "failed."
-            printf "\n\n" >> /tmp/profile-$profilename.yaml
+            cat $taptemplateDIR/$filename >> $baseProfileFile && printf "ok." || printf "failed."
+            printf "\n\n" >> $baseProfileFile
             printf "\n"
         else
             printf "\nconfigs for $promptName....skipped.\n"
@@ -99,19 +99,24 @@ buildProfileFile () {
 
 
 buildProfile () {
-
+    baseProfileFile=$1
+    printf "extract variables from profile file....\n"
     # extract variable from file (variable format is: <NAME-OF-THE-VARIABLE>)
-    extracts=($(grep -o '<[A-Za-z0-9_\-]*>' ~/binaries/profile-$profiletype.template))
+    extracts=($(grep -o '<[A-Za-z0-9_\-]*>' $baseProfileFile))
     keys=()
 
     # populate keys with unique values only (in the file there may be multiple occurances of same variables)
     i=0
     while [[ $i -lt ${#extracts[*]} ]] ; do
+        printf "checking ${extracts[$i]} in environment variable..."
         containsElement "${extracts[$i]}" "${keys[@]}"
         ret=$?
         if [[ $ret == 0 ]]
         then
+            printf "doesnt exist\n"
             keys+=("${extracts[$i]}")
+        else
+            printf "exist\n"
         fi
         ((i=$i+1))
     done
@@ -149,12 +154,12 @@ buildProfile () {
                     printf "empty value is not allowed.\n"
                 fi
             done
-            sed -i 's|'${v}'|'$inp'|g' /tmp/profile-$profilename.yaml
+            sed -i 's|'${v}'|'$inp'|g' $baseProfileFile
         else
             # when exists as environment variable already, no need to prompt user for input. Just replace in the file.
             inp=${!inputvar} # the value of the environment variable (here accessed as dynamic variable)
             printf "environment variable found: $inputvar=$inp\n"
-            sed -i 's|<'$inputvar'>|'$inp'|g' /tmp/profile-$profilename.yaml
+            sed -i 's|<'$inputvar'>|'$inp'|g' $baseProfileFile
         fi
     done
 
@@ -203,22 +208,25 @@ then
     printf "\nAdjusted descriptor name DESCRIPTOR_NAME=$DESCRIPTOR_NAME...ok\n"
 fi
 
+
 printf "\ncreating temporary file for profile...."
-cp $taptemplateDIR/profile-$profiletype.template /tmp/profile-$profilename.yaml && printf "ok." || printf "failed"
+tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
+cp $taptemplateDIR/profile-$profiletype.template $tmpProfileFile && printf "ok." || printf "failed"
 printf "\n"
 
 printf "generate profile file...\n"
-buildProfileFile
+buildProfileFile $tmpProfileFile
 printf "\nprofile file generation...COMPLETE.\n"
 
-printf "\n"
 
-printf "adjust values in profile file...\n"
-buildProfile
+printf "\n\n\n"
+
+
+buildProfile $tmpProfileFile
 printf "\nprofile value adjustment...COMPLETE\n"
 
 printf "\nadding file for confirmation..."
-cp /tmp/profile-$profilename.yaml ~/tapconfigs/ && printf "COMPLETE" || printf "FAILED"
+cp $tmpProfileFile ~/tapconfigs/ && printf "COMPLETE" || printf "FAILED"
 
 printf "\n\nGenerated profile file: $HOME/tapconfigs/profile-$profilename.yaml\n\n"
 
