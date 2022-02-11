@@ -27,7 +27,7 @@ installTap()
     if [[ -z $INSTALL_REGISTRY_USERNAME || -z $INSTALL_REGISTRY_PASSWORD ]]
     then
         printf "\nERROR: Tanzu Net username or password missing.\n"
-        returnOrexit || return 1
+        returnOrexit && return 1
     fi
     sleep 1
     printf "Access to Tanzu Net check --- COMPLETED.\n\n"
@@ -55,13 +55,13 @@ installTap()
         if [[ -z $clusteressentialsbinary ]]
         then
             printf "\nERROR: tanzu-cluster-essentials-linux-amd64-x.x.x.tgz is a required binary for TAP installation.\nYou must place this binary under binaries directory.\n"
-            returnOrexit || return 1
+            returnOrexit && return 1
         else
             numberoftarfound=$(find ~/binaries/tanzu-cluster-essentials-linux-amd64* -type f -printf "." | wc -c)
             if [[ $numberoftarfound -gt 1 ]]
             then
                 printf "\nERROR: More than 1 tanzu-cluster-essentials-linux-amd64-x.x.x.tgz found in the binaries directory.\nOnly 1 is allowed.\n"
-                returnOrexit || return 1
+                returnOrexit && return 1
             fi
         fi
     fi
@@ -86,13 +86,13 @@ installTap()
         if [[ -z $tanzuclibinary ]]
         then
             printf "\nERROR: tanzu-framework-linux-amd64.tar is a required binary for TAP installation.\nYou must place this binary under binaries directory.\n"
-            returnOrexit || return 1
+            returnOrexit && return 1
         else
             numberoftarfound=$(find ~/binaries/tanzu-framework-linux-amd64* -type f -printf "." | wc -c)
             if [[ $numberoftarfound -gt 1 ]]
             then
                 printf "\nERROR: More than 1 tanzu-framework-linux-amd64.tar found in the binaries directory.\nOnly 1 is allowed.\n"
-                returnOrexit || return 1
+                returnOrexit && return 1
             fi
         fi
     fi
@@ -126,7 +126,7 @@ installTap()
         fi
         if [[ $doinflate == 'n' ]]
         then
-            returnOrexit || return 1;
+            returnOrexit && return 1;
         fi
         printf "\nExtracting $clusteressentialsbinary in $DIR\n"
         tar -xvf ${clusteressentialsbinary} -C $HOME/tanzu-cluster-essentials/ || returnOrexit
@@ -179,7 +179,7 @@ installTap()
         fi
         if [[ $doinflate == 'n' ]]
         then
-            returnOrexit || return 1;
+            returnOrexit && return 1;
         fi
         printf "\nExtracting $tanzuclibinary in $DIR\n"
         tar -xvf $tanzuclibinary -C $HOME/tanzu/ || returnOrexit
@@ -208,7 +208,7 @@ installTap()
         read -p "Confirm to proceed further? [y/n]: " yn
         case $yn in
             [Yy]* ) printf "\nyou confirmed yes\n"; break;;
-            [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; returnOrexit || return 1;;
+            [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; returnOrexit && return 1;;
             * ) echo "Please answer y or n.";;
         esac
     done
@@ -249,7 +249,7 @@ installProfile()
         rm $notifyfile
     fi
     unset profilefilename
-    source $HOME/read-params-profile.sh
+    source $HOME/generate-profile-file.sh
     if [ -f "$notifyfile" ]; then
         profilefilename=$(cat $notifyfile)
     fi
@@ -267,32 +267,24 @@ installProfile()
 
         if [[ $confirmed == 'n' ]]
         then
-            returnOrexit || return 1
+            returnOrexit && return 1
         fi
 
 
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
-        tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install
+        printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install"
+        # tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install
 
         printf "\nwait 1m...\n"
         sleep 1m
 
         printf "\nCheck installation status....\n"
+        printf "DEBUG: tanzu package installed get tap -n tap-install"
         tanzu package installed get tap -n tap-install
 
         printf "\nVerify that necessary packages are installed....\n"
+        printf "DEBUG: tanzu package installed list -A"
         tanzu package installed list -A
-
-
-        while true; do
-            read -p "Confirm to proceed further? [y/n]: " yn
-            case $yn in
-                [Yy]* ) printf "\nyou confirmed yes\n"; break;;
-                [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; returnOrexit || return 1;;
-                * ) echo "Please answer y or n.";;
-            esac
-        done
-
         
     fi
 }

@@ -1,0 +1,8 @@
+supply_chain: basic
+
+ootb_supply_chain_basic:
+  registry:
+    server: "<SUPPLY-CHAIN-REGISTRY-SERVER-NAME>"
+    repository: "<SUPPLY-CHAIN-REGISTRY-REPO-NAME>"
+  gitops:
+    ssh_secret: "<SUPPLY-CHAIN-REGISTRY-GITOPS-SECRET-NAME>"

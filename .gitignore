@@ -8,11 +8,11 @@
 .nogit
 .cache/
 .config/
+.vmware-cna-saas
+.docker
 
 .ssh/*
 !.ssh/.gitkeep
-.docker/*
-!.docker/.gitkeep
 .kube/*
 !.kube/.gitkeep
 binaries/*
@@ -20,6 +20,5 @@ binaries/*
 !binaries/tapinstall.sh
 !binaries/read-params-profile.sh
 !binaries/init.sh
-.vmware-cna-saas
+!binaries/taptemplates
 tanzu-cluster-essentials
-.cache/tanzu/catalog.yaml

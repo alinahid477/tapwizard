@@ -1,0 +1,36 @@
+[
+    {
+        "name": "buildservice",
+        "filename":"buildservice.template",
+        "prompt": "Would you like add build service?",
+        "hint": "recommended for dev cluster"
+    },
+    {
+        "name": "ingress",
+        "filename":"ingress.template",
+        "prompt": "Would you like add ingress?",
+        "hint": "important for CNR and GUIs"
+    },
+    {
+        "name": "learningcentre",
+        "filename":"learningcentre.template",
+        "prompt": "Would you like add GUI learing centre?"
+    },
+    {
+        "name": "scanner",
+        "filename":"scanner.template",
+        "prompt": "Would you like add scanner for image scanning?"
+    },
+    {
+        "name": "supply chain",
+        "filename":"supplychain-$.template",
+        "prompt": "Would you like add supply chain?",
+        "options": ["basic","basic-with-testing"]
+    },
+    {
+        "name": "TapGUI",
+        "filename":"tapgui.template",
+        "prompt": "Would you like add tap-gui?",
+        "hint": "recommended"
+    }
+]

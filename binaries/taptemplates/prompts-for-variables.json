@@ -1,0 +1,10 @@
+[
+    {
+        "name": "<SUPPLY-CHAIN-REGISTRY-GITOPS-SECRET-NAME>",
+        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during development namespace config).\nFor now it just name of the secret.\nBUT you must record this name and use the exact same name to create secret."
+    },
+    {
+        "name": "<TEST-VARIABLE>",
+        "hint": "test test test"
+    }
+]
