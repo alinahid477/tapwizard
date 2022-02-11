@@ -18,7 +18,7 @@
 binaries/*
 !binaries/.gitkeep
 !binaries/tapinstall.sh
-!binaries/read-params-profile.sh
+!binaries/generate-profile-file.sh
 !binaries/init.sh
 !binaries/taptemplates
 tanzu-cluster-essentials
