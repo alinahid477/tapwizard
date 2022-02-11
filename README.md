@@ -6,7 +6,8 @@
 ## pre-req
 - k8 cluster (aks, eks). [TKGs --- coming soon]
 - docker ce or ee installed locally
-- tanu, tap binaries
+- tanu, tap binaries in binaries directory of this dir
+- .kubeconfig file in .kube directory of this dir
 
 ## .env
 
