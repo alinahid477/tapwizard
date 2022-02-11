@@ -19,7 +19,8 @@ tanzu
 !.kube/.gitkeep
 binaries/*
 !binaries/.gitkeep
-!binaries/tapinstall.sh
+!binaries/installtap.sh
+!binaries/installprofile.sh
 !binaries/generate-profile-file.sh
 !binaries/init.sh
 !binaries/templates
