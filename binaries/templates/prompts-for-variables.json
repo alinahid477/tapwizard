@@ -1,7 +1,36 @@
 [
     {
-        "name": "<SUPPLY-CHAIN-REGISTRY-GITOPS-SECRET-NAME>",
-        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during development namespace config).\nFor now it just name of the secret.\nBUT you must record this name and use the exact same name to create secret."
+        "name": "<GITOPS-SECRET-NAME>",
+        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during development namespace config).\nFor now it is just name of the secret.\nBUT you must record this name and use the exact same name to create secret.",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<SUPPLY-CHAIN-REGISTRY-SERVER>",
+        "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io"
+    },
+    {
+        "name": "<SUPPLY-CHAIN-REGISTRY-REPO>",
+        "hint": "This is where workload images are stored in the registry.\nImages are written to SERVER-NAME/REPO-NAME/workload-name.\neg: my-project/petclinic or my-dockerhub-username"
+    },
+    {
+        "name": "<KP-DEFAULT-REPO>",
+        "hint": "Tanzu Build Service dependencies are written to this location\neg:my-harbor.io/my-project/build-service or my-dockerhub-user/build-service"
+    },
+    {
+        "name": "<KP-DEFAULT-REPO-USERNAME>",
+        "hint": "is the username that can write to KP-DEFAULT-REPO.\nYou should be able to docker push to this location with this credential."
+    },
+    {
+        "name": "<SCANNER-DEV-NAMESPACE>",
+        "hint": "This is the namespace where you want the ScanTemplates to be deployed to.\nThis is the namespace where the scanning feature is going to run."
+    },
+    {
+        "name": "<SCANNER-DEV-NAMESPACE>",
+        "hint": "This is the namespace where you want the ScanTemplates to be deployed to.\nThis is the namespace where the scanning feature is going to run."
+    },
+    {
+        "name": "<LEARNING-CENTER-DOMAIN-NAME>",
+        "hint": "This is the domain name for learing centre.\n(eg: learningcenter.example.com).\nThe domain does not have to exist now.\nIt can be created later once the ip address is obtained\nOR, it can be changed later through updating profile (for example: learningcenter.1.2.3.4.nip.io where 1.2.3.4 is the ip obtained from ingress controller deployment)."
     },
     {
         "name": "<TEST-VARIABLE>",

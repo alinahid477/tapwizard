@@ -2,7 +2,7 @@ supply_chain: basic
 
 ootb_supply_chain_basic:
   registry:
-    server: "<SUPPLY-CHAIN-REGISTRY-SERVER-NAME>"
-    repository: "<SUPPLY-CHAIN-REGISTRY-REPO-NAME>"
+    server: "<SUPPLY-CHAIN-REGISTRY-SERVER>"
+    repository: "<SUPPLY-CHAIN-REGISTRY-REPO>"
   gitops:
-    ssh_secret: "<SUPPLY-CHAIN-REGISTRY-GITOPS-SECRET-NAME>"
+    ssh_secret: "<GITOPS-SECRET-NAME>"

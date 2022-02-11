@@ -259,8 +259,8 @@ installProfile()
         while true; do
             read -p "Review the file and confirm to continue? [y/n] " yn
             case $yn in
-                [Yy]* ) printf "\nyou confirmed yes\n"; confirmed='y' break;;
-                [Nn]* ) printf "\n\nYou said no. \n\nExiting...\n\n"; break;;
+                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                [Nn]* ) printf "You confirmed no.\n"; break;;
                 * ) echo "Please answer yes or no.";
             esac
         done

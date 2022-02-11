@@ -1,3 +1,3 @@
 grype:
-  namespace: "<MY-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
-  targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET>"
+  namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
+  targetImagePullSecret: "<GITOPS-SECRET-NAME>"

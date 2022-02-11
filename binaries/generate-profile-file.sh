@@ -1,9 +1,11 @@
 #!/bin/bash
 export $(cat /root/.env | xargs)
 
-taptemplateDIR=$(echo "$HOME/binaries/taptemplates" | xargs)
+templateFilesDIR=$(echo "$HOME/binaries/templates" | xargs)
 promptsForFilesJSON='prompts-for-files.json'
 promptsForVariablesJSON='prompts-for-variables.json'
+bluecolor=$(tput setaf 4)
+normalcolor=$(tput sgr0)
 
 containsElement () {
   local e match="$1"
@@ -17,7 +19,7 @@ buildProfileFile () {
     baseProfileFile=$1
     # iterate over array in json file (json file starts with array)
     # base64 decode is needed so that jq format is per line. Otherwise gettting value from the formatted item object becomes impossible 
-    for promptItem in $(jq -r '.[] | @base64' $taptemplateDIR/$promptsForFilesJSON); do
+    for promptItem in $(jq -r '.[] | @base64' $templateFilesDIR/$promptsForFilesJSON); do
         printf "\n\n"
 
         _jq() {
@@ -27,16 +29,19 @@ buildProfileFile () {
         promptName=$(echo $(_jq '.name')) # get property value of property called "name" from itemObject (aka array element object)
         prompt=$(echo $(_jq '.prompt'))
         hint=$(echo $(_jq '.hint'))
+        
         if [[ -n $hint && $hint != null ]] # so, -n works if variable does not exist or value is empty. the jq is outputing null hence need to check null too.
         then
-            printf "$hint\n"
+            printf "$prompt (${bluecolor} hint: $hint ${normalcolor})\n"
+        else
+            printf "$prompt\n"
         fi
         while true; do
-            read -p "$prompt [y/n]: " yn
+            read -p "please confirm [y/n]: " yn
             case $yn in
                 [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
                 [Nn]* ) printf "You said no.\n"; break;;
-                * ) echo "Please answer y or n.";;
+                * ) echo "Please answer y or n\n";;
             esac
         done
         if [[ $confirmed == 'y' ]]
@@ -86,12 +91,13 @@ buildProfileFile () {
             fi
 
             # append the content of the chunked file to the profile file.
-            printf "\nadding configs for $promptName...."
-            cat $taptemplateDIR/$filename >> $baseProfileFile && printf "ok." || printf "failed."
+            printf "adding configs for $promptName...."
+            cat $templateFilesDIR/$filename >> $baseProfileFile && printf "ok." || printf "failed."
             printf "\n\n" >> $baseProfileFile
             printf "\n"
         else
-            printf "\nconfigs for $promptName....skipped.\n"
+            printf "configs for $promptName....skipped."
+            printf "\n"
         fi
     done
 }
@@ -108,15 +114,11 @@ buildProfile () {
     # populate keys with unique values only (in the file there may be multiple occurances of same variables)
     i=0
     while [[ $i -lt ${#extracts[*]} ]] ; do
-        printf "checking ${extracts[$i]} in environment variable..."
         containsElement "${extracts[$i]}" "${keys[@]}"
         ret=$?
         if [[ $ret == 0 ]]
         then
-            printf "doesnt exist\n"
             keys+=("${extracts[$i]}")
-        else
-            printf "exist\n"
         fi
         ((i=$i+1))
     done
@@ -141,10 +143,11 @@ buildProfile () {
         # if input variable does not exist as environment variable (meaning if the value is empty or unset that means variable does not exists)
         if [[ -z ${!inputvar} ]]; then 
             # when does not exist prompt user to input value
-            hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $taptemplateDIR/$promptsForVariablesJSON)
+            hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $templateFilesDIR/$promptsForVariablesJSON)
+            isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
             if [[ -n $hint && $hint != null ]]
             then
-                printf "$hint\n"
+                printf "$inputvar Hint: ${bluecolor}$hint ${normalcolor}\n"
             fi
             isinputneeded='y'
             while [[ -z $inp ]]; do
@@ -155,6 +158,12 @@ buildProfile () {
                 fi
             done
             sed -i 's|'${v}'|'$inp'|g' $baseProfileFile
+            # add to .env for later use (eg: during developer namespace creation)
+            if [[ -n $isRecordAsEnvVar && $isRecordAsEnvVar == true ]]
+            then
+                printf "$inputvar=${inp}" >> $HOME/.env
+                printf "\n" >> $HOME/.env
+            fi
         else
             # when exists as environment variable already, no need to prompt user for input. Just replace in the file.
             inp=${!inputvar} # the value of the environment variable (here accessed as dynamic variable)
@@ -211,7 +220,7 @@ fi
 
 printf "\ncreating temporary file for profile...."
 tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
-cp $taptemplateDIR/profile-$profiletype.template $tmpProfileFile && printf "ok." || printf "failed"
+cp $templateFilesDIR/profile-$profiletype.template $tmpProfileFile && printf "ok." || printf "failed"
 printf "\n"
 
 printf "generate profile file...\n"
