@@ -243,7 +243,7 @@ fi
 
 if [[ $doinstall == "y" ]] 
 then
-    source ~/binaries/tapinstall.sh    
+    source ~/binaries/installtap.sh    
 fi
 
 
@@ -277,8 +277,8 @@ then
 fi
 
 printf "\nYour available wizards are:\n"
-echo -e "\t~/binaries/tapinstall.sh"
-echo -e "\t~/binaries/tapconfigurewizard.sh --help"
+echo -e "\t~/binaries/installtap.sh"
+echo -e "\t~/binaries/installprofile.sh"
 
 cd ~
 

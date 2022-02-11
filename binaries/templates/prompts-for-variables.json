@@ -21,16 +21,16 @@
         "hint": "is the username that can write to KP-DEFAULT-REPO.\nYou should be able to docker push to this location with this credential."
     },
     {
-        "name": "<SCANNER-DEV-NAMESPACE>",
-        "hint": "This is the namespace where you want the ScanTemplates to be deployed to.\nThis is the namespace where the scanning feature is going to run."
+        "name": "<INGRESS-DOMAIN>",
+        "hint": "This is the subdomain or domain for the host name that you point at the tanzu-shared-ingress service’s External IP address.\nThe (sub)domain A record does not need to be created upfront (and can be created later)\nas the tanzu-shared-ingress service’s External IP address will become available after profile deployment."
     },
     {
         "name": "<SCANNER-DEV-NAMESPACE>",
-        "hint": "This is the namespace where you want the ScanTemplates to be deployed to.\nThis is the namespace where the scanning feature is going to run."
+        "hint": "This is the namespace where you want the ScanTemplates to be deployed to and scanning feature is going to run."
     },
     {
         "name": "<LEARNING-CENTER-DOMAIN-NAME>",
-        "hint": "This is the domain name for learing centre.\n(eg: learningcenter.example.com).\nThe domain does not have to exist now.\nIt can be created later once the ip address is obtained\nOR, it can be changed later through updating profile (for example: learningcenter.1.2.3.4.nip.io where 1.2.3.4 is the ip obtained from ingress controller deployment)."
+        "hint": "This is the domain name for learing centre.\n(eg: learningcenter.example.com).\nThe domain does not have to exist now.\nIt can be created later once the ip address is obtained\nOR, it can be changed later through updating profile\nfor example: learningcenter.1.2.3.4.nip.io where 1.2.3.4 is the ip of tanzu-shared-ingress service’s External IP address."
     },
     {
         "name": "<TEST-VARIABLE>",
