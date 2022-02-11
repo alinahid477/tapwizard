@@ -161,6 +161,7 @@ buildProfile () {
             # add to .env for later use (eg: during developer namespace creation)
             if [[ -n $isRecordAsEnvVar && $isRecordAsEnvVar == true ]]
             then
+                printf "\n" >> $HOME/.env
                 printf "$inputvar=${inp}" >> $HOME/.env
                 printf "\n" >> $HOME/.env
             fi
