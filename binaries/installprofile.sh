@@ -45,19 +45,19 @@ installProfile()
 
 
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
-        printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"
-        # tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install
+        #printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"
+        tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s
 
         printf "\nwait 1m...\n"
-        sleep 1m
+        sleep 2m
 
         printf "\nCheck installation status....\n"
-        printf "DEBUG: tanzu package installed get tap -n tap-install"
-        # tanzu package installed get tap -n tap-install
+        # printf "DEBUG: tanzu package installed get tap -n tap-install"
+        tanzu package installed get tap -n tap-install
 
         printf "\nVerify that necessary packages are installed....\n"
-        printf "DEBUG: tanzu package installed list -A"
-        # tanzu package installed list -A
+        # printf "DEBUG: tanzu package installed list -A"
+        tanzu package installed list -A
         
     fi
 }

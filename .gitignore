@@ -22,6 +22,7 @@ binaries/*
 !binaries/installtap.sh
 !binaries/installprofile.sh
 !binaries/generate-profile-file.sh
+!binaries/createakscluster.sh
 !binaries/init.sh
 !binaries/templates
 tapconfigs/*
