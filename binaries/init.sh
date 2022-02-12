@@ -1,10 +1,10 @@
 #!/bin/bash
 
 export $(cat /root/.env | xargs)
-unset doinstall
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
-ls -l /root/binaries/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
 
 if [[ -n $BASTION_HOST ]]
 then
@@ -277,6 +277,8 @@ fi
 printf "DONE\n\n\n"
 sleep 2
 
+unset doinstall
+
 if [[ $isexist == "n" ]]
 then
     while true; do
@@ -291,14 +293,14 @@ fi
 
 if [[ $doinstall == "y" ]] 
 then
-    source ~/binaries/installtap.sh    
+    source ~/binaries/installpackagerepository.sh    
 fi
 
 
 printf "\nYour available wizards are:\n"
-echo -e "\t~/binaries/installtap.sh"
+echo -e "\t~/binaries/installpackagerepository.sh"
 echo -e "\t~/binaries/installprofile.sh"
-
+echo -e "\t~/binaries/installdevnamespace.sh"
 cd ~
 
 /bin/bash

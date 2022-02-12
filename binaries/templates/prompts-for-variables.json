@@ -6,11 +6,13 @@
     },
     {
         "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io"
+        "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<PVT_REGISTRY_REPO>",
-        "hint": "This is where workload images are stored in the registry.\nImages are written to SERVER-NAME/REPO-NAME/workload-name.\neg: my-project/petclinic or my-dockerhub-username"
+        "hint": "This is where workload images are stored in the registry.\nImages are written to SERVER-NAME/REPO-NAME/workload-name.\neg: my-project/petclinic or my-dockerhub-username",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<KP-DEFAULT-REPO>",
@@ -25,6 +27,10 @@
         "hint": "This is the subdomain or domain for the host name that you point at the tanzu-shared-ingress service’s External IP address.\nThe (sub)domain A record does not need to be created upfront (and can be created later)\nas the tanzu-shared-ingress service’s External IP address will become available after profile deployment."
     },
     {
+        "name": "<GIT-CATALOG-URL>",
+        "hint": "This is the URL of the catalog-info.yaml file from Tap GUI (that you downloaded from Tanzu Net, eg: Tanzu Application Platform GUI Blank Catalog) uploaded in your git repo.\n Steps to get the URL:\n  - Download the tar file from Tanzu Net and untar.\n  - Create a public github repo.\n  - Push the contents of the untar in that repo.\n  - get the url of the catalog-info.yaml (eg: https://github.com/alinahid477/tap-gui/blob/main/blank/catalog-info.yaml)"
+    },
+    {
         "name": "<SCANNER-DEV-NAMESPACE>",
         "hint": "This is the namespace where you want the ScanTemplates to be deployed to and scanning feature is going to run."
     },
@@ -35,5 +41,45 @@
     {
         "name": "<TEST-VARIABLE>",
         "hint": "test test test"
+    },
+    {
+        "name": "<AZ_LOCATION>",
+        "hint": "eg: westus2",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_GROUP_NAME>",
+        "hint": "eg: tap",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_AKS_CLUSTER_NAME>",
+        "hint": "eg: tapcluster",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_AKS_VM_SIZE>",
+        "hint": "eg: Standard_D5_v2",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_AKS_NODE_COUNT>",
+        "hint": "eg: 4",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_TENANT_ID>",
+        "hint": "The subscription id",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_APP_ID>",
+        "hint": "The service principal app id",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<AZ_APP_CLIENT_SECRET>",
+        "hint": "The service principal app secret",
+        "isRecordAsEnvVar": true
     }
 ]

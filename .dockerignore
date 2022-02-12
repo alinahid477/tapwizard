@@ -12,3 +12,5 @@
 .config
 tanzu
 tanzu-cluster-essentials
+*.tgz
+*.tar

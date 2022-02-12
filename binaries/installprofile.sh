@@ -15,6 +15,8 @@ returnOrexit()
     fi
 }
 
+source $HOME/binaries/scripts/generate-profile-file.sh
+
 installProfile() 
 {
     export notifyfile=/tmp/merlin-tap-notifyfile
@@ -22,7 +24,7 @@ installProfile()
         rm $notifyfile
     fi
     unset profilefilename
-    source $HOME/binaries/generate-profile-file.sh
+    generateProfile
     if [ -f "$notifyfile" ]; then
         profilefilename=$(cat $notifyfile)
     fi

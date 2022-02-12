@@ -1,8 +1,8 @@
 #!/bin/bash
 
+export $(cat /root/.env | xargs)
 
 isexists=$(which az)
-
 if [[ -z $isexists ]]
 then
     printf "\naz cli not found. Installing...\n"
@@ -16,19 +16,31 @@ then
     exit 1
 fi
 
+source $HOME/binaries/scripts/extract-and-take-input.sh
+
+if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ] || [ -z "$AZ_GROUP_NAME" ] || [ -z "$AZ_LOCATION" ] || [ -z "$AZ_AKS_CUSTER_NAME" ] || [ -z "$AZ_AKS_VM_SIZE" ] || [ -z "$AZ_AKS_NODE_COUNT" ]
+then
+    printf "\n\nNo AZ config found.\nGoing to collect from user and save it in .env for future use....\n\n"
+    cp $HOME/binaries/template/az-aks-variables.template /tmp/az-aks-variables.env.tmp
+    extractVariableAndTakeInput /tmp/az-aks-variables.env.tmp
+    export $(cat /root/.env | xargs)
+fi
+
+
+
 
 ISAZLOGGEDIN=$(az account show | grep name)
 
 if [ -z "$ISAZLOGGEDIN" ]
 then
     printf "\n\nlogin to az\n\n"
-    if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_TKG_APP_ID" ] || [ -z "$AZ_TKG_APP_ID" ]
+    if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ]
     then
         printf "\n\naz login\n\n"
         az login
     else
-        printf "\n\naz login --service-principal --username $AZ_TKG_APP_ID --password $AZ_TKG_APP_CLIENT_SECRET --tenant $AZ_TENANT_ID\n\n"
-        az login --service-principal --username $AZ_TKG_APP_ID --password $AZ_TKG_APP_CLIENT_SECRET --tenant $AZ_TENANT_ID
+        printf "\n\naz login --service-principal --username $AZ_APP_ID --password $AZ_APP_CLIENT_SECRET --tenant $AZ_TENANT_ID\n\n"
+        az login --service-principal --username $AZ_APP_ID --password $AZ_APP_CLIENT_SECRET --tenant $AZ_TENANT_ID
     fi
     printf "\n\nLogged with below details\n"
     az account show
@@ -37,11 +49,6 @@ else
     az account show
 fi
 
-AZ_LOCATION=westus2
-AZ_GROUP_NAME=tap
-AZ_CLUSTER_NAME=tapcluster
-AZ_AKS_VM_SIZE=Standard_D5_v2
-AZ_AKS_NODE_COUNT=4
 
 isexists=$(az group show --name ${AZ_GROUP_NAME} | jq -r '.id')
 if [[ -z $isexists ]]
@@ -64,11 +71,11 @@ while [[ $isregistered == 'Registered' && $count -lt 15 ]]; do
     ((count=$count+1))
 done
 
-printf "\nCreate aks cluster in rg:${AZ_GROUP_NAME} name:${AZ_CLUSTER_NAME} of nodesize:${AZ_AKS_VM_SIZE} with nodecount:${AZ_AKS_NODE_COUNT}\n"
-az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_CLUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy #--node-osdisk-size 500 #--enable-addons monitoring
+printf "\nCreate aks cluster in rg:${AZ_GROUP_NAME} name:${AZ_AKS_CUSTER_NAME} of nodesize:${AZ_AKS_VM_SIZE} with nodecount:${AZ_AKS_NODE_COUNT}\n"
+az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy #--node-osdisk-size 500 #--enable-addons monitoring
 
 printf "\naks cluster get credential. This should create /root/.kube/config file...\n"
-az aks get-credentials --resource-group ${AZ_GROUP_NAME} --name ${AZ_CLUSTER_NAME}
+az aks get-credentials --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CUSTER_NAME}
 
 printf "\ncreating clusterrolebinding:tap-psp-rolebinding --group=system:authenticated --clusterrole=psp:privileged...\n"
 kubectl create clusterrolebinding tap-psp-rolebinding --group=system:authenticated --clusterrole=psp:privileged

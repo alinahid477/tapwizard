@@ -1,4 +1,4 @@
-Get-ChildItem -Recurse -Filter * | Where-Object {$_.PsIsContainer -eq $True -and ($_.Name -Like "binaries*" -or $_.Name -Like "images*") } | 
+Get-ChildItem -Recurse -Filter * | Where-Object {$_.PsIsContainer -eq $True -and ($_.Name -Like "binaries*" -or $_.Name -Like "tapconfig*") } | 
 Foreach-Object { 
 	$folder=$_.FullName
 	Write-Output "processing dir ... $folder"

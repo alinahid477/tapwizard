@@ -19,9 +19,11 @@ tanzu
 !.kube/.gitkeep
 binaries/*
 !binaries/.gitkeep
-!binaries/installtap.sh
+!binaries/scripts
+!binaries/installpackagerepository.sh
 !binaries/installprofile.sh
 !binaries/generate-profile-file.sh
+!binaries/installdevnamespace.sh
 !binaries/createakscluster.sh
 !binaries/init.sh
 !binaries/templates

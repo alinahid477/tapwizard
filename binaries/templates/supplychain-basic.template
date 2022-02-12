@@ -5,4 +5,4 @@ ootb_supply_chain_basic:
     server: "<PVT_REGISTRY_SERVER>"
     repository: "<PVT_REGISTRY_REPO>"
   gitops:
-    ssh_secret: "<GITOPS-SECRET-NAME>"
+    ssh_secret: "<GITOPS_SECRET_NAME>"

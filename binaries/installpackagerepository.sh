@@ -17,7 +17,7 @@ returnOrexit()
 }
 
 
-installTap()
+installPackageRepository()
 {
     export $(cat /root/.env | xargs)
 
@@ -310,7 +310,7 @@ else
 fi
 if [[ $performinstall == 'y' ]]
 then
-    installTap
+    installPackageRepository
     printf "\n\n********TAP packages repository add....COMPLETE**********\n\n\n"
 fi
 
