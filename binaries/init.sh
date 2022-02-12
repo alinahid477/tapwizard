@@ -67,7 +67,20 @@ fi
 
 
 printf "\n\n\n***********Checking kubeconfig...*************\n"
-sleep 2
+sleep 1
+if [[ ! -f $HOME/.kube/config ]]
+then
+    printf "\n\nNo kubeconfig found in $HOME/.kube/config. Would you like to create one:\n"
+    while true; do
+        read -p "which k8s cluster would you like to create? [aks]: " inp
+        if [[ $inp == 'aks' ]]
+        then
+            source $HOME/binaries/createakscluster.sh
+        else
+            printf "Invalid input given.\nEither add config file in .kube dir of this dir OR provide a valid value for cluster create.\n"
+        fi
+    done
+fi
 
 if [[ -n $TKG_VSPHERE_SUPERVISOR_ENDPOINT ]]
 then
@@ -185,7 +198,6 @@ else
         sleep 2
     fi
 fi
-
 
 
 
