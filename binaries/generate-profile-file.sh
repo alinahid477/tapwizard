@@ -17,6 +17,9 @@ containsElement () {
 # read what to prompt for user input from a json file.
 buildProfileFile () {
     baseProfileFile=$1
+
+    excluded_packages_STR=''
+
     # iterate over array in json file (json file starts with array)
     # base64 decode is needed so that jq format is per line. Otherwise gettting value from the formatted item object becomes impossible 
     for promptItem in $(jq -r '.[] | @base64' $templateFilesDIR/$promptsForFilesJSON); do
@@ -96,10 +99,40 @@ buildProfileFile () {
             printf "\n\n" >> $baseProfileFile
             printf "\n"
         else
+            # whenever the user select 'n' to installing a component of the profile add them in the excluded packages list
+            # otherwise what happens is: the config goes missing (because of this script) but tapprofile still thinks it needs to install it.
+            # as a result the package ends up being in reconcile error state
             printf "configs for $promptName....skipped."
+            packagename=$(echo $(_jq '.packagename'))            
+            if [[ -z $packagename || $packagename == null ]]
+            then
+                readarray -t packagenames < <(echo $(_jq '.packagenames') | jq -rc '.[]')
+                for packagename in "${packagenames[@]}"; do
+                    excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+                done
+            else
+                excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+            fi
+            
             printf "\n"
         fi
     done
+
+    # this is special. This does not align with the above generic logic 
+    if [[ -n $excluded_packages_STR ]]
+    then
+        filename='excluded_packages.template'
+        replace='<EXCLUDED-PACKAGES-LIST>'
+        printf "\n"
+        printf "Adding excluded_packages...."
+        sleep 2
+        cp $templateFilesDIR/$filename /tmp/
+        awk -v old="${replace}" -v new="${excluded_packages_STR}" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' /tmp/$filename > /tmp/$filename.tmp
+        # sed -i 's|'$replace'|'$excluded_packages_STR'|' /tmp/$filename
+        cat /tmp/$filename.tmp >> $baseProfileFile && printf "ok." || printf "failed."
+        printf "\n\n" >> $baseProfileFile
+        printf "\n"
+    fi
 }
 
 
@@ -142,12 +175,25 @@ buildProfile () {
         then
             printf "$inputvar Hint: ${bluecolor}$hint ${normalcolor}\n"
         fi
+        # read this property to see if this variable should be recorded in .env file for usage in developer workspace (eg: git-ops-secret)
+        isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
+        
+        
+        # if the above value is true (isRecordAsEnvVar=true) this means that environment it should not exist in .env file yet 
+        # AND will be written in when user provide the input. (only reason it is being stored in .env so it can be reused at developer namespaces)
+        # so performing the below in case it existed in .env file (the only way this could occur, in error ofcourse, is if the enduser/I use an older .env file)
+        if [[ -n $isRecordAsEnvVar && $isRecordAsEnvVar == true ]]
+        then
+            sed -i '/'$inputvar'/d' /root/.env
+            sleep 1
+        fi
 
         unset inp
         # dynamic variable-->eg: variable name (NAME_OF_THE_VARIABLE) in a variable ('inputvar')
         # the way to access the value dynamic variable is: ${!inputvar}
 
         # if input variable does not exist as environment variable (meaning if the value is empty or unset that means variable does not exists)
+        # Hence, need to prompt user for input and take userinput.
         if [[ -z ${!inputvar} ]]; then 
             # when does not exist prompt user to input value
             isinputneeded='y'
@@ -160,8 +206,7 @@ buildProfile () {
             done
             sed -i 's|'${v}'|'$inp'|g' $baseProfileFile
             
-            # add to .env for later use if instructed in the prompt file (eg: during developer namespace creation)
-            isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
+            # add to .env for later use if instructed in the prompt file (eg: during developer namespace creation)            
             if [[ -n $isRecordAsEnvVar && $isRecordAsEnvVar == true ]]
             then
                 printf "\n" >> $HOME/.env
@@ -183,65 +228,75 @@ buildProfile () {
 
 }
 
+main () {
+    printf "\n*******Starting profile wizard*******\n\n"
 
+    unset profilename
+    while [[ -z $profilename ]]; do
+        read -p "name of the profile: " profilename
+        if [[ -z $profilename ]]
+        then
+            printf "empty value is not allowed.\n"
+        fi
+    done
 
-printf "\n*******Starting profile wizard*******\n\n"
+    unset inp
+    unset profiletype
+    while [[ -z $profiletype ]]; do
+        read -p "type of the profile [full or lite] (default: full): " inp
+        if [[ -z $inp ]]
+        then
+            inp='full'
+        fi
+        if [[ $inp == 'full' || $inp == 'lite' ]]
+        then
+            profiletype=$inp
+        fi
+        if [[ -z $profiletype ]]
+        then
+            printf "Please provide a valid value. Only \"full\" or \"lite\" are allowed valid value.\n"
+        fi
+    done
 
-
-unset profilename
-while [[ -z $profilename ]]; do
-    read -p "name of the profile: " profilename
-    if [[ -z $profilename ]]
+    if [[ -n $DESCRIPTOR_NAME ]]
     then
-        printf "empty value is not allowed.\n"
+        DESCRIPTOR_NAME=$(echo "$DESCRIPTOR_NAME-$profiletype" | xargs)
+        printf "\nAdjusted descriptor name DESCRIPTOR_NAME=$DESCRIPTOR_NAME...ok\n"
     fi
-done
-
-unset inp
-unset profiletype
-while [[ -z $profiletype ]]; do
-    read -p "type of the profile [full or lite] (default: full): " inp
-    if [[ -z $inp ]]
-    then
-        inp='full'
-    fi
-    if [[ $inp == 'full' || $inp == 'lite' ]]
-    then
-        profiletype=$inp
-    fi
-    if [[ -z $profiletype ]]
-    then
-        printf "Please provide a valid value. Only \"full\" or \"lite\" are allowed valid value.\n"
-    fi
-done
-
-if [[ -n $DESCRIPTOR_NAME ]]
-then
-    DESCRIPTOR_NAME=$(echo "$DESCRIPTOR_NAME-$profiletype" | xargs)
-    printf "\nAdjusted descriptor name DESCRIPTOR_NAME=$DESCRIPTOR_NAME...ok\n"
-fi
 
 
+    printf "\ncreating temporary file for profile...."
+    tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
+    cp $templateFilesDIR/profile-$profiletype.template $tmpProfileFile && printf "ok." || printf "failed"
+    printf "\n"
+
+    printf "generate profile file...\n"
+    buildProfileFile $tmpProfileFile
+    printf "\nprofile file generation...COMPLETE.\n"
+
+
+    printf "\n\n\n"
+
+
+    buildProfile $tmpProfileFile
+    printf "\nprofile value adjustment...COMPLETE\n"
+
+    printf "\nadding file for confirmation..."
+    cp $tmpProfileFile ~/tapconfigs/ && printf "COMPLETE" || printf "FAILED"
+
+    printf "\n\nGenerated profile file: $HOME/tapconfigs/profile-$profilename.yaml\n\n"
+
+    echo "$HOME/tapconfigs/profile-$profilename.yaml" >> $(echo $notifyfile)
+}
+
+# main
+
+# debug
+profilename="debug"
+profiletype="full"
 printf "\ncreating temporary file for profile...."
 tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
 cp $templateFilesDIR/profile-$profiletype.template $tmpProfileFile && printf "ok." || printf "failed"
 printf "\n"
-
-printf "generate profile file...\n"
 buildProfileFile $tmpProfileFile
-printf "\nprofile file generation...COMPLETE.\n"
-
-
-printf "\n\n\n"
-
-
-buildProfile $tmpProfileFile
-printf "\nprofile value adjustment...COMPLETE\n"
-
-printf "\nadding file for confirmation..."
-cp $tmpProfileFile ~/tapconfigs/ && printf "COMPLETE" || printf "FAILED"
-
-printf "\n\nGenerated profile file: $HOME/tapconfigs/profile-$profilename.yaml\n\n"
-
-echo "$HOME/tapconfigs/profile-$profilename.yaml" >> $(echo $notifyfile)
-
+# end debug

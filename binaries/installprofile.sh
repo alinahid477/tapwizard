@@ -43,7 +43,14 @@ installProfile()
             returnOrexit && return 1
         fi
 
-
+        if [[ -z $TAP_PACKAGE_VERSION ]]
+        then
+            printf "\nERROR: package version could not be retrieved.\n"
+            printf "Execute below command manually:\n"
+            printf "tanzu package install tap -p tap.tanzu.vmware.com -v {TAP_PACKAGE_VERSION} --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s\n"
+            printf "${bluecolor}Where TAP_PACKAGE_VERSION is the version of the tap.tanzu.vmware.com you want to install${normalcolor}\n"
+            returnOrexit && return 1
+        fi
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
         #printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"
         tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s
@@ -58,8 +65,51 @@ installProfile()
         printf "\nVerify that necessary packages are installed....\n"
         # printf "DEBUG: tanzu package installed list -A"
         tanzu package installed list -A
-        
+
+        printf "\nExtracting ip of the load balancer...."
+        lbip=$(kubectl get svc -n tanzu-system-ingress -o json | jq -r '.items[] | select(.spec.type == "LoadBalancer" and .metadata.name == "envoy") | .status.loadBalancer.ingress[0].ip')
+        printf $lbip
+        printf "\n"
+        printf "${bluecolor}use this ip to create A record in the DNS zone or update profile with this ip if using xip.io or nip.io ${normalcolor}\n"
+        printf "${bluecolor}To update run the below command: ${normalcolor}\n"
+        printf "${bluecolor}tanzu package installed update tap -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install${normalcolor}\n"
+
+        confirmed='n'
+        while true; do
+            read -p "Please confirm if reconcile for needed packages are successful? [y/n] " yn
+            case $yn in
+                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                [Nn]* ) printf "You confirmed no.\n"; break;;
+                * ) echo "Please answer yes or no.";
+            esac
+        done
+
+        if [[ $confirmed == 'y' ]]
+        then
+            INSTALL_TAP_PROFILE='COMPLETED'
+            sed -i '/INSTALL_TAP_PROFILE/d' $HOME/.env
+            printf "\nINSTALL_TAP_PROFILE=COMPLETED\n" >> $HOME/.env
+            printf "\n\n********TAP profile deployment....COMPLETE**********\n\n\n"
+        fi                  
     fi
 }
 
 installProfile
+
+if [[ $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
+then
+    unset confirmed
+    while true; do
+        read -p "Would you like to configure developer workspace now? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; break;;
+            * ) echo "Please answer yes or no.";
+        esac
+    done
+
+    if [[ -n $confirmed && $confirmed == 'y' ]]
+    then
+        printf "\nTODO: Kick off developer workspace script\n"
+    fi
+fi

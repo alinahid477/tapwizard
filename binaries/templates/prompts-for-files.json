@@ -1,36 +1,49 @@
 [
     {
         "name": "buildservice",
+        "packagename": "buildservice.tanzu.vmware.com",
         "filename":"buildservice.template",
         "prompt": "Would you like to add build service?",
         "hint": "recommended for devsecops"
     },
     {
         "name": "ingress",
+        "packagename": "contour.tanzu.vmware.com",
         "filename":"ingress.template",
         "prompt": "Would you like to add ingress?",
         "hint": "recommended for CNR and GUIs"
     },
     {
         "name": "learningcentre",
+        "packagename": "learningcenter.tanzu.vmware.com",
         "filename":"learningcentre.template",
         "prompt": "Would you like to add GUI learing centre?"
     },
     {
         "name": "scanner",
+        "packagename": "scanning.apps.tanzu.vmware.com",
         "filename":"scanner.template",
         "prompt": "Would you like to add scanner for image scanning?"
     },
     {
         "name": "supply chain",
+        "packagenames": ["ootb-supply-chain-basic.tanzu.vmware.com", "ootb-supply-chain-testing.tanzu.vmware.com", "ootb-supply-chain-testing-scanning.tanzu.vmware.com"],
         "filename":"supplychain-$.template",
         "prompt": "Would you like to add supply chain?",
-        "options": ["basic","basic-with-testing"]
+        "options": ["basic","testing","testing-scanning"]
     },
     {
         "name": "TapGUI",
+        "packagename": "tap-gui.tanzu.vmware.com",
         "filename":"tapgui.template",
         "prompt": "Would you like to add tap-gui?",
         "hint": "recommended"
+    },
+    {
+        "name": "CNR",
+        "packagename": "cnrs.tanzu.vmware.com",
+        "filename":"cnrs.template",
+        "prompt": "Would you like to add cloud native runtime?",
+        "hint": "This enables to deploy serverless on the k8s cluster."
     }
 ]
