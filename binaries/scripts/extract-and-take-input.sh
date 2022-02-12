@@ -1,13 +1,20 @@
 #!/bin/bash
 
-
 export $(cat /root/.env | xargs)
 
+source $HOME/binaries/scripts/contains-element.sh
+
 extractVariableAndTakeInput () {
-    baseProfileFile=$1
-    printf "extract variables from profile file....\n"
+    local templateFilesDIR=$(echo "$HOME/binaries/templates" | xargs)
+    local promptsForVariablesJSON='prompts-for-variables.json'
+    local bluecolor=$(tput setaf 4)
+    local normalcolor=$(tput sgr0)
+
+    baseVariableFile=$1
+    
+    printf "extracting variables for user input....\n"
     # extract variable from file (variable format is: <NAME-OF-THE-VARIABLE>)
-    extracts=($(grep -o '<[A-Za-z0-9_\-]*>' $baseProfileFile))
+    extracts=($(grep -o '<[A-Za-z0-9_\-]*>' $baseVariableFile))
     keys=()
 
     # populate keys with unique values only (in the file there may be multiple occurances of same variables)
@@ -69,7 +76,7 @@ extractVariableAndTakeInput () {
                     printf "empty value is not allowed.\n"
                 fi
             done
-            sed -i 's|'${v}'|'$inp'|g' $baseProfileFile
+            sed -i 's|'${v}'|'$inp'|g' $baseVariableFile
             
             # read this property to see if this variable should be recorded in .env file for usage in developer workspace (eg: git-ops-secret)
             isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
@@ -84,13 +91,13 @@ extractVariableAndTakeInput () {
             # when exists as environment variable already, no need to prompt user for input. Just replace in the file.
             inp=${!inputvar} # the value of the environment variable (here accessed as dynamic variable)
             printf "environment variable found: $inputvar=$inp\n"
-            sed -i 's|<'$inputvar'>|'$inp'|g' $baseProfileFile
+            sed -i 's|<'$inputvar'>|'$inp'|g' $baseVariableFile
         fi
     done
 
     if [[ $isinputneeded == 'n' ]]
     then
-        printf "\nAll needed values for profile found in environment variable. No user input needed.\n"
+        printf "\nAll needed values found in environment variable. No user input needed.\n"
     fi
 
 }

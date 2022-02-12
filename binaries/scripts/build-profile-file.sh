@@ -1,9 +1,15 @@
 #!/bin/bash
 export $(cat /root/.env | xargs)
 
+source $HOME/binaries/scripts/contains-element.sh
 
 # read what to prompt for user input from a json file.
 buildProfileFile () {
+    local templateFilesDIR=$(echo "$HOME/binaries/templates" | xargs)
+    local promptsForFilesJSON='prompts-for-files.json'
+    local bluecolor=$(tput setaf 4)
+    local normalcolor=$(tput sgr0)
+
     baseProfileFile=$1
 
     excluded_packages_STR=''

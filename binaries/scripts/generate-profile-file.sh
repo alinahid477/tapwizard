@@ -2,10 +2,7 @@
 export $(cat /root/.env | xargs)
 
 templateFilesDIR=$(echo "$HOME/binaries/templates" | xargs)
-promptsForFilesJSON='prompts-for-files.json'
-promptsForVariablesJSON='prompts-for-variables.json'
-bluecolor=$(tput setaf 4)
-normalcolor=$(tput sgr0)
+
 
 source $HOME/binaries/scripts/contains-element.sh
 source $HOME/binaries/scripts/build-profile-file.sh

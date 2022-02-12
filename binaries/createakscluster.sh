@@ -21,8 +21,8 @@ source $HOME/binaries/scripts/extract-and-take-input.sh
 if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ] || [ -z "$AZ_GROUP_NAME" ] || [ -z "$AZ_LOCATION" ] || [ -z "$AZ_AKS_CUSTER_NAME" ] || [ -z "$AZ_AKS_VM_SIZE" ] || [ -z "$AZ_AKS_NODE_COUNT" ]
 then
     printf "\n\nNo AZ config found.\nGoing to collect from user and save it in .env for future use....\n\n"
-    cp $HOME/binaries/template/az-aks-variables.template /tmp/az-aks-variables.env.tmp
-    extractVariableAndTakeInput /tmp/az-aks-variables.env.tmp
+    cp $HOME/binaries/templates/az-aks-variables.template /tmp/az-aks-variables.env.tmp || exit 1
+    extractVariableAndTakeInput /tmp/az-aks-variables.env.tmp || exit 1
     export $(cat /root/.env | xargs)
 fi
 
@@ -30,7 +30,6 @@ fi
 
 
 ISAZLOGGEDIN=$(az account show | grep name)
-
 if [ -z "$ISAZLOGGEDIN" ]
 then
     printf "\n\nlogin to az\n\n"
@@ -49,6 +48,12 @@ else
     az account show
 fi
 
+ISAZLOGGEDIN=$(az account show | grep name)
+if [ -z "$ISAZLOGGEDIN" ]
+then
+    printf "\nERROR:Login unsuccessfull\n"
+    exit 1
+fi
 
 isexists=$(az group show --name ${AZ_GROUP_NAME} | jq -r '.id')
 if [[ -z $isexists ]]
