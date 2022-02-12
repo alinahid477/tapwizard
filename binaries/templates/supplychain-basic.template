@@ -2,7 +2,7 @@ supply_chain: basic
 
 ootb_supply_chain_basic:
   registry:
-    server: "<SUPPLY-CHAIN-REGISTRY-SERVER>"
-    repository: "<SUPPLY-CHAIN-REGISTRY-REPO>"
+    server: "<PVT_REGISTRY_SERVER>"
+    repository: "<PVT_REGISTRY_REPO>"
   gitops:
     ssh_secret: "<GITOPS-SECRET-NAME>"

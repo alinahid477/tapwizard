@@ -5,11 +5,11 @@
         "isRecordAsEnvVar": true
     },
     {
-        "name": "<SUPPLY-CHAIN-REGISTRY-SERVER>",
+        "name": "<PVT_REGISTRY_SERVER>",
         "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io"
     },
     {
-        "name": "<SUPPLY-CHAIN-REGISTRY-REPO>",
+        "name": "<PVT_REGISTRY_REPO>",
         "hint": "This is where workload images are stored in the registry.\nImages are written to SERVER-NAME/REPO-NAME/workload-name.\neg: my-project/petclinic or my-dockerhub-username"
     },
     {

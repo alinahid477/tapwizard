@@ -136,6 +136,13 @@ buildProfile () {
         # so, <NAME-OF-THE-VARIABLE> is modified to NAME_OF_THE_VARIABLE
         inputvar=$(echo "${v}" | sed 's/[<>]//g' | sed 's/[-]/_/g')
         
+        # read hint from pompts variable file and display it
+        hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $templateFilesDIR/$promptsForVariablesJSON)
+        if [[ -n $hint && $hint != null ]]
+        then
+            printf "$inputvar Hint: ${bluecolor}$hint ${normalcolor}\n"
+        fi
+
         unset inp
         # dynamic variable-->eg: variable name (NAME_OF_THE_VARIABLE) in a variable ('inputvar')
         # the way to access the value dynamic variable is: ${!inputvar}
@@ -143,12 +150,6 @@ buildProfile () {
         # if input variable does not exist as environment variable (meaning if the value is empty or unset that means variable does not exists)
         if [[ -z ${!inputvar} ]]; then 
             # when does not exist prompt user to input value
-            hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $templateFilesDIR/$promptsForVariablesJSON)
-            isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
-            if [[ -n $hint && $hint != null ]]
-            then
-                printf "$inputvar Hint: ${bluecolor}$hint ${normalcolor}\n"
-            fi
             isinputneeded='y'
             while [[ -z $inp ]]; do
                 read -p "input value for $inputvar: " inp
@@ -158,7 +159,9 @@ buildProfile () {
                 fi
             done
             sed -i 's|'${v}'|'$inp'|g' $baseProfileFile
-            # add to .env for later use (eg: during developer namespace creation)
+            
+            # add to .env for later use if instructed in the prompt file (eg: during developer namespace creation)
+            isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)
             if [[ -n $isRecordAsEnvVar && $isRecordAsEnvVar == true ]]
             then
                 printf "\n" >> $HOME/.env
