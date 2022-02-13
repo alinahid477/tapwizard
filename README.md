@@ -5,26 +5,27 @@
 A wizard like UI (GUI coming soon) for Tanzu Application Platform. The goal is to:
 - Provide a installer experience to get TAP deployed on the k8s cluster
 - provide a wizard experience to create TAP profile to support the architecture described here: https://github.com/vmware-tanzu-labs/tanzu-validated-solutions/blob/main/src/reference-designs/tap-architecture-planning.md
-- Quick, Easy and Fast way to demo TAP 
+- Quick, Easy and Fast way to install TAP 
 - Quick, Easy and Fast way to start using TAP
 
 ** few things are WIP .. will be updated soon
 
 ## pre-req
 - docker ce or ee installed locally
-- download tanu cli (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418), and place the tar in binaries directory
-- download cluster essential for vmware tanzu (https://network.pivotal.io/products/tanzu-cluster-essentials#/releases/1011100) and place the tgz in binaries directory.
-- download tap gui (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418/file_groups/6091) 
+- download `tanu framework` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418), and place the tar in `binaries` directory
+- download `cluster essential for vmware tanzu` (https://network.pivotal.io/products/tanzu-cluster-essentials#/releases/1011100) and place the tgz in `binaries` directory.
+- download `tap gui` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418/file_groups/6091) 
     - untar the tar.gz
     - create a git public repository and clone it
-    - add the untar-ed/inflated contents to the git and push the untar (eg: blank or yelp) 
+    - add the untar-ed/inflated contents to the git repo and push the untar (eg: blank or yelp) 
     - grab the url of catalog-info.yaml (eg: https://github.com/alinahid477/tap-gui/blob/main/blank/catalog-info.yaml) and keep it handy.
-- k8 cluster (aks, eks). [TKGs --- coming soon].
-    - create a k8s cluster (**This wizard can also create aks k8s cluster**)
-        - if you have created k8s cluster outside of this wizard grab the kubeconfig file and place it in the .kube directory
-        - if you do not have a k8s cluster handy the wizard will detect and prompt for creating a cluster (post cluster create it will add the kubeconfig file in .kube directory)
-            - **creating aks cluster**: ceate service principal app with necessary permissions and keep the app id, tenantid and app secret handy.
-- you own container registry details (see below env variable)
+- kubeconfig file of a k8 cluster (aks, eks). [TKGs --- coming soon].
+    - **If k8s cluster is not pre-existing** create a new k8s cluster (**This wizard can create aks k8s cluster**)
+        - if there's no kubeconfig detected the wizard will prompt for creating a new cluster (post cluster create it will add the kubeconfig file in `.kube` directory)
+        - **creating aks cluster**: ceate service principal app with necessary permissions and keep the app id, tenantid and app secret handy.
+    - **if there's already a k8s cluster** get the kubeconfig file for the cluser and place it in the `.kube` directory with name `config`
+        - this wizard will detect the available contexts and prompt for selecting the the right one.
+- Container registry details (see below env variable)
 - .env file (see below)
 
 ## .env
