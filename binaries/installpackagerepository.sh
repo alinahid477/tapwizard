@@ -106,13 +106,9 @@ installPackageRepository()
         DIR="$HOME/tanzu-cluster-essentials"
         if [ ! -d "$DIR" ]
         then
-            printf "Creating new dir:$DIR...\n"
-            mkdir $HOME/tanzu-cluster-essentials || returnOrexit && return 1
-            if [[ $isreturnorexit == 'return' ]]
-            then
-                printf "\nNot proceed further...\n"
-                return 1
-            fi
+            printf "Creating new dir:$DIR..."
+            mkdir $HOME/tanzu-cluster-essentials && printf "OK" || printf "FAILED"
+            printf "\n"
         else
             printf "\n$DIR already exits...\n"
             while true; do
@@ -127,6 +123,10 @@ installPackageRepository()
         if [[ $doinflate == 'n' ]]
         then
             returnOrexit && return 1;
+        fi
+        if [ ! -d "$DIR" ]
+        then
+            returnOrexit && return 1
         fi
         printf "\nExtracting $clusteressentialsbinary in $DIR\n"
         tar -xvf ${clusteressentialsbinary} -C $HOME/tanzu-cluster-essentials/ || returnOrexit
@@ -187,13 +187,9 @@ installPackageRepository()
         DIR="$HOME/tanzu"
         if [ ! -d "$DIR" ]
         then
-            printf "Creating new $DIR...\n"
-            mkdir $HOME/tanzu || returnOrexit
-            if [[ $isreturnorexit == 'return' ]]
-            then
-                printf "\nNot proceed further...\n"
-                return 1
-            fi
+            printf "Creating new $DIR..."
+            mkdir $HOME/tanzu && printf "OK" || printf "FAILED"
+            printf "\n"
         else
             printf "$DIR already exits...\n"
             while true; do
@@ -208,6 +204,11 @@ installPackageRepository()
         if [[ $doinflate == 'n' ]]
         then
             returnOrexit && return 1;
+        fi
+        if [ ! -d "$DIR" ]
+        then
+            printf "\nNot proceed further...\n"
+            returnOrexit && return 1
         fi
         printf "\nExtracting $tanzuclibinary in $DIR....\n"
         tar -xvf $tanzuclibinary -C $HOME/tanzu/ || returnOrexit
