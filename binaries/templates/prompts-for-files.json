@@ -15,7 +15,7 @@
     },
     {
         "name": "learningcentre",
-        "packagename": "learningcenter.tanzu.vmware.com",
+        "packagenames": ["learningcenter.tanzu.vmware.com", "workshops.learningcenter.tanzu.vmware.com"],
         "filename":"learningcentre.template",
         "prompt": "Would you like to add GUI learing centre?"
     },
