@@ -77,7 +77,7 @@ while [[ $isregistered == 'Registered' && $count -lt 15 ]]; do
 done
 
 printf "\nCreate aks cluster in rg:${AZ_GROUP_NAME} name:${AZ_AKS_CLUSTER_NAME} of nodesize:${AZ_AKS_VM_SIZE} with nodecount:${AZ_AKS_NODE_COUNT}\n"
-az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CLUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy #--node-osdisk-size 500 #--enable-addons monitoring
+az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CLUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy --generate-ssh-keys #--node-osdisk-size 500 #--enable-addons monitoring
 
 printf "\naks cluster get credential. This should create /root/.kube/config file...\n"
 az aks get-credentials --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CLUSTER_NAME}
