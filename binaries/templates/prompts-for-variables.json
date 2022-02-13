@@ -35,6 +35,10 @@
         "hint": "This is the namespace where you want the ScanTemplates to be deployed to and scanning feature is going to run."
     },
     {
+        "name": "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>",
+        "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credential here."
+    },
+    {
         "name": "<LEARNING-CENTER-DOMAIN-NAME>",
         "hint": "This is the domain name for learing centre.\n(eg: learningcenter.example.com).\nThe domain does not have to exist now.\nIt can be created later once the ip address is obtained\nOR, it can be changed later through updating profile\nfor example: learningcenter.1.2.3.4.nip.io where 1.2.3.4 is the ip of tanzu-shared-ingress service’s External IP address."
     },
