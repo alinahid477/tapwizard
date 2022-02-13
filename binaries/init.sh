@@ -86,6 +86,25 @@ then
             fi
         fi        
     done
+else
+    printf "\n\nExisting kubeconfig file found. Checkings number of contexts..."
+    numberofcontexts=$(kubectl config get-contexts --no-headers -o name | wc -l)
+    printf "$numberofcontexts\n"
+    if [[ $numberofcontexts -gt 1 ]]
+    then
+        printf "More than 1 context found.\navailable contexts are....\n"
+        kubectl config get-contexts
+        while true; do
+            read -p "input the name of the context for TAP deployment: " inp
+            if [[ -z $inp ]]
+            then
+                printf "empty value is not allowed.\n"
+            else 
+                kubectl config use-context $inp && printf "context switched to $inp\n" || exit 1
+                break
+            fi        
+        done
+    fi   
 fi
 
 if [[ -n $TKG_VSPHERE_SUPERVISOR_ENDPOINT ]]

@@ -133,6 +133,6 @@ then
 
     if [[ -n $confirmed && $confirmed == 'y' ]]
     then
-        printf "\nTODO: Kick off developer workspace script\n"
+        source $HOME/binaries/installdevnamespace.sh
     fi
 fi
