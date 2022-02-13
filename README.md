@@ -25,7 +25,7 @@ A wizard like UI (GUI coming soon) for Tanzu Application Platform
 - .env file (see below)
 
 ## .env
-Run `mv .env.sample .env`
+Run `cp .env.sample .env`
 
 fill out the necessary details (ignore the vsphere related variables for now)
 

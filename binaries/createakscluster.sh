@@ -18,7 +18,7 @@ fi
 
 source $HOME/binaries/scripts/extract-and-take-input.sh
 
-if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ] || [ -z "$AZ_GROUP_NAME" ] || [ -z "$AZ_LOCATION" ] || [ -z "$AZ_AKS_CUSTER_NAME" ] || [ -z "$AZ_AKS_VM_SIZE" ] || [ -z "$AZ_AKS_NODE_COUNT" ]
+if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ] || [ -z "$AZ_GROUP_NAME" ] || [ -z "$AZ_LOCATION" ] || [ -z "$AZ_AKS_CLUSTER_NAME" ] || [ -z "$AZ_AKS_VM_SIZE" ] || [ -z "$AZ_AKS_NODE_COUNT" ]
 then
     printf "\n\nNo AZ config found.\nGoing to collect from user and save it in .env for future use....\n\n"
     cp $HOME/binaries/templates/az-aks-variables.template /tmp/az-aks-variables.env.tmp || exit 1
@@ -76,11 +76,11 @@ while [[ $isregistered == 'Registered' && $count -lt 15 ]]; do
     ((count=$count+1))
 done
 
-printf "\nCreate aks cluster in rg:${AZ_GROUP_NAME} name:${AZ_AKS_CUSTER_NAME} of nodesize:${AZ_AKS_VM_SIZE} with nodecount:${AZ_AKS_NODE_COUNT}\n"
-az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy #--node-osdisk-size 500 #--enable-addons monitoring
+printf "\nCreate aks cluster in rg:${AZ_GROUP_NAME} name:${AZ_AKS_CLUSTER_NAME} of nodesize:${AZ_AKS_VM_SIZE} with nodecount:${AZ_AKS_NODE_COUNT}\n"
+az aks create --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CLUSTER_NAME} --node-count ${AZ_AKS_NODE_COUNT} --node-vm-size ${AZ_AKS_VM_SIZE} --enable-pod-security-policy #--node-osdisk-size 500 #--enable-addons monitoring
 
 printf "\naks cluster get credential. This should create /root/.kube/config file...\n"
-az aks get-credentials --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CUSTER_NAME}
+az aks get-credentials --resource-group ${AZ_GROUP_NAME} --name ${AZ_AKS_CLUSTER_NAME}
 
 printf "\ncreating clusterrolebinding:tap-psp-rolebinding --group=system:authenticated --clusterrole=psp:privileged...\n"
 kubectl create clusterrolebinding tap-psp-rolebinding --group=system:authenticated --clusterrole=psp:privileged
