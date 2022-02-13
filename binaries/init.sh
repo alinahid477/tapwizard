@@ -72,13 +72,19 @@ if [[ ! -f $HOME/.kube/config ]]
 then
     printf "\n\nNo kubeconfig found in $HOME/.kube/config. Would you like to create one:\n"
     while true; do
-        read -p "which k8s cluster would you like to create? [aks]: " inp
+        read -p "which k8s cluster would you like to create? [aks, none]: " inp
         if [[ $inp == 'aks' ]]
         then
             source $HOME/binaries/createakscluster.sh
-        else
-            printf "Invalid input given.\nEither add config file in .kube dir of this dir OR provide a valid value for cluster create.\n"
-        fi
+            break
+        else 
+            if [[ $inp == 'none' ]]
+            then
+                exit 1
+            else
+                printf "Invalid input given.\nEither add config file in .kube dir of this dir OR provide a valid value for cluster create.\n"
+            fi
+        fi        
     done
 fi
 
