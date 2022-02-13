@@ -74,13 +74,15 @@ installProfile()
             reconcileStatus=$(tanzu package installed list -A -o json | jq -r '.[] | select(.name == "tap") | .status')
             if [[ $reconcileStatus == *@("failed")* ]]
             then
+                printf "Did not get a Reconcile successful. Received status: $reconcileStatus\n."
                 reconcileStatus=''
             fi
             if [[ $reconcileStatus == *@("succeeded")* ]]
             then
+                printf "Received status: $reconcileStatus\n."
                 break
             fi
-            printf "wait 2m before checking again ($count out of 4)...."
+            printf "wait 2m before checking again ($count out of 4 max)...."
             ((count=$count+1))
             sleep 2m
         done
@@ -103,7 +105,7 @@ installProfile()
         then
             printf "\nExtracting ip of the load balancer...."
             lbip=$(kubectl get svc -n tanzu-system-ingress -o json | jq -r '.items[] | select(.spec.type == "LoadBalancer" and .metadata.name == "envoy") | .status.loadBalancer.ingress[0].ip')
-            printf $lbip
+            printf "IP: $lbip"
             printf "\n"
             printf "${bluecolor}use this ip to create A record in the DNS zone or update profile with this ip if using xip.io or nip.io ${normalcolor}\n"
             printf "${bluecolor}To update run the below command: ${normalcolor}\n"
