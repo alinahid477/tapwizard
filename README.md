@@ -64,7 +64,9 @@ start.bat
 follow the prompt of the UI for a guided experience of installing TAP on k8s
 
 ## Demo Video:
-https://youtu.be/vHhRGqbM3uU
+
+[![Watch the video](https://img.youtube.com/vi/vHhRGqbM3uU/default.jpg)](https://youtu.be/vHhRGqbM3uU)
+
 
 
 
