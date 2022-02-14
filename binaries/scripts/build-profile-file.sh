@@ -87,10 +87,13 @@ buildProfileFile () {
                 filename=$(echo $filename | sed 's|\$|'$selectedOption'|g')
             fi
 
-            # append the content of the chunked file to the profile file.
-            printf "adding configs for $promptName...."
-            cat $templateFilesDIR/$filename >> $baseProfileFile && printf "ok." || printf "failed."
-            printf "\n\n" >> $baseProfileFile
+            if [[ -n $filename && $filename != null ]]
+            then
+                # append the content of the chunked file to the profile file.
+                printf "adding configs for $promptName...."
+                cat $templateFilesDIR/$filename >> $baseProfileFile && printf "ok." || printf "failed."
+                printf "\n\n" >> $baseProfileFile
+            fi
             printf "\n"
         else
             # whenever the user select 'n' to installing a component of the profile add them in the excluded packages list
