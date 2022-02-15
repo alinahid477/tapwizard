@@ -299,7 +299,6 @@ then
     if [[ -n $istapinstall ]]
     then
         printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
-        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
         sed -i '/INSTALL_TAP_PROFILE/d' /root/.env
         printf "\nINSTALL_TAP_PROFILE=COMPLETED" >> /root/.env
         export INSTALL_TAP_PROFILE=COMPLETED
@@ -311,6 +310,7 @@ then
         fi
     fi
 fi
+
 if [[ -n $INSTALL_TAP_PROFILE && $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
 then
     printf "\n\nINSTALL_TAP_PROFILE is marked as $INSTALL_TAP_PROFILE.\n"
