@@ -312,6 +312,7 @@ then
     fi
 fi
 if [[ -n $INSTALL_TAP_PROFILE && $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
+then
     printf "\n\nINSTALL_TAP_PROFILE is marked as $INSTALL_TAP_PROFILE.\n"
     if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
     then
