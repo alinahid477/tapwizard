@@ -276,23 +276,47 @@ printf "DONE\n\n\n"
 
 printf "\n\n************Checking if TAP is already installed on k8s cluster**********\n"
 
+if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL || $INSTALL_TANZU_CLUSTER_ESSENTIAL != 'COMPLETED' ]]
+then
+    printf "Checking cluster essential in k8s...\n"
+    isclusteressential=$(kubectl get configmaps -n tanzu-cluster-essentials | grep -sw 'kapp-controller')
+    if [[ -n $isclusteressential ]]
+    then
+        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
+        sed -i '/INSTALL_TANZU_CLUSTER_ESSENTIAL/d' /root/.env
+        printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED" >> /root/.env
+        export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
+    fi
+fi
+
 # This logic is flawd. Need to change to something solid
 sleep 1
 isexist='y'
 if [[ -z $INSTALL_TAP_PROFILE || $INSTALL_TAP_PROFILE != 'COMPLETED' ]]
 then
-    printf "\n\nTAP is not found in the k8s cluster (ns: tap-install is missing).\n\n"
-    if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
+    printf "Checking tap-install in k8s...\n"
+    istapinstall=$(kubectl get packageinstalls.packaging.carvel.dev -n tap-install | grep -w tap)
+    if [[ -n $istapinstall ]]
     then
-        isexist="n"
+        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
+        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
+        sed -i '/INSTALL_TAP_PROFILE/d' /root/.env
+        printf "\nINSTALL_TAP_PROFILE=COMPLETED" >> /root/.env
+        export INSTALL_TAP_PROFILE=COMPLETED
+    else
+        printf "TAP is not found in the k8s cluster (ns: tap-install is missing or empty).\n\n"
+        if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
+        then
+            isexist="n"
+        fi
     fi
-else
+fi
+if [[ -n $INSTALL_TAP_PROFILE && $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
     printf "\n\nINSTALL_TAP_PROFILE is marked as $INSTALL_TAP_PROFILE.\n"
     if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
     then
         # printf "Checking tap package version..."
         # istapversion=$(tanzu package available list tap.tanzu.vmware.com --namespace tap-install -o json | jq -r '[ .[] | {version: .version, released: .["released-at"]|split(" ")[0]} ] | sort_by(.released) | reverse[0] | .version')
-        
         printf "\n\n.env is not marked as complete. Marking as complete.\n\n"
         sed -i '/COMPLETE/d' /root/.env
         printf "\nCOMPLETE=YES" >> /root/.env
