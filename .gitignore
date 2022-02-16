@@ -12,6 +12,13 @@
 .docker
 tanzu-cluster-essentials
 tanzu
+.m2
+.redhat
+.sts4
+.tilt-dev
+.vscode
+.vscode-server
+
 
 .ssh/*
 !.ssh/.gitkeep
@@ -29,3 +36,5 @@ binaries/*
 !binaries/templates
 tapconfigs/*
 !tapconfigs/.gitkeep
+apps/*
+!apps/.gitkeep

@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
 	nano \
 	net-tools \
 	libdigest-sha-perl \
+	default-jdk \
 	&& curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
 	&& chmod +x /usr/local/bin/kubectl
 
@@ -29,7 +30,8 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
 	&& rm docker-${DOCKERVERSION}.tgz
 # RUN curl -sSL https://get.docker.com/ | sh
 
-
+RUN curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash; exit 0 
+RUN  mv tilt /usr/local/bin/ && tilt version
 
 COPY binaries/init.sh /usr/local/
 

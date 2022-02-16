@@ -2,7 +2,6 @@
 .kube
 .local
 .docker
-.docker/config.json
 .vmware-cna-saas
 .azure
 .tanzu
@@ -14,3 +13,15 @@ tanzu
 tanzu-cluster-essentials
 *.tgz
 *.tar
+.m2
+.tilt-dev
+.vscode
+.vscode-server
+.cache
+apps
+.m2
+.redhat
+.sts4
+.tilt-dev
+.vscode
+.vscode-server
