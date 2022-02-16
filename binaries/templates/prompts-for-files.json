@@ -45,5 +45,10 @@
         "filename":"cnrs.template",
         "prompt": "Would you like to add cloud native runtime?",
         "hint": "This enables to deploy serverless on the k8s cluster."
+    },
+    {
+        "name": "API Portal",
+        "packagename": "api-portal.tanzu.vmware.com",        
+        "prompt": "Would you like to add api-portal?"
     }
 ]
