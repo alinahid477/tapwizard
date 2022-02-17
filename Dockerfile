@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
 	net-tools \
 	libdigest-sha-perl \
 	default-jdk \
+	git \
 	&& curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
 	&& chmod +x /usr/local/bin/kubectl
 

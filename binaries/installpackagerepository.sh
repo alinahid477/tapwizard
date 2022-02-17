@@ -16,6 +16,8 @@ returnOrexit()
     fi
 }
 
+source $HOME/binaries/scripts/install-cluster-essential-tarfile.sh
+source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
 
 installPackageRepository()
 {
@@ -37,208 +39,41 @@ installPackageRepository()
     #     printf "\nERROR: Access information to container registry is missing.\n"
     # fi
     
-    printf "\nChecking Tanzu cluster essential binary..."
-    sleep 1
-    isinflatedCE='n'
-    DIR="$HOME/tanzu-cluster-essentials"
-    if [ -d "$DIR" ]
+    installClusterEssentialTarFile
+    installTanzuFrameworkTarFile
+
+
+    unset performinstall
+    if [[ -n $INSTALL_TANZU_CLUSTER_ESSENTIAL && $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
     then
-        if [ "$(ls -A $DIR)" ]; then
-            isinflatedCE='y'
-            printf "\nFound cluster essential is already inflated in $DIR.\nSkipping further checks.\n"
-        fi
+        printf "\nFound tanzu-cluster-essential installation is marked as complete\n"
+        while true; do
+            read -p "Do you want to trigger deployment again? [y/n]: " yn
+            case $yn in
+                [Yy]* ) performinstall="y"; printf "you confirmed yes\n"; break;;
+                [Nn]* ) performinstall="n";printf "You said no.\n"; break;;
+                * ) echo "Please answer y or n.";;
+            esac
+        done
+    else
+        performinstall='y'
     fi
-    sleep 1
-    if [[ $isinflatedCE == 'n' ]]
+    if [[ $performinstall == 'y' ]]
     then
-        clusteressentialsbinary=$(ls ~/binaries/tanzu-cluster-essentials-linux-amd64*)
-        if [[ -z $clusteressentialsbinary ]]
-        then
-            printf "\nERROR: tanzu-cluster-essentials-linux-amd64-x.x.x.tgz is a required binary for TAP installation.\nYou must place this binary under binaries directory.\n"
-            returnOrexit && return 1
-        else
-            numberoftarfound=$(find ~/binaries/tanzu-cluster-essentials-linux-amd64* -type f -printf "." | wc -c)
-            if [[ $numberoftarfound -gt 1 ]]
-            then
-                printf "\nERROR: More than 1 tanzu-cluster-essentials-linux-amd64-x.x.x.tgz found in the binaries directory.\nOnly 1 is allowed.\n"
-                returnOrexit && return 1
-            fi
-        fi
+        printf "\nInstalling cluster essential in k8s cluster...\n\n"
+        sleep 1
+        cd $HOME/tanzu-cluster-essentials
+        source ./install.sh
+        printf "\nTanzu cluster essential instllation....COMPLETED\n\n"
     fi
-    printf "COMPLETED.\n\n"
+    if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL ]]
+    then
+        printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED\n" >> $HOME/.env
+        export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
+    fi
     sleep 2
 
-    printf "\nChecking Tanzu Framework binary..."
-    sleep 1
-    isinflatedTZ='n'
-    DIR="$HOME/.config/tanzu"
-    if [ -d "$DIR" ]
-    then
-        if [ "$(ls -A $DIR)" ]; then
-            isinflatedTZ='y'
-            printf "\nFound tanzu cli is already inflated in $DIR.\nSkipping further checks.\n"
-        fi
-    fi
-    sleep 1
-    if [[ $isinflatedTZ == 'n' ]]
-    then
-        tanzuclibinary=$(ls ~/binaries/tanzu-framework-linux-amd64*)
-        if [[ -z $tanzuclibinary ]]
-        then
-            printf "\nERROR: tanzu-framework-linux-amd64.tar is a required binary for TAP installation.\nYou must place this binary under binaries directory.\n"
-            returnOrexit && return 1
-        else
-            numberoftarfound=$(find ~/binaries/tanzu-framework-linux-amd64* -type f -printf "." | wc -c)
-            if [[ $numberoftarfound -gt 1 ]]
-            then
-                printf "\nERROR: More than 1 tanzu-framework-linux-amd64.tar found in the binaries directory.\nOnly 1 is allowed.\n"
-                returnOrexit && return 1
-            fi
-        fi
-    fi
-    printf "COMPLETED\n\n"
-    sleep 2
-
-    if [[ $isinflatedCE == 'n' && -n $clusteressentialsbinary ]]
-    then
-        printf "\nInflating Tanzu cluster essential...\n"
-        sleep 1
-        DIR="$HOME/tanzu-cluster-essentials"
-        if [ ! -d "$DIR" ]
-        then
-            printf "Creating new dir:$DIR..."
-            mkdir $HOME/tanzu-cluster-essentials && printf "OK" || printf "FAILED"
-            printf "\n"
-        else
-            printf "\n$DIR already exits...\n"
-            while true; do
-                read -p "Confirm to untar in $DIR [y/n]: " yn
-                case $yn in
-                    [Yy]* ) doinflate="y"; printf "\nyou confirmed yes\n"; break;;
-                    [Nn]* ) doinflate="n";printf "\n\nYou said no.\n"; break;;
-                    * ) echo "Please answer y or n.";;
-                esac
-            done
-        fi
-        if [[ $doinflate == 'n' ]]
-        then
-            returnOrexit && return 1;
-        fi
-        if [ ! -d "$DIR" ]
-        then
-            returnOrexit && return 1
-        fi
-        printf "\nExtracting $clusteressentialsbinary in $DIR\n"
-        tar -xvf ${clusteressentialsbinary} -C $HOME/tanzu-cluster-essentials/ || returnOrexit
-        if [[ $isreturnorexit == 'return' ]]
-        then
-            printf "\nNot proceed further...\n"
-            return 1
-        fi
-        printf "$clusteressentialsbinary extract in in $DIR....COMPLETED\n\n"
-
-        unset performinstall
-        if [[ -n $INSTALL_TANZU_CLUSTER_ESSENTIAL && $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
-        then
-            printf "\nFound tanzu-cluster-essential installation is marked as complete\n"
-            while true; do
-                read -p "Do you want to trigger deployment again? [y/n]: " yn
-                case $yn in
-                    [Yy]* ) performinstall="y"; printf "you confirmed yes\n"; break;;
-                    [Nn]* ) performinstall="n";printf "You said no.\n"; break;;
-                    * ) echo "Please answer y or n.";;
-                esac
-            done
-        else
-            performinstall='y'
-        fi
-        if [[ $performinstall == 'y' ]]
-        then
-            printf "\nInstalling cluster essential in k8s cluster...\n\n"
-            sleep 1
-            cd $HOME/tanzu-cluster-essentials
-            source ./install.sh
-            cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp || returnOrexit
-            if [[ $isreturnorexit == 'return' ]]
-            then
-                printf "\nNot proceed further...\n"
-                return 1
-            fi
-            chmod +x /usr/local/bin/kapp || returnOrexit
-            if [[ $isreturnorexit == 'return' ]]
-            then
-                printf "\nNot proceed further...\n"
-                return 1
-            fi
-            printf "checking kapp...."
-            kapp version
-            printf "\nTanzu cluster essential instllation....COMPLETED\n\n"
-        fi
-        if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL ]]
-        then
-            printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED\n" >> $HOME/.env
-        fi
-        sleep 2
-    fi
-    if [[ $isinflatedTZ == 'n' && -n $tanzuclibinary ]]
-    then
-        printf "\nInflating Tanzu CLI...\n"
-        sleep 1
-        DIR="$HOME/tanzu"
-        if [ ! -d "$DIR" ]
-        then
-            printf "Creating new $DIR..."
-            mkdir $HOME/tanzu && printf "OK" || printf "FAILED"
-            printf "\n"
-        else
-            printf "$DIR already exits...\n"
-            while true; do
-                read -p "Confirm to untar in $DIR [y/n]: " yn
-                case $yn in
-                    [Yy]* ) doinflate="y"; printf "\nyou confirmed yes\n"; break;;
-                    [Nn]* ) doinflate="n";printf "\n\nYou said no.\n"; break;;
-                    * ) echo "Please answer y or n.";;
-                esac
-            done
-        fi
-        if [[ $doinflate == 'n' ]]
-        then
-            returnOrexit && return 1;
-        fi
-        if [ ! -d "$DIR" ]
-        then
-            printf "\nNot proceed further...\n"
-            returnOrexit && return 1
-        fi
-        printf "\nExtracting $tanzuclibinary in $DIR....\n"
-        tar -xvf $tanzuclibinary -C $HOME/tanzu/ || returnOrexit
-        if [[ $isreturnorexit == 'return' ]]
-        then
-            printf "\nNot proceed further...\n"
-            return 1
-        fi
-        printf "\n$tanzuclibinary extract in $DIR......COMPLETED.\n\n"
-        
-        printf "\nClean install tanzu cli...\n"
-        sleep 1
-
-        tanzuframworkVersion=$(ls $HOME/tanzu/cli/core/ | grep "^v[0-9\.]*$")        
-        if [[ -z $tanzuframworkVersion ]]
-        then
-            printf "\nERROR: could not found version dir in the tanzu/cli/core.\n"
-            returnOrexit && return 1;
-        fi
-        cd $HOME/tanzu || returnOrexit
-        install cli/core/$tanzuframworkVersion/tanzu-core-linux_amd64 /usr/local/bin/tanzu || returnOrexit
-        chmod +x /usr/local/bin/tanzu || returnOrexit
-        tanzu version || returnOrexit
-        printf "installing tanzu plugin from local..."
-        tanzu plugin install --local cli all || returnOrexit
-        printf "COMPLETE.\n"
-        tanzu plugin list
-        printf "\nTanzu framework installation...COMPLETE.\n\n"
-        sleep 2
-    fi
+    
 
     unset confirmed
     while true; do

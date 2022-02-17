@@ -241,36 +241,10 @@ while true; do
 done
 
 printf "\n\n************Checking installed binaries**************\n\n"
-DIR="$HOME/tanzu-cluster-essentials"
-if [ -d "$DIR" ]
-then
-    if [ "$(ls -A $DIR)" ]; then
-        printf "\nFound cluster essential dir $DIR. Linking kapp..\n"
-        cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp
-        chmod +x /usr/local/bin/kapp
-        sleep 2
-        kapp --version
-        sleep 1
-    fi
-fi
-
-DIR="$HOME/tanzu"
-if [ -d "$DIR" ]
-then
-    if [ "$(ls -A $DIR)" ]; then
-        printf "\nFound tanzu dir $DIR. Linking tanzu..\n"
-        tanzuframworkVersion=$(ls $HOME/tanzu/cli/core/ | grep "^v[0-9\.]*$")        
-        if [[ -z $tanzuframworkVersion ]]
-        then
-            printf "\nERROR: could not found version dir in the tanzu/cli/core.\n"
-            returnOrexit && return 1;
-        fi
-        install $HOME/tanzu/cli/core/$tanzuframworkVersion/tanzu-core-linux_amd64 /usr/local/bin/tanzu
-        chmod +x /usr/local/bin/tanzu
-        tanzu version
-        sleep 2            
-    fi
-fi
+source $HOME/binaries/scripts/install-cluster-essential-tarfile.sh
+source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
+installClusterEssentialTarFile
+installTanzuFrameworkTarFile
 printf "DONE\n\n\n"
 
 
@@ -282,7 +256,7 @@ then
     isclusteressential=$(kubectl get configmaps -n tanzu-cluster-essentials | grep -sw 'kapp-controller')
     if [[ -n $isclusteressential ]]
     then
-        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
+        printf "Found kapp-controller in the k8s but .env is not marked as complete. Marking as complete.\n"
         sed -i '/INSTALL_TANZU_CLUSTER_ESSENTIAL/d' /root/.env
         printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED" >> /root/.env
         export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
