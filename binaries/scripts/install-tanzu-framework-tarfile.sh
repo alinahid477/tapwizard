@@ -93,8 +93,7 @@ installTanzuFrameworkTarFile () {
     isexist=$(tanzu version)
     if [[ -d $DIR && -z $isexist ]]
     then
-        printf "\nClean install tanzu cli...\n"
-        sleep 1
+        printf "\nLinking tanzu cli...\n"
         tanzuframworkVersion=$(ls $HOME/tanzu/cli/core/ | grep "^v[0-9\.]*$")        
         if [[ -z $tanzuframworkVersion ]]
         then
@@ -105,11 +104,15 @@ installTanzuFrameworkTarFile () {
         install cli/core/$tanzuframworkVersion/tanzu-core-linux_amd64 /usr/local/bin/tanzu || returnOrexit
         chmod +x /usr/local/bin/tanzu || returnOrexit
         tanzu version || returnOrexit
-        printf "installing tanzu plugin from local..."
-        tanzu plugin install --local cli all || returnOrexit
-        printf "COMPLETE.\n"
-        tanzu plugin list
-        printf "\nTanzu framework installation...COMPLETE.\n\n"
+        # if [[ ! -d $HOME/.config ]]
+        # then
+        #     printf "installing tanzu plugin from local..."
+        #     tanzu plugin install --local cli all || returnOrexit
+        #     printf "COMPLETE.\n"
+        #     tanzu plugin list
+        #     printf "\nTanzu framework installation...COMPLETE.\n\n"
+        # fi
         sleep 2
+        printf "DONE\n\n"
     fi
 }
