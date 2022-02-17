@@ -104,14 +104,14 @@ installTanzuFrameworkTarFile () {
         install cli/core/$tanzuframworkVersion/tanzu-core-linux_amd64 /usr/local/bin/tanzu || returnOrexit
         chmod +x /usr/local/bin/tanzu || returnOrexit
         tanzu version || returnOrexit
-        # if [[ ! -d $HOME/.config ]]
-        # then
-        #     printf "installing tanzu plugin from local..."
-        #     tanzu plugin install --local cli all || returnOrexit
-        #     printf "COMPLETE.\n"
-        #     tanzu plugin list
-        #     printf "\nTanzu framework installation...COMPLETE.\n\n"
-        # fi
+        if [[ ! -d $HOME/.local/share/tanzu-cli ]]
+        then
+            printf "installing tanzu plugin from local..."
+            tanzu plugin install --local cli all || returnOrexit
+            printf "COMPLETE.\n"
+            tanzu plugin list
+            printf "\nTanzu framework installation...COMPLETE.\n\n"
+        fi
         sleep 2
         printf "DONE\n\n"
     fi
