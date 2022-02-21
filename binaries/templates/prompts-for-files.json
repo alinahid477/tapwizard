@@ -1,10 +1,16 @@
 [
     {
         "name": "buildservice",
-        "packagename": "buildservice.tanzu.vmware.com",
+        "packagenames": ["buildservice.tanzu.vmware.com", "build.appliveview.tanzu.vmware.com"],
         "filename":"buildservice.template",
         "prompt": "Would you like to add build service?",
-        "hint": "recommended for devsecops"
+        "hint": "recommended for devsecops (build/dev cluster)"
+    },
+    {
+        "name": "deliveryservice",
+        "packagename": "ootb-delivery-basic.tanzu.vmware.com",
+        "prompt": "Would you like to add delivery service?",
+        "hint": "recommended for devsecops delivery (run/dev cluster)"
     },
     {
         "name": "ingress",
@@ -23,21 +29,22 @@
         "name": "scanner",
         "packagename": "scanning.apps.tanzu.vmware.com",
         "filename":"scanner.template",
-        "prompt": "Would you like to add scanner for image scanning?"
+        "prompt": "Would you like to add scanner for image scanning? (Recommended for dev, build clusters)"
     },
     {
         "name": "supply chain",
         "packagenames": ["ootb-supply-chain-basic.tanzu.vmware.com", "ootb-supply-chain-testing.tanzu.vmware.com", "ootb-supply-chain-testing-scanning.tanzu.vmware.com"],
         "filename":"supplychain-$.template",
         "prompt": "Would you like to add supply chain?",
-        "options": ["basic","testing","testing-scanning"]
+        "options": ["basic","testing","testing-scanning"],
+        "hint": "recommended for build, dev clusters"
     },
     {
         "name": "TapGUI",
-        "packagename": "tap-gui.tanzu.vmware.com",
+        "packagenames": ["tap-gui.tanzu.vmware.com", "accelerator.apps.tanzu.vmware.com"],
         "filename":"tapgui.template",
         "prompt": "Would you like to add tap-gui?",
-        "hint": "recommended"
+        "hint": "recommended for dev, gui cluster"
     },
     {
         "name": "CNR",
@@ -47,8 +54,20 @@
         "hint": "This enables to deploy serverless on the k8s cluster."
     },
     {
+        "name": "Convention Service",
+        "packagenames": ["controller.conventions.apps.tanzu.vmware.com", "developer-conventions.tanzu.vmware.com", "spring-boot-conventions.tanzu.vmware.com"],
+        "prompt": "Would you like to add convention service?",
+        "hint": "Convention Service provides a means for people in operational roles to express their hard-won knowledge and opinions about how applications should run on Kubernetes as a convention.\n(recommended for build, dev cluster)"
+    },
+    {
         "name": "API Portal",
         "packagename": "api-portal.tanzu.vmware.com",        
         "prompt": "Would you like to add api-portal?"
+    },
+    {
+        "name": "Service Binding",
+        "packagenames": ["service-bindings.labs.vmware.com", "services-toolkit.tanzu.vmware.com"],
+        "prompt": "Would you like to add Service Binding Capability?",
+        "hint": "A Service Binding describes the connection between a Provisioned Service and an Workload Projection.\nRead more at: https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-service-bindings-about.html\nRecommended for dev, run cluster"
     }
 ]
