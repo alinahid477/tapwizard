@@ -22,7 +22,7 @@ extractVariableAndTakeInput () {
     while [[ $i -lt ${#extracts[*]} ]] ; do
         containsElement "${extracts[$i]}" "${keys[@]}"
         ret=$?
-        if [[ $ret == 0 ]]
+        if [[ $ret == 1 ]]
         then
             keys+=("${extracts[$i]}")
         fi

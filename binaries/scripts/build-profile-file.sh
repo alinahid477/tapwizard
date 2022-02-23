@@ -71,7 +71,7 @@ buildProfileFile () {
                     # this is why I converted the JsonArray into bash array (as mentioned above)
                     containsElement "${selectedOption}" "${options[@]}"
                     ret=$?
-                    if [[ $ret == 0 ]]
+                    if [[ $ret == 1 ]]
                     then
                         unset selectedOption
                         printf "You must input a valid value from the available options.\n"
