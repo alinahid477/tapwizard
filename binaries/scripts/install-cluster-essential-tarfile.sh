@@ -33,13 +33,13 @@ installClusterEssentialTarFile () {
         if [[ -z $clusteressentialsbinary ]]
         then
             printf "\nERROR: tanzu-cluster-essentials-linux-amd64-x.x.x.tgz is a required binary for TAP installation.\nYou must place this binary under binaries directory.\n"
-            returnOrexit && return 1
+            returnOrexit || return 1
         else
             numberoftarfound=$(find ~/binaries/tanzu-cluster-essentials-linux-amd64* -type f -printf "." | wc -c)
             if [[ $numberoftarfound -gt 1 ]]
             then
                 printf "\nERROR: More than 1 tanzu-cluster-essentials-linux-amd64-x.x.x.tgz found in the binaries directory.\nOnly 1 is allowed.\n"
-                returnOrexit && return 1
+                returnOrexit || return 1
             fi
         fi
     fi
@@ -73,11 +73,11 @@ installClusterEssentialTarFile () {
         fi
         if [[ $doinflate == 'n' ]]
         then
-            returnOrexit && return 1;
+            returnOrexit || return 1;
         fi
         if [ ! -d "$DIR" ]
         then
-            returnOrexit && return 1
+            returnOrexit || return 1
         fi
         printf "\nExtracting $clusteressentialsbinary in $DIR\n"
         tar -xvf ${clusteressentialsbinary} -C $HOME/tanzu-cluster-essentials/ || returnOrexit

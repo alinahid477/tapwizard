@@ -47,7 +47,7 @@ createDevNS () {
         if [[ -z $isexist ]]
         then
             printf "ERROR: Failed to create namespace: $namespacename\n"
-            returnOrexit && return 1
+            returnOrexit || return 1
         fi
     fi
 

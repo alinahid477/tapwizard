@@ -42,7 +42,7 @@ installProfile()
 
         if [[ $confirmed == 'n' ]]
         then
-            returnOrexit && return 1
+            returnOrexit || return 1
         fi
 
         if [[ -z $TAP_PACKAGE_VERSION ]]
@@ -51,7 +51,7 @@ installProfile()
             printf "Execute below command manually:\n"
             printf "tanzu package install tap -p tap.tanzu.vmware.com -v {TAP_PACKAGE_VERSION} --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s\n"
             printf "${bluecolor}Where TAP_PACKAGE_VERSION is the version of the tap.tanzu.vmware.com you want to install${normalcolor}\n"
-            returnOrexit && return 1
+            returnOrexit || return 1
         fi
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
         #printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"

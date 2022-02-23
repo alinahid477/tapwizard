@@ -29,7 +29,7 @@ installPackageRepository()
     if [[ -z $INSTALL_REGISTRY_USERNAME || -z $INSTALL_REGISTRY_PASSWORD ]]
     then
         printf "\nERROR: Tanzu Net username or password missing.\n"
-        returnOrexit && return 1
+        returnOrexit || return 1
     fi
     sleep 1
     printf "COMPLETED.\n\n"
@@ -88,7 +88,7 @@ installPackageRepository()
     if [[ $confirmed == 'n' ]]
     then
         printf "\nNot proceed further...\n"
-        returnOrexit && return 1
+        returnOrexit || return 1
     fi
 
     isexist=$(kubectl get ns | grep "^tap-install")
