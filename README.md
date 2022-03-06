@@ -3,7 +3,7 @@
 <img src="images/logo.png" alt="Merlin-TAP" width=200 height=210/>
 
 A wizard like UI (GUI coming soon) for Tanzu Application Platform. The goal is to:
-- Provide a installer experience to get TAP deployed on the k8s cluster
+- Provide an installer experience to get TAP deployed on the k8s cluster
 - provide a wizard experience to create TAP profile to support the architecture described here: https://github.com/vmware-tanzu-labs/tanzu-validated-solutions/blob/main/src/reference-designs/tap-architecture-planning.md
 - Quick, Easy and Fast way to install TAP 
 - Quick, Easy and Fast way to start using TAP
