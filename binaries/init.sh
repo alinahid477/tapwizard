@@ -2,68 +2,34 @@
 
 export $(cat /root/.env | xargs)
 
+if [[ ! -f $HOME/binaries/scripts/returnOrexit.sh ]]
+then
+    if [[ ! -d  "$HOME/binaries/scripts" ]]
+    then
+        mkdir -p $HOME/binaries/scripts
+    fi
+    printf "\n\n************Downloading Common Scripts**************\n\n"
+    curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o $HOME/binaries/scripts/download-common-scripts.sh
+    chmod +x $HOME/binaries/scripts/download-common-scripts.sh
+    $HOME/binaries/scripts/download-common-scripts.sh tap scripts
+    sleep 1
+    if [[ -n $BASTION_HOST ]]
+    then
+        $HOME/binaries/scripts/download-common-scripts.sh bastion scripts/bastion
+        sleep 1
+    fi
+    printf "\n\n\n///////////// COMPLETED //////////////////\n\n\n"
+    printf "\n\n"
+fi
+
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
 
-if [[ -n $BASTION_HOST ]]
-then
-    isexists=$(ls -l /root/.ssh/id_rsa)
-    if [[ -n $isexists ]]
-    then
-        chmod 600 /root/.ssh/id_rsa 
-        isrsacommented=$(cat ~/Dockerfile | grep '#\s*COPY .ssh/id_rsa /root/.ssh/')
-        if [[ -n $isrsacommented ]]
-        then
-            printf "\n\nBoth id_rsa file and bastion host input found...\n"
-            printf "Adjusting the dockerfile to include id_rsa...\n"
-            
-            sed -i '/COPY .ssh\/id_rsa \/root\/.ssh\//s/^# //' ~/Dockerfile
-            sed -i '/RUN chmod 600 \/root\/.ssh\/id_rsa/s/^# //' ~/Dockerfile
+source $HOME/binaries/scripts/returnOrexit.sh
+source $HOME/binaries/scripts/color-file.sh
+source $HOME/binaries/scripts/init-prechecks.sh
 
-            printf "\n\nDockerfile is now adjusted with id_rsa.\n\n"
-            printf "\n\nPlease rebuild the docker image and run again (or ./start.sh tbs forcebuild).\n\n"
-            exit 1
-        fi
-    else
-        printf "\nERROR: Bastion host input provided but no id_rsa present in .ssh directory.\n"
-        printf "You must place the private key called \"id_rsa\" in .ssh directory and add the public key to the bastion host server.\n"
-        printf "exit 1...\n"
-        exit
-    fi
-fi
-
-
-if [[ -n $TMC_API_TOKEN ]]
-then
-    printf "\nChecking TMC cli...\n"
-    ISTMCEXISTS=$(tmc --help)
-    sleep 1
-    if [ -z "$ISTMCEXISTS" ]
-    then
-        printf "\n\ntmc command does not exist.\n\n"
-        printf "\n\nChecking for binary presence...\n\n"
-        IS_TMC_BINARY_EXISTS=$(ls ~/binaries/ | grep tmc)
-        sleep 2
-        if [ -z "$IS_TMC_BINARY_EXISTS" ]
-        then
-            printf "\n\nBinary does not exist in ~/binaries directory.\n"
-            printf "\nIf you like to access k8s cluster using TMC then please download tmc binary from https://{orgname}.tmc.cloud.vmware.com/clidownload and place in the ~/binaries directory.\n"
-            printf "\nAfter you have placed the binary file you can, additionally, uncomment the tmc relevant in the Dockerfile.\n\n"
-            printf "\n\nERROR: TMC_API_TOKEN specified but TMC binary is not present in binaries directory.\nExiting...\n\n"
-            exit 1
-        else
-            printf "\n\nTMC binary found...\n"
-            printf "\n\nAdjusting Dockerfile\n"
-            sed -i '/COPY binaries\/tmc \/usr\/local\/bin\//s/^# //' ~/Dockerfile
-            sed -i '/RUN chmod +x \/usr\/local\/bin\/tmc/s/^# //' ~/Dockerfile
-            sleep 2
-            printf "\nDONE..\n"
-            printf "\n\nPlease build this docker container again and run.\nor ./start.sh merlin-tap forcebuild\n"
-            exit 1
-        fi
-    fi
-fi
 
 
 printf "\n\n\n***********Checking kubeconfig...*************\n"
@@ -241,10 +207,10 @@ while true; do
 done
 
 printf "\n\n************Checking installed binaries**************\n\n"
-source $HOME/binaries/scripts/install-cluster-essential-tarfile.sh
-source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
-installClusterEssentialTarFile
-installTanzuFrameworkTarFile
+source $HOME/binaries/scripts/install-cluster-essential.sh
+source $HOME/binaries/scripts/install-tanzu-cli.sh
+installClusterEssential
+installTanzuCLI
 printf "DONE\n\n\n"
 
 

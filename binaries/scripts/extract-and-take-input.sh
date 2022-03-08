@@ -10,18 +10,18 @@ extractVariableAndTakeInput () {
     local bluecolor=$(tput setaf 4)
     local normalcolor=$(tput sgr0)
 
-    baseVariableFile=$1
+    local baseVariableFile=$1
     
     printf "extracting variables for user input....\n"
     # extract variable from file (variable format is: <NAME-OF-THE-VARIABLE>)
-    extracts=($(grep -o '<[A-Za-z0-9_\-]*>' $baseVariableFile))
-    keys=()
+    local extracts=($(grep -o '<[A-Za-z0-9_\-]*>' $baseVariableFile))
+    local keys=()
 
     # populate keys with unique values only (in the file there may be multiple occurances of same variables)
     i=0
     while [[ $i -lt ${#extracts[*]} ]] ; do
-        containsElement "${extracts[$i]}" "${keys[@]}"
-        ret=$?
+        local containsElement "${extracts[$i]}" "${keys[@]}"
+        local ret=$?
         if [[ $ret == 1 ]]
         then
             keys+=("${extracts[$i]}")
@@ -30,7 +30,7 @@ extractVariableAndTakeInput () {
     done
 
 
-    isinputneeded='n'
+    local isinputneeded='n'
 
     # iterate over each variable name that may need user input (if not exist as environment variable)
     for v in "${keys[@]}"; do
@@ -40,10 +40,10 @@ extractVariableAndTakeInput () {
         # 1. Modify to remove '<' and '>'
         # 2. Modify to replace '-' with '_'
         # so, <NAME-OF-THE-VARIABLE> is modified to NAME_OF_THE_VARIABLE
-        inputvar=$(echo "${v}" | sed 's/[<>]//g' | sed 's/[-]/_/g')
+        local inputvar=$(echo "${v}" | sed 's/[<>]//g' | sed 's/[-]/_/g')
         
         # read hint from pompts variable file and display it
-        hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $templateFilesDIR/$promptsForVariablesJSON)
+        local hint=$(jq -r '.[] | select(.name == "'$v'") | .hint' $templateFilesDIR/$promptsForVariablesJSON)
         if [[ -n $hint && $hint != null ]]
         then
             printf "$inputvar Hint: ${bluecolor}$hint ${normalcolor}\n"
@@ -59,8 +59,10 @@ extractVariableAndTakeInput () {
         #     sed -i '/'$inputvar'/d' /root/.env
         #     sleep 1
         # fi
+        
+        local useSpecialReplace=$(jq -r '.[] | select(.name == "'$v'") | .use_special_replace' $templateFilesDIR/$promptsForVariablesJSON)
 
-        unset inp
+        local inp=''
         # dynamic variable-->eg: variable name (NAME_OF_THE_VARIABLE) in a variable ('inputvar')
         # the way to access the value dynamic variable is: ${!inputvar}
 
@@ -76,7 +78,18 @@ extractVariableAndTakeInput () {
                     printf "empty value is not allowed.\n"
                 fi
             done
-            sed -i 's|'${v}'|'$inp'|g' $baseVariableFile
+
+            
+            # printf "\nDBG: $useSpecialReplace\n"
+            if [[ -n $useSpecialReplace && $useSpecialReplace == true ]]
+            then
+                awk -v old=${v} -v new="$inp" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' $baseVariableFile > $baseVariableFile.tmp && mv $baseVariableFile.tmp $baseVariableFile
+                sleep 1
+            else
+                sed -i 's|'${v}'|'$inp'|g' $baseVariableFile
+            fi
+
+            
             
             # read this property to see if this variable should be recorded in .env file for usage in developer workspace (eg: git-ops-secret)
             isRecordAsEnvVar=$(jq -r '.[] | select(.name == "'$v'") | .isRecordAsEnvVar' $templateFilesDIR/$promptsForVariablesJSON)

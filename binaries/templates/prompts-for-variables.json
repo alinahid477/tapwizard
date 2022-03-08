@@ -5,6 +5,25 @@
         "isRecordAsEnvVar": true
     },
     {
+        "name": "<GIT_SERVER_HOST>",
+        "hint": "Gitrepo host name. eg: github.com, bitbucket.org."
+    },
+    {
+        "name": "<GIT_SSH_PRIVATE_KEY>",
+        "hint": "Content of the Git identity private key.",
+        "use_special_replace": true
+    },
+    {
+        "name": "<GIT_SSH_PUBLIC_KEY>",
+        "hint": "Content of the Git identity public key.",
+        "use_special_replace": true
+    },
+    {
+        "name": "<GIT_SERVER_HOST_FILE>",
+        "hint": "Content of the Git ssh known_hosts file.",
+        "use_special_replace": true
+    },
+    {
         "name": "<PVT_REGISTRY_SERVER>",
         "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io",
         "isRecordAsEnvVar": true

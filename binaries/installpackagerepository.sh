@@ -39,8 +39,19 @@ installPackageRepository()
     #     printf "\nERROR: Access information to container registry is missing.\n"
     # fi
     
-    installClusterEssentialTarFile
-    installTanzuFrameworkTarFile
+    local isexist=$(which kapp)
+    if [[ -z $isexist ]]
+    then
+        printf "\nERROR: kapp not found, meaning cluster essential has not been installed.\n"
+        returnOrexit || return 1
+    fi
+    isexist=$(which tanzu)
+    if [[ -z $isexist ]]
+    then
+        printf "\nERROR: tanzu cli not found, meaning it has not been installed.\n"
+        returnOrexit || return 1
+    fi
+    
 
 
     unset performinstall
@@ -91,7 +102,7 @@ installPackageRepository()
         returnOrexit || return 1
     fi
 
-    local isexist=$(kubectl get ns | grep "^tap-install")
+    isexist=$(kubectl get ns | grep "^tap-install")
     if [[ -z $isexist ]]
     then
         printf "\nCreate namespace tap-install in k8s..."
