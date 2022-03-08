@@ -75,7 +75,7 @@ installPackageRepository()
 
     
 
-    unset confirmed
+    local confirmed=''
     while true; do
         read -p "Confirm to proceed further? [y/n]: " yn
         case $yn in

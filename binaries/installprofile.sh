@@ -105,6 +105,11 @@ installProfile()
         then
             printf "\nExtracting ip of the load balancer...."
             lbip=$(kubectl get svc -n tanzu-system-ingress -o json | jq -r '.items[] | select(.spec.type == "LoadBalancer" and .metadata.name == "envoy") | .status.loadBalancer.ingress[0].ip')
+            if [[ -z $lbip || $lbip == null ]]
+            then
+                lbip=$(kubectl get svc -n tanzu-system-ingress -o json | jq -r '.items[] | select(.spec.type == "LoadBalancer" and .metadata.name == "envoy") | .status.loadBalancer.ingress[0].hostname')
+                lbip=$(dig $lbip +short)
+            fi
             printf "IP: $lbip"
             printf "\n"
             printf "${bluecolor}use this ip to create A record in the DNS zone or update profile with this ip if using xip.io or nip.io ${normalcolor}\n"
