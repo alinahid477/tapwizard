@@ -77,10 +77,10 @@ installPackageRepository()
 
     local confirmed=''
     while true; do
-        read -p "Confirm to proceed further? [y/n]: " yn
+        read -p "Confirm to install tap-repository? [y/n]: " yn
         case $yn in
-            [Yy]* ) confirmed='y'; printf "you confirmed yes\n"; break;;
-            [Nn]* ) confirmed='n'; printf "You said no.\n\nExiting...\n\n"; break;;
+            [Yy]* ) confirmed='y'; printf "you confirmed yes\n"; break;
+            [Nn]* ) confirmed='n'; printf "You said no.\n\nExiting...\n\n"; break;
             * ) echo "Please answer y or n.";;
         esac
     done
@@ -91,7 +91,7 @@ installPackageRepository()
         returnOrexit || return 1
     fi
 
-    isexist=$(kubectl get ns | grep "^tap-install")
+    local isexist=$(kubectl get ns | grep "^tap-install")
     if [[ -z $isexist ]]
     then
         printf "\nCreate namespace tap-install in k8s..."

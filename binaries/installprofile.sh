@@ -19,6 +19,9 @@ source $HOME/binaries/scripts/generate-profile-file.sh
 
 installProfile() 
 {
+    local bluecolor=$(tput setaf 4)
+    local normalcolor=$(tput sgr0)
+
     export notifyfile=/tmp/merlin-tap-notifyfile
     if [ -f "$notifyfile" ]; then
         rm $notifyfile
@@ -28,17 +31,21 @@ installProfile()
     if [ -f "$notifyfile" ]; then
         profilefilename=$(cat $notifyfile)
     fi
-    if [[ -n $profilefilename && -f $profilefilename && $SILENTMODE != 'y' ]]
+    if [[ -n $profilefilename && -f $profilefilename ]]
     then
-        confirmed='n'
-        while true; do
-            read -p "Review the file and confirm to continue? [y/n] " yn
-            case $yn in
-                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-                [Nn]* ) printf "You confirmed no.\n"; break;;
-                * ) echo "Please answer yes or no.";
-            esac
-        done
+        export PROFILE_FILE_NAME=$profilefilename
+        local confirmed=''
+        if [[ $SILENTMODE != 'YES' ]]
+        then            
+            while true; do
+                read -p "Review the file and confirm to continue? [y/n] " yn
+                case $yn in
+                    [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                    [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                    * ) echo "Please answer yes or no.";
+                esac
+            done
+        fi
 
         if [[ $confirmed == 'n' ]]
         then

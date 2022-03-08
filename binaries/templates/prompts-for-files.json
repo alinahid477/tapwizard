@@ -27,7 +27,7 @@
     },
     {
         "name": "scanner",
-        "packagename": "scanning.apps.tanzu.vmware.com",
+        "packagenames": ["grype.scanning.apps.tanzu.vmware.com", "scanning.apps.tanzu.vmware.com"],
         "filename":"scanner.template",
         "prompt": "Would you like to add scanner for image scanning? (Recommended for dev, build clusters)"
     },

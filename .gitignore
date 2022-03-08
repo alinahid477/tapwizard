@@ -19,7 +19,8 @@ tanzu
 .vscode
 .vscode-server
 
-
+.git-ops/*
+!.git-ops/.gitkeep
 .ssh/*
 !.ssh/.gitkeep
 .kube/*

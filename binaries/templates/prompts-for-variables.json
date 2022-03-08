@@ -1,7 +1,7 @@
 [
     {
         "name": "<GITOPS-SECRET-NAME>",
-        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during development namespace config).\nFor now it is just name of the secret.\nBUT you must record this name and use the exact same name to create secret.",
+        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during developer namespace config).\nFor now it is just name of the secret.\nBUT you must record this name and use the exact same name to create secret.",
         "isRecordAsEnvVar": true
     },
     {
@@ -36,7 +36,8 @@
     },
     {
         "name": "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>",
-        "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credential here."
+        "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credential here.",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<LEARNING-CENTER-DOMAIN-NAME>",
