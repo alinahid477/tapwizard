@@ -25,3 +25,4 @@ apps
 .tilt-dev
 .vscode
 .vscode-server
+.git-ops
