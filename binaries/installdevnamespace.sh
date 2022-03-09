@@ -133,6 +133,7 @@ createDevNS () {
                 printf "COMPLETE\n"
             fi
 
+            export $(cat /root/.env | xargs)
             if [[ $selectedSupplyChainType == 'local_iteration_with_code_from_git' ]]
             then
                 local tmpCmdFile=/tmp/devnamespacecmdgitssh.tmp
@@ -151,9 +152,9 @@ createDevNS () {
             if [[ $selectedSupplyChainType == 'gitops' ]]
             then
                 export GIT_SERVER_HOST=$gitprovidername
-                export GIT_SSH_PRIVATE_KEY="$(cat $HOME/.git-ops/identity)"
-                export GIT_SSH_PUBLIC_KEY="$(cat $HOME/.git-ops/identity.pub)"
-                export GIT_SERVER_HOST_FILE="$(cat $HOME/.git-ops/known_hosts)"
+                export GIT_SSH_PRIVATE_KEY='"$(cat $HOME/.git-ops/identity)"'
+                export GIT_SSH_PUBLIC_KEY='"$(cat $HOME/.git-ops/identity.pub)\"'
+                export GIT_SERVER_HOST_FILE='"$(cat $HOME/.git-ops/known_hosts)"'
 
                 cp $HOME/binaries/templates/gitops-secret.yaml /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
                 extractVariableAndTakeInput /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
