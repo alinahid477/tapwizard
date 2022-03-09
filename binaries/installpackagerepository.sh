@@ -3,8 +3,8 @@
 
 export $(cat $HOME/.env | xargs)
 
-source $HOME/binaries/scripts/install-cluster-essential-tarfile.sh
-source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
+source $HOME/binaries/scripts/install-cluster-essential.sh
+source $HOME/binaries/scripts/install-tanzu-cli.sh
 
 installPackageRepository()
 {

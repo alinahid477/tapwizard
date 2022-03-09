@@ -133,7 +133,6 @@ createDevNS () {
                 printf "COMPLETE\n"
             fi
 
-            export $(cat /root/.env | xargs)
             if [[ $selectedSupplyChainType == 'local_iteration_with_code_from_git' ]]
             then
                 local tmpCmdFile=/tmp/devnamespacecmdgitssh.tmp
@@ -143,6 +142,7 @@ createDevNS () {
                 extractVariableAndTakeInput $tmpCmdFile
                 cmdTemplate=$(cat $tmpCmdFile)
 
+                export $(cat $HOME/.env | xargs)
 
                 printf "\nCreating new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
                 $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
@@ -158,6 +158,8 @@ createDevNS () {
 
                 cp $HOME/binaries/templates/gitops-secret.yaml /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
                 extractVariableAndTakeInput /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
+
+                export $(cat $HOME/.env | xargs)
 
                 printf "\nApplying kubectl for new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
                 kubectl apply -f /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
