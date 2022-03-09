@@ -20,7 +20,7 @@ extractVariableAndTakeInput () {
     # populate keys with unique values only (in the file there may be multiple occurances of same variables)
     i=0
     while [[ $i -lt ${#extracts[*]} ]] ; do
-        local containsElement "${extracts[$i]}" "${keys[@]}"
+        containsElement "${extracts[$i]}" "${keys[@]}"
         local ret=$?
         if [[ $ret == 1 ]]
         then
@@ -104,7 +104,21 @@ extractVariableAndTakeInput () {
             # when exists as environment variable already, no need to prompt user for input. Just replace in the file.
             inp=${!inputvar} # the value of the environment variable (here accessed as dynamic variable)
             printf "environment variable found: $inputvar=$inp\n"
-            sed -i 's|<'$inputvar'>|'$inp'|g' $baseVariableFile
+            local replaceVar=''
+            
+            if [[ $v == "<$inputvar>" ]] ## if raw and transformed varname is the same
+            then
+                replaceVar="<$inputvar>"
+            else
+                replaceVar=${v}
+            fi
+            if [[ -n $useSpecialReplace && $useSpecialReplace == true ]]
+            then
+                awk -v old=$replaceVar -v new="$inp" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' $baseVariableFile > $baseVariableFile.tmp && mv $baseVariableFile.tmp $baseVariableFile
+                sleep 1
+            else
+                sed -i 's|'$replaceVar'|'$inp'|g' $baseVariableFile
+            fi
         fi
     done
 

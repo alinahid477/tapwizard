@@ -119,7 +119,7 @@ createDevNS () {
 
             local gitprovidername=''
             while [[ -z $gitprovidername ]]; do
-                read -p "Input the hostname of they git repo? [y/n] " gitprovidername
+                read -p "Input the hostname of they git repo: " gitprovidername
                 if [[ -z $gitprovidername ]]
                 then
                     printf "WARN: empty value not allowed.\n"
@@ -170,7 +170,7 @@ createDevNS () {
     extractVariableAndTakeInput $tmpCmdFile
     cmdTemplate=$(cat $tmpCmdFile)
 
-    printf "\nCreating new secret for private registry with name: registry-credentials..."
+    printf "\nCreating new secret for private registry with name: $TARGET_REGISTRY_CREDENTIALS_SECRET_NAME..."
     $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
     printf "\n"
 
