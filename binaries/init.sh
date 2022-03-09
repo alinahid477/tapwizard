@@ -31,7 +31,6 @@ source $HOME/binaries/scripts/color-file.sh
 source $HOME/binaries/scripts/init-prechecks.sh
 
 
-
 printf "\n\n\n***********Checking kubeconfig...*************\n"
 sleep 1
 if [[ ! -f $HOME/.kube/config ]]
@@ -42,6 +41,7 @@ then
         if [[ $inp == 'aks' ]]
         then
             source $HOME/binaries/createakscluster.sh
+            createAKSCluster
             break
         else 
             if [[ $inp == 'none' ]]
@@ -72,6 +72,17 @@ else
         done
     fi   
 fi
+
+printf "\n\n************Checking cloud CLI if needed**************\n\n"
+source $HOME/binaries/scripts/install-cloud-cli.sh
+if [[ -n $AWS_ACCESS_KEY_ID ]]
+then
+    # aks cluster does NOT require az cli to be present
+    # BUT eks cluster does. Hence installing aws cli
+    installAWSCLI
+fi
+
+
 
 if [[ -n $TKG_VSPHERE_SUPERVISOR_ENDPOINT ]]
 then

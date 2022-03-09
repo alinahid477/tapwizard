@@ -1,20 +1,7 @@
 #!/bin/bash
 
 
-export $(cat /root/.env | xargs)
-
-isreturnorexit='n'
-returnOrexit()
-{
-    if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
-    then
-        isreturnorexit='return'
-        return 1
-    else
-        isreturnorexit='exit'
-        exit 1
-    fi
-}
+export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/install-cluster-essential-tarfile.sh
 source $HOME/binaries/scripts/install-tanzu-framework-tarfile.sh
