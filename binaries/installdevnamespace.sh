@@ -115,21 +115,24 @@ createDevNS () {
 
         if [[ $confirmed == 'y' ]]
         then
-            printf "Hint: ${bluecolor}Gitrepo host name. eg: github.com, bitbucket.org${normalcolor}\n"
+            if [[ ! -f $HOME/.git-ops/known_hosts ]]
+            then
+                printf "Hint: ${bluecolor}Gitrepo host name. eg: github.com, bitbucket.org${normalcolor}\n"
 
-            local gitprovidername=''
-            while [[ -z $gitprovidername ]]; do
-                read -p "Input the hostname of they git repo: " gitprovidername
-                if [[ -z $gitprovidername ]]
-                then
-                    printf "WARN: empty value not allowed.\n"
-                fi
-            done
+                local gitprovidername=''
+                while [[ -z $gitprovidername ]]; do
+                    read -p "Input the hostname of they git repo: " gitprovidername
+                    if [[ -z $gitprovidername ]]
+                    then
+                        printf "WARN: empty value not allowed.\n"
+                    fi
+                done
 
-            printf "Creating known_hosts file for $gitprovidername..."
-            ssh-keyscan $gitprovidername > $HOME/.git-ops/known_hosts || returnOrexit || return 1
-            printf "COMPLETE\n"
-
+                printf "Creating known_hosts file for $gitprovidername..."
+                ssh-keyscan $gitprovidername > $HOME/.git-ops/known_hosts || returnOrexit || return 1
+                printf "COMPLETE\n"
+            fi
+            
             if [[ $selectedSupplyChainType == 'local_iteration_with_code_from_git' ]]
             then
                 local tmpCmdFile=/tmp/devnamespacecmdgitssh.tmp
