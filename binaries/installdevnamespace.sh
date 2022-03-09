@@ -102,8 +102,8 @@ createDevNS () {
 
         printf "Here's identity.pub\n"
         cat $HOME/.git-ops/identity.pub
-        sleep 1
-
+        sleep 2
+        printf "\n\n"
         while true; do
             read -p "Confirm to continue to create secret in k8s cluster using the Git repo keypair? [y/n] " yn
             case $yn in
@@ -132,7 +132,7 @@ createDevNS () {
                 ssh-keyscan $gitprovidername > $HOME/.git-ops/known_hosts || returnOrexit || return 1
                 printf "COMPLETE\n"
             fi
-            
+
             if [[ $selectedSupplyChainType == 'local_iteration_with_code_from_git' ]]
             then
                 local tmpCmdFile=/tmp/devnamespacecmdgitssh.tmp
@@ -145,7 +145,8 @@ createDevNS () {
 
                 printf "\nCreating new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
                 $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
-                printf "\n"
+                printf "\n\n\n"
+                sleep 4
             fi
             if [[ $selectedSupplyChainType == 'gitops' ]]
             then
@@ -159,7 +160,7 @@ createDevNS () {
 
                 printf "\nApplying kubectl for new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
                 kubectl apply -f /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
-                printf "\n"
+                printf "\n\n\n"
             fi
         fi
     fi
