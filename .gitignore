@@ -27,7 +27,10 @@ tanzu
 !.kube/.gitkeep
 binaries/*
 !binaries/.gitkeep
-!binaries/scripts
+binaries/scripts/*
+!binaries/scripts/build-profile-file.sh
+!binaries/scripts/extract-and-take-input.sh
+!binaries/scripts/generate-profile-file.sh
 !binaries/installpackagerepository.sh
 !binaries/installprofile.sh
 !binaries/generate-profile-file.sh
