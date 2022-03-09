@@ -152,9 +152,9 @@ createDevNS () {
             if [[ $selectedSupplyChainType == 'gitops' ]]
             then
                 export GIT_SERVER_HOST=$gitprovidername
-                export GIT_SSH_PRIVATE_KEY='"$(cat $HOME/.git-ops/identity)"'
-                export GIT_SSH_PUBLIC_KEY='"$(cat $HOME/.git-ops/identity.pub)\"'
-                export GIT_SERVER_HOST_FILE='"$(cat $HOME/.git-ops/known_hosts)"'
+                export GIT_SSH_PRIVATE_KEY=$(cat $HOME/.git-ops/identity | base64 -w 0)
+                export GIT_SSH_PUBLIC_KEY=$(cat $HOME/.git-ops/identity.pub | base64 -w 0)
+                export GIT_SERVER_HOST_FILE=$(cat $HOME/.git-ops/known_hosts | base64 -w 0)
 
                 cp $HOME/binaries/templates/gitops-secret.yaml /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
                 extractVariableAndTakeInput /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
@@ -162,6 +162,11 @@ createDevNS () {
                 printf "\nApplying kubectl for new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
                 kubectl apply -f /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
                 printf "\n\n\n"
+                sleep 3
+                unset GIT_SERVER_HOST
+                unset GIT_SSH_PRIVATE_KEY
+                unset GIT_SSH_PUBLIC_KEY
+                unset GIT_SERVER_HOST_FILE
             fi
         fi
     fi
