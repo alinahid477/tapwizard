@@ -12,6 +12,7 @@
 .docker
 tanzu-cluster-essentials
 tanzu
+awscli
 .m2
 .redhat
 .sts4
