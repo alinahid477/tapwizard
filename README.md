@@ -68,6 +68,23 @@ follow the prompt of the UI for a guided experience of installing TAP on k8s
 [![Watch the video](https://img.youtube.com/vi/vHhRGqbM3uU/hqdefault.jpg)](https://youtu.be/vHhRGqbM3uU)
 
 
+# Flux CD Stuff
+
+- exclude `fluxcd.source.controller.tanzu.vmware.com` from RUN cluster profile
+- Manually install fluxcd (as described below)
+    - This is because with `source-control.flux.io` (which is what TAP installs) only does source code fetch
+    - We also need to "kubectl apply -f config/delivery.yaml" (delivery.yaml generated and pushed by build cluster -- supply-chain / tekton gitops)
+    - installing fluxcd the below way will also install `Kustomize.flux.io` which will do kubectl apply based on the source 
+
+https://fluxcd.io/docs/installation/
+
+```
+curl -s https://fluxcd.io/install.sh | sudo bash
+flux check --pre
+export GITHUB_TOKEN=<your-token>
+flux bootstrap github --owner=alinahid477 --repository=pvtrepo --path=flux-system --personal=true --private=true
+```
+
 
 # Some concept dump (WIP)
 

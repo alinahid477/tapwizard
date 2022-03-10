@@ -1,0 +1,35 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  labels:
+    app.kubernetes.io/component: source
+    app.kubernetes.io/part-of: tanzu-java-web-app
+  name: tanzu-java-web-app-delivery
+  namespace: spring-space
+spec:
+  gitImplementation: go-git
+  ignore: |
+    /*
+    !/config
+  interval: 1m0s
+  ref:
+    branch: release
+  secretRef:
+    name: git-ssh
+  timeout: 20s
+  url: ssh://git@github.com/alinahid477/tapdemo-java-app.git
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: tanzu-java-web-app
+  namespace: spring-space
+spec:
+  interval: 1m0s
+  path: ./config
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: tanzu-java-web-app-delivery
+  targetNamespace: spring-space
