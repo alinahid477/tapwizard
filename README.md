@@ -83,6 +83,8 @@ curl -s https://fluxcd.io/install.sh | sudo bash
 flux check --pre
 export GITHUB_TOKEN=<your-token>
 flux bootstrap github --owner=alinahid477 --repository=pvtrepo --path=flux-system --personal=true --private=true
+## Modify the binaries/templates/fluxcd-run.yaml file accordingly and run the below
+kubectl deploy -f binaries/templates/fluxcd-run.yaml
 ```
 
 
