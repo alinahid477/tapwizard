@@ -186,8 +186,14 @@ createDevNS () {
     $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
     printf "\n"
 
-    printf "\nCreating RBAC, SA for associating TAP and registry with name: default..."
-    kubectl apply -n $namespacename -f $HOME/binaries/templates/workload-ns-setup.yaml && printf "OK" || printf "FAILED"
+    printf "\nGenerating RBAC, SA for associating TAP and registry using name: default..."
+    cp $HOME/binaries/templates/workload-ns-setup.yaml /tmp/workload-ns-setup-$namespacename.yaml
+    extractVariableAndTakeInput /tmp/workload-ns-setup-$namespacename.yaml
+
+    printf "\n"
+
+    printf "\nCreating RBAC, RB, SA for associating TAP and registry using name: default..."
+    kubectl apply -n $namespacename -f /tmp/workload-ns-setup-$namespacename.yaml && printf "OK" || printf "FAILED"
     printf "\n"
 
     printf "\n\n**** Developer namespace: $namespacename setup...COMPLETE\n\n\n"
