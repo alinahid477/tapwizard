@@ -1,0 +1,43 @@
+profile: full
+ceip_policy_disclosed: true 
+
+metadata_store:
+  app_service_type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
+
+buildservice:
+  kp_default_repository: "<KP-DEFAULT-REPO>"
+  kp_default_repository_username: "<KP-DEFAULT-REPO-USERNAME>"
+  kp_default_repository_password: "<KP-DEFAULT-REPO-PASSWORD>"
+  tanzunet_username: "<INSTALL_REGISTRY_USERNAME>"
+  tanzunet_password: "<INSTALL_REGISTRY_PASSWORD>"
+  descriptor_name: "<DESCRIPTOR_NAME>"
+  enable_automatic_dependency_updates: true
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+tap_gui:
+  service_type: ClusterIP
+  ingressEnabled: "true"
+  ingressDomain: "<INGRESS-DOMAIN>"
+  app_config:
+    app:
+      baseUrl: http://tap-gui.<INGRESS-DOMAIN>
+    catalog:
+      locations:
+        - type: url
+          target: https://<GIT-CATALOG-URL>/catalog-info.yaml
+    backend:
+      baseUrl: http://tap-gui.<INGRESS-DOMAIN>
+      cors:
+        origin: http://tap-gui.<INGRESS-DOMAIN>
+
+
+
+
+
+
+
+

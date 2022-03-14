@@ -2,6 +2,7 @@
 export $(cat /root/.env | xargs)
 
 source $HOME/binaries/scripts/contains-element.sh
+source $HOME/binaries/scripts/keyvaluefile-functions.sh
 
 # read what to prompt for user input from a json file.
 buildProfileFile () {
@@ -17,12 +18,28 @@ buildProfileFile () {
     # iterate over array in json file (json file starts with array)
     # base64 decode is needed so that jq format is per line. Otherwise gettting value from the formatted item object becomes impossible 
     for promptItem in $(jq -r '.[] | @base64' $templateFilesDIR/$promptsForFilesJSON); do
-        printf "\n\n"
-
         _jq() {
             echo ${promptItem} | base64 --decode | jq -r ${1}
         }
-        unset confirmed
+
+
+        # if there's a condition for display this block then first check if condition is met or not
+        local conditionalvalue=$(echo $(_jq '.conditionalvalue'))
+        local ret=255
+        if [[ -n $conditionalvalue && $conditionalvalue != null ]]
+        then
+            local returnedValue=$(conditionalValueParser $variableFile ${conditionalvalue[@]})
+            if [[ -z $returnedValue ]]
+            then
+                # condition is false. skip this block as this does not apply. 
+                # eg PROFILE_TYPE=full || PROFILE_TYPE=lite
+                continue
+            fi
+        fi
+
+        printf "\n\n"
+
+        local confirmed=''
         promptName=$(echo $(_jq '.name')) # get property value of property called "name" from itemObject (aka array element object)
         prompt=$(echo $(_jq '.prompt'))
         hint=$(echo $(_jq '.hint'))
@@ -105,10 +122,20 @@ buildProfileFile () {
             then
                 readarray -t packagenames < <(echo $(_jq '.packagenames') | jq -rc '.[]')
                 for packagename in "${packagenames[@]}"; do
-                    excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+                    if [[ -z $excluded_packages_STR ]]
+                    then
+                        excluded_packages_STR="  - $packagename"
+                    else
+                        excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+                    fi                    
                 done
             else
-                excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+                if [[ -z $excluded_packages_STR ]]
+                then
+                    excluded_packages_STR="  - $packagename"
+                else
+                    excluded_packages_STR="$excluded_packages_STR\n  - $packagename"
+                fi
             fi
             
             printf "\n"
@@ -116,18 +143,36 @@ buildProfileFile () {
     done
 
     # this is special. This does not align with the above generic logic 
-    if [[ -n $excluded_packages_STR ]]
+    local exclErr=''
+    local exclProfileType=$PROFILE_TYPE
+    if [[ -z $exclProfileType ]]
     then
-        filename='excluded_packages.template'
-        replace='<EXCLUDED-PACKAGES-LIST>'
-        printf "\n"
-        printf "Adding excluded_packages...."
-        sleep 2
-        cp $templateFilesDIR/$filename /tmp/
-        awk -v old="${replace}" -v new="${excluded_packages_STR}" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' /tmp/$filename > /tmp/$filename.tmp
-        # sed -i 's|'$replace'|'$excluded_packages_STR'|' /tmp/$filename
-        cat /tmp/$filename.tmp >> $baseProfileFile && printf "ok." || printf "failed."
-        printf "\n\n" >> $baseProfileFile
-        printf "\n"
+        exclProfileType='full'
     fi
+    local exclFilename="excluded_packages-$exclProfileType.template"
+    local exclReplace='<EXCLUDED-PACKAGES-LIST>'
+    printf "\n"
+    printf "Adding excluded_packages...."
+    sleep 2
+    cp $templateFilesDIR/$exclFilename /tmp/ || exclErr='failed'
+    if [[ -n $exclErr ]]
+    then
+        printf "FAILED.\n"
+        returnOrexit || return 1
+    fi
+    awk -v old="${exclReplace}" -v new="${excluded_packages_STR}" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' /tmp/$exclFilename > /tmp/$exclFilename.tmp || exclErr='failed'
+    # sed -i 's|'$replace'|'$excluded_packages_STR'|' /tmp/$filename
+    if [[ -n $exclErr ]]
+    then
+        printf "FAILED.\n"
+        returnOrexit || return 1
+    fi
+    cat /tmp/$exclFilename.tmp >> $baseProfileFile || exclErr="failed"
+    if [[ -n $exclErr ]]
+    then
+        printf "FAILED.\n"
+        returnOrexit || return 1
+    fi
+    printf "\n\n" >> $baseProfileFile
+    printf "\n"
 }

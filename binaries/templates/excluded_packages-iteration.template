@@ -1,0 +1,7 @@
+excluded_packages:
+  - learningcenter.tanzu.vmware.com
+  - workshops.learningcenter.tanzu.vmware.com
+  - api-portal.tanzu.vmware.com 
+<EXCLUDED-PACKAGES-LIST>
+
+

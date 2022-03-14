@@ -26,7 +26,7 @@ installProfile()
     if [ -f "$notifyfile" ]; then
         rm $notifyfile
     fi
-    unset profilefilename
+    local profilefilename=''
     generateProfile
     if [ -f "$notifyfile" ]; then
         profilefilename=$(cat $notifyfile)

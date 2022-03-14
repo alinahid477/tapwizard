@@ -1,0 +1,11 @@
+excluded_packages: 
+  - ootb-delivery-basic.tanzu.vmware.com
+  - learningcenter.tanzu.vmware.com
+  - workshops.learningcenter.tanzu.vmware.com
+  - tap-gui.tanzu.vmware.com
+  - accelerator.apps.tanzu.vmware.com
+  - cnrs.tanzu.vmware.com
+  - api-portal.tanzu.vmware.com
+  - service-bindings.labs.vmware.com
+  - services-toolkit.tanzu.vmware.com
+<EXCLUDED-PACKAGES-LIST>

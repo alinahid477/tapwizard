@@ -1,6 +1,7 @@
 [
     {
         "name": "buildservice",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["buildservice.tanzu.vmware.com", "build.appliveview.tanzu.vmware.com"],
         "filename":"buildservice.template",
         "prompt": "Would you like to add build service?",
@@ -8,12 +9,14 @@
     },
     {
         "name": "deliveryservice",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "ootb-delivery-basic.tanzu.vmware.com",
         "prompt": "Would you like to add delivery service?",
         "hint": "recommended for devsecops delivery (run/dev cluster)"
     },
     {
         "name": "ingress",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "contour.tanzu.vmware.com",
         "filename":"ingress.template",
         "prompt": "Would you like to add ingress?",
@@ -21,12 +24,14 @@
     },
     {
         "name": "learningcentre",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["learningcenter.tanzu.vmware.com", "workshops.learningcenter.tanzu.vmware.com"],
         "filename":"learningcentre.template",
         "prompt": "Would you like to add GUI learing centre?"
     },
     {
         "name": "scanner",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["grype.scanning.apps.tanzu.vmware.com", "scanning.apps.tanzu.vmware.com"],
         "filename":"scanner.template",
         "prompt": "Would you like to add scanner for image scanning? (Recommended for dev, build clusters)"
@@ -41,6 +46,7 @@
     },
     {
         "name": "TapGUI",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["tap-gui.tanzu.vmware.com", "accelerator.apps.tanzu.vmware.com"],
         "filename":"tapgui.template",
         "prompt": "Would you like to add tap-gui?",
@@ -48,6 +54,7 @@
     },
     {
         "name": "CNR",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "cnrs.tanzu.vmware.com",
         "filename":"cnrs.template",
         "prompt": "Would you like to add cloud native runtime?",
@@ -55,17 +62,20 @@
     },
     {
         "name": "Convention Service",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["controller.conventions.apps.tanzu.vmware.com", "developer-conventions.tanzu.vmware.com", "spring-boot-conventions.tanzu.vmware.com"],
         "prompt": "Would you like to add convention service?",
         "hint": "Convention Service provides a means for people in operational roles to express their hard-won knowledge and opinions about how applications should run on Kubernetes as a convention.\n(recommended for build, dev cluster)"
     },
     {
         "name": "API Portal",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "api-portal.tanzu.vmware.com",        
         "prompt": "Would you like to add api-portal?"
     },
     {
         "name": "Service Binding",
+        "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["service-bindings.labs.vmware.com", "services-toolkit.tanzu.vmware.com"],
         "prompt": "Would you like to add Service Binding Capability?",
         "hint": "A Service Binding describes the connection between a Provisioned Service and an Workload Projection.\nRead more at: https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-service-bindings-about.html\nRecommended for dev, run cluster"
