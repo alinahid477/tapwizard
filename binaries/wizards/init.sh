@@ -301,10 +301,7 @@ then
 fi
 
 
-printf "\nYour available wizards are:\n"
-echo -e "\t~/binaries/installpackagerepository.sh"
-echo -e "\t~/binaries/installprofile.sh"
-echo -e "\t~/binaries/installdevnamespace.sh"
-cd ~
+printf "\nUsage merlin --help\n"
 
+cd ~
 /bin/bash
