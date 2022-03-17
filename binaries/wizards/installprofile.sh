@@ -1,38 +1,32 @@
 #!/bin/bash
 
-export $(cat /root/.env | xargs)
+export $(cat $HOME/.env | xargs)
 
-isreturnorexit='n'
-returnOrexit()
-{
-    if [[ "${BASH_SOURCE[0]}" != "${0}" ]]
-    then
-        isreturnorexit='return'
-        return 1
-    else
-        isreturnorexit='exit'
-        exit 1
-    fi
-}
-
+source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/generate-profile-file.sh
 
 installProfile() 
 {
     local bluecolor=$(tput setaf 4)
     local normalcolor=$(tput sgr0)
+    local profilefilename=$1
 
-    export notifyfile=/tmp/merlin-tap-notifyfile
-    if [ -f "$notifyfile" ]; then
-        rm $notifyfile
+    if [[ -z $profilefilename ]]
+    then
+        export notifyfile=/tmp/merlin-tap-notifyfile
+        if [ -f "$notifyfile" ]; then
+            rm $notifyfile
+        fi
+        
+        generateProfile
+        if [ -f "$notifyfile" ]; then
+            profilefilename=$(cat $notifyfile)
+        fi
     fi
-    local profilefilename=''
-    generateProfile
-    if [ -f "$notifyfile" ]; then
-        profilefilename=$(cat $notifyfile)
-    fi
+    
     if [[ -n $profilefilename && -f $profilefilename ]]
     then
+        unset notifyfile
         export PROFILE_FILE_NAME=$profilefilename
         local confirmed=''
         if [[ $SILENTMODE != 'YES' ]]
@@ -52,17 +46,33 @@ installProfile()
             returnOrexit || return 1
         fi
 
-        if [[ -z $TAP_PACKAGE_VERSION ]]
+        printf "\n\nChecking installed tap package version....."
+        local tapPackageVersion=$(tanzu package available list tap.tanzu.vmware.com --namespace tap-install -o json | jq -r '[ .[] | {version: .version, released: .["released-at"]|split(" ")[0]} ] | sort_by(.released) | reverse[0] | .version')
+        printf "found $tapPackageVersion\n\n"
+        if [[ -z $tapPackageVersion ]]
         then
-            printf "\nERROR: package version could not be retrieved.\n"
+            printf "\n${redcolor}ERROR: package version could not be retrieved.${normalcolor}\n"
             printf "Execute below command manually:\n"
             printf "tanzu package install tap -p tap.tanzu.vmware.com -v {TAP_PACKAGE_VERSION} --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s\n"
-            printf "${bluecolor}Where TAP_PACKAGE_VERSION is the version of the tap.tanzu.vmware.com you want to install${normalcolor}\n"
+            printf "${yellowcolor}Where TAP_PACKAGE_VERSION is the version of the tap.tanzu.vmware.com you want to install${normalcolor}\n"
             returnOrexit || return 1
+        else
+            if [[ -n $TAP_PACKAGE_VERSION && "$TAP_PACKAGE_VERSION" != "$tapPackageVersion" ]]
+            then
+                printf "\n${redcolor}WARN: .env variable TAP_PACKAGE_VERSION=$TAP_PACKAGE_VERSION does not match version installed on cluster tapPackageVersion=$tapPackageVersion.${normalcolor}\n"
+                while true; do
+                    read -p "confirm to continue install profile using version $tapPackageVersion? [y/n] " yn
+                    case $yn in
+                        [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                        [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; returnOrexit || return 1;;
+                        * ) echo "Please answer yes or no.";
+                    esac
+                done
+            fi
         fi
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
         #printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"
-        tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s
+        tanzu package install tap -p tap.tanzu.vmware.com -v $tapPackageVersion --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s
 
         printf "\nwait 2m...\n"
         sleep 2m
@@ -147,6 +157,6 @@ then
 
     if [[ -n $confirmed && $confirmed == 'y' ]]
     then
-        source $HOME/binaries/installdevnamespace.sh
+        source $HOME/binaries/wizards/installdevnamespace.sh
     fi
 fi

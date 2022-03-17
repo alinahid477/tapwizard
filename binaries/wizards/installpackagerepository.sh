@@ -3,6 +3,7 @@
 
 export $(cat $HOME/.env | xargs)
 
+source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/install-cluster-essential.sh
 source $HOME/binaries/scripts/install-tanzu-cli.sh
 
@@ -161,5 +162,5 @@ done
 
 if [[ $confirmed == 'y' ]]
 then
-    source $HOME/binaries/installprofile.sh
+    source $HOME/binaries/wizards/installprofile.sh
 fi

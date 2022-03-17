@@ -27,6 +27,7 @@ awscli
 .kube/*
 !.kube/.gitkeep
 binaries/*
+!binaries/wizards
 !binaries/.gitkeep
 binaries/scripts/*
 !binaries/scripts/build-profile-file.sh
@@ -41,5 +42,3 @@ binaries/scripts/*
 !binaries/templates
 tapconfigs/*
 !tapconfigs/.gitkeep
-apps/*
-!apps/.gitkeep

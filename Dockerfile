@@ -34,7 +34,11 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
 RUN curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash; exit 0 
 RUN  mv tilt /usr/local/bin/ && tilt version
 
-COPY binaries/init.sh /usr/local/
+COPY binaries/wizards/init.sh /usr/local/
+RUN chmod +x /usr/local/init.sh
+
+COPY binaries/wizards/merlin.sh /usr/local/bin/merlin
+RUN chmod +x /usr/local/bin/merlin
 
 # COPY .ssh/id_rsa /root/.ssh/
 # RUN chmod 600 /root/.ssh/id_rsa

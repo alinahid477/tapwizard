@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-export $(cat /root/.env | xargs)
+export $(cat $HOME/.env | xargs)
 
-
+source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/extract-and-take-input.sh
 source $HOME/binaries/scripts/select-from-available-options.sh
 
@@ -13,7 +13,7 @@ createDevNS () {
 
     printf "\n*******Starting developer namespace wizard*******\n\n"
 
-    unset namespacename
+    local namespacename=''
     while [[ -z $namespacename ]]; do
         read -p "name of the namespace: " namespacename
         if [[ -z $namespacename && ! $namespacename =~ ^[A-Za-z0-9_\-]+$ ]]

@@ -233,10 +233,11 @@ then
     isclusteressential=$(kubectl get configmaps -n tanzu-cluster-essentials | grep -sw 'kapp-controller')
     if [[ -n $isclusteressential ]]
     then
-        printf "Found kapp-controller in the k8s but .env is not marked as complete. Marking as complete.\n"
+        printf "Found kapp-controller in the k8s but .env is not marked as complete. Marking as complete....."
         sed -i '/INSTALL_TANZU_CLUSTER_ESSENTIAL/d' /root/.env
         printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED" >> /root/.env
         export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
+        printf "DONE.\n"
     fi
 fi
 
@@ -249,10 +250,11 @@ then
     istapinstall=$(kubectl get packageinstalls.packaging.carvel.dev -n tap-install | grep -w tap)
     if [[ -n $istapinstall ]]
     then
-        printf "Found in the k8s but .env is not marked as complete. Marking as complete.\n"
+        printf "Found tap in tap-install ns in the k8s but .env is not marked as complete. Marking as complete...."
         sed -i '/INSTALL_TAP_PROFILE/d' /root/.env
         printf "\nINSTALL_TAP_PROFILE=COMPLETED" >> /root/.env
         export INSTALL_TAP_PROFILE=COMPLETED
+        printf "DONE.\n"
     else
         printf "TAP is not found in the k8s cluster (ns: tap-install is missing or empty).\n\n"
         if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
@@ -269,13 +271,14 @@ then
     then
         # printf "Checking tap package version..."
         # istapversion=$(tanzu package available list tap.tanzu.vmware.com --namespace tap-install -o json | jq -r '[ .[] | {version: .version, released: .["released-at"]|split(" ")[0]} ] | sort_by(.released) | reverse[0] | .version')
-        printf "\n\n.env is not marked as complete. Marking as complete.\n\n"
+        printf "\n\n.env is not marked as overall completed. Marking as complete...."
         sed -i '/COMPLETE/d' /root/.env
         printf "\nCOMPLETE=YES" >> /root/.env
         export COMPLETE=YES
+        printf "DONE.\n\n"
     fi
 fi
-printf "DONE\n\n\n"
+printf "INIT COMPLETE\n\n\n"
 sleep 2
 
 unset doinstall
@@ -294,7 +297,7 @@ fi
 
 if [[ $doinstall == "y" ]] 
 then
-    source ~/binaries/installpackagerepository.sh    
+    source $HOME/binaries/wizards/installpackagerepository.sh    
 fi
 
 
