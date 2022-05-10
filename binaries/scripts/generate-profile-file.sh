@@ -12,7 +12,7 @@ source $HOME/binaries/scripts/select-from-available-options.sh
 generateProfile () {
     printf "\n*******Starting profile wizard*******\n\n"
 
-    local profileTypes=("full" "lite" "iteration" "build" "run" "gui" "customfile")
+    local profileTypes=("full" "lite" "iteration" "build" "run" "view" "customfile")
     local selectedProfileType=''
     local selectedProfileMainType=''
     selectFromAvailableOptions ${profileTypes[@]}
@@ -24,7 +24,7 @@ generateProfile () {
     else
         # selected option
         selectedProfileType=${profileTypes[$ret]}
-        if [[ $selectedProfileType == 'customfile' || $selectedProfileType == 'full' || $selectedProfileType == 'iteration' || $selectedProfileType == 'build' || $selectedProfileType == 'build' || $selectedProfileType == 'run' || $selectedProfileType == 'gui' ]]
+        if [[ $selectedProfileType == 'customfile' || $selectedProfileType == 'full' || $selectedProfileType == 'iteration' || $selectedProfileType == 'build' || $selectedProfileType == 'build' || $selectedProfileType == 'run' || $selectedProfileType == 'view' ]]
         then
             selectedProfileMainType='full'
         else 

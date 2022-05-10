@@ -79,6 +79,14 @@
         "hint": "This is the domain name for learing centre.\n(eg: learningcenter.example.com).\nThe domain does not have to exist now.\nIt can be created later once the ip address is obtained\nOR, it can be changed later through updating profile\nfor example: learningcenter.1.2.3.4.nip.io where 1.2.3.4 is the ip of tanzu-shared-ingress service’s External IP address."
     },
     {
+        "name": "<IS-APP-LIVE-VIEW-SSL-DISABLED>",
+        "hint": "input true or false"
+    },
+    {
+        "name": "<APP-LIVE-VIEW-INGRESS-DOMAIN>",
+        "hint": "This is the Domain for capturing live view data. This domain should match between run and view profile.\nFor run profile provide the domain name (and a suffix \"appliveview\". is already present in the file --> Merlin will take care of it).\nOn the View profile also provide the same domain name."
+    },
+    {
         "name": "<TEST-VARIABLE>",
         "hint": "test test test"
     },

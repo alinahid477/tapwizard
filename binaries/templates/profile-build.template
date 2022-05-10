@@ -1,4 +1,4 @@
-profile: full
+profile: build
 ceip_policy_disclosed: true 
 
 metadata_store:
@@ -13,10 +13,10 @@ buildservice:
   descriptor_name: "<DESCRIPTOR_NAME>"
   enable_automatic_dependency_updates: true
 
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
+# contour:
+#   envoy:
+#     service:
+#       type: LoadBalancer
 
 grype:
   namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.

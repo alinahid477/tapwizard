@@ -42,7 +42,7 @@
         "filename":"supplychain-$.template",
         "prompt": "Would you like to add supply chain?",
         "options": ["basic","testing","testing-scanning"],
-        "hint": "recommended for build, dev clusters"
+        "hint": "recommended for build, iterate clusters"
     },
     {
         "name": "TapGUI",

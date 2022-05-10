@@ -90,6 +90,24 @@ installPackageRepository()
         returnOrexit || return 1
     fi
 
+    printf "\nChecking PSP:vmware-system-privileged in the cluster..."
+    local isvmwarepsp=$(kubectl get psp | grep -w vmware-system-privileged)
+    local istmcpsp=$(kubectl get psp | grep -w vmware-system-tmc-privileged)
+    if [[ -n $isvmwarepsp || -n $istmcpsp ]]
+    then
+        printf "FOUND\n"
+        printf "\nChecking clusterrolebinding:default-tkg-admin-privileged-binding in the cluster..."
+        local isclusterroleexist=$(kubectl get clusterrolebinding -A | grep -w default-tkg-admin-privileged-binding)
+        if [[ -z $isclusterroleexist ]]
+        then
+            printf "NOT FOUND. Creating...."
+            kubectl create clusterrolebinding default-tkg-admin-privileged-binding --clusterrole=psp:vmware-system-privileged --group=system:authenticated
+            printf "clusterrolebinding:default-tkg-admin-privileged-binding....CREATED.\n"
+        else
+            printf "FOUND.\n"
+        fi
+    fi
+
     isexist=$(kubectl get ns | grep "^tap-install")
     if [[ -z $isexist ]]
     then

@@ -1,4 +1,4 @@
-profile: full
+profile: view
 ceip_policy_disclosed: true 
 
 metadata_store:
@@ -34,7 +34,9 @@ tap_gui:
       cors:
         origin: http://tap-gui.<INGRESS-DOMAIN>
 
-
+appliveview:
+  ingressEnabled: <IS-APP-LIVE-VIEW-SSL-DISABLED>
+  ingressDomain: <APP-LIVE-VIEW-INGRESS-DOMAIN>
 
 
 

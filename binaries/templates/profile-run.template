@@ -1,4 +1,4 @@
-profile: full
+profile: run
 ceip_policy_disclosed: true 
 
 metadata_store:
@@ -14,5 +14,8 @@ cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 
-
+appliveview_connector:
+  backend:
+    sslDisabled: <IS-APP-LIVE-VIEW-SSL-DISABLED>
+    host: appliveview.<APP-LIVE-VIEW-INGRESS-DOMAIN>
 
