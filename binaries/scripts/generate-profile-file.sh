@@ -71,7 +71,8 @@ generateProfile () {
 
         if [[ -n $DESCRIPTOR_NAME ]]
         then
-            export DESCRIPTOR_NAME=$(echo "$DESCRIPTOR_NAME-$selectedProfileMainType" | xargs)
+            # export DESCRIPTOR_NAME=$(echo "$DESCRIPTOR_NAME-$selectedProfileMainType" | xargs)
+            export DESCRIPTOR_NAME=$(echo $selectedProfileMainType | xargs)
             printf "\nAdjusted descriptor name DESCRIPTOR_NAME=$DESCRIPTOR_NAME...ok\n"
         fi
 

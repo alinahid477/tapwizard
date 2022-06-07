@@ -8,23 +8,24 @@ A wizard like UI (GUI coming soon) for Tanzu Application Platform. The goal is t
 - Quick, Easy and Fast way to install TAP 
 - Quick, Easy and Fast way to start using TAP
 
-** few things are WIP .. will be updated soon
-
 ## pre-req
 - docker ce or ee installed locally
-- download `tanu framework` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418), and place the tar in `binaries` directory
-- download `cluster essential for vmware tanzu` (https://network.pivotal.io/products/tanzu-cluster-essentials#/releases/1011100) and place the tgz in `binaries` directory.
-- download `tap gui` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1043418/file_groups/6091) 
+- account in tanzunet (https://login.run.pivotal.io/login). If you dont have an account create one (it's free).
+- download `tanu framework` (https://network.pivotal.io/products/tanzu-application-platform/), and place the tar in `binaries` directory
+- download `cluster essential for vmware tanzu` (https://network.pivotal.io/products/tanzu-cluster-essentials) and place the tgz in `binaries` directory.
+- download `tap gui` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1095326/file_groups/6091) 
     - untar the tar.gz
     - create a git public repository and clone it
     - add the untar-ed/inflated contents to the git repo and push the untar (eg: blank or yelp) 
     - grab the url of catalog-info.yaml (eg: https://github.com/alinahid477/tap-gui/blob/main/blank/catalog-info.yaml) and keep it handy.
-- kubeconfig file of a k8 cluster (aks, eks). [TKGs --- coming soon].
+- kubeconfig file of a k8 cluster (aks, eks, tkg).
     - **If k8s cluster is not pre-existing** create a new k8s cluster (**This wizard can create aks k8s cluster**)
         - if there's no kubeconfig detected the wizard will prompt for creating a new cluster (post cluster create it will add the kubeconfig file in `.kube` directory)
-        - **creating aks cluster**: ceate service principal app with necessary permissions and keep the app id, tenantid and app secret handy.
+        - **creating aks cluster**: requires a service principle. If you do not have a service principal follow the wizard prompt to create a new one.
     - **if there's already a k8s cluster** get the kubeconfig file for the cluser and place it in the `.kube` directory with name `config`
         - this wizard will detect the available contexts and prompt for selecting the the right one.
+        - ***If the kubernetes control plane is private and requires accessing through bastion host*** please replace the control plane url/ip of `clusters.cluster.server` field with `kubernetes`. eg> `server: https://kubernetes:6443` in `kubeconfig` file placed in `.kube` directory of this dir. You may also be required to replace the value of `users.user.exec.env.name=CLUSTER_ENDPOINT` from private url/ip to `kubernetes`, eg> `value: https://kubernetes:6443`
+
 - Container registry details (see below env variable)
 - .env file (see below)
 
@@ -38,12 +39,12 @@ fill out the necessary details (ignore the vsphere related variables for now)
 - PVT_REGISTRY_USERNAME=eg: your username
 - PVT_REGISTRY_PASSWORD=eg: your password
 - TANZU_CLI_NO_INIT=true (do not change)
-- INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:82dfaf70656b54dcba0d4def85ccae1578ff27054e7533d08320244af7fb0343 (do not change)
+- INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d (change as per value here: https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.1/cluster-essentials/GUID-deploy.html)
 - INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com (do not change)
 - INSTALL_REGISTRY_USERNAME=eg: your tanzu net username
 - INSTALL_REGISTRY_PASSWORD=eg: your tanzu net password
-- TAP_VERSION=1.0.1 (do not change)
-- DESCRIPTOR_NAME=tap-1.0.0 (do not change)
+- TAP_VERSION=1.1.1 (change as per tap version: https://network.pivotal.io/products/tanzu-application-platform/)
+- DESCRIPTOR_NAME=tap-1.1 (do not change)
 
 
 
@@ -66,6 +67,13 @@ follow the prompt of the UI for a guided experience of installing TAP on k8s
 ## Demo Video:
 
 [![Watch the video](https://img.youtube.com/vi/vHhRGqbM3uU/hqdefault.jpg)](https://youtu.be/vHhRGqbM3uU)
+
+
+
+# TODO
+- GUI for installer
+- GUI for supply chain (in progress)
+
 
 
 # Flux CD Stuff

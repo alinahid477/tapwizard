@@ -8,7 +8,7 @@ tap_gui:
     catalog:
       locations:
         - type: url
-          target: https://<GIT-CATALOG-URL>/catalog-info.yaml
+          target: <GIT-CATALOG-URL>
     backend:
       baseUrl: http://tap-gui.<INGRESS-DOMAIN>
       cors:
