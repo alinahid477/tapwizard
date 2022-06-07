@@ -4,13 +4,18 @@ export $(cat /root/.env | xargs)
 
 
 source $HOME/binaries/scripts/extract-and-take-input.sh
-source $HOME/binaries/scripts/install-cloud-cli.sh
-
-
 
 
 function createAKSCluster () {
-    installAZCLI
+
+    printf "\n\nDownloading Azure scripts....\n\n"
+    $HOME/binaries/scripts/download-common-scripts.sh clouds.azure scripts/clouds/azure
+    sleep 2
+    printf "DOWNLOAD COMPLETE...\n"
+    
+    source $HOME/binaries/scripts/clouds/azure/azure.sh
+    prepareAccount || returnOrexit || exit 1
+
 
     if [ -z "$AZ_TENANT_ID" ] || [ -z "$AZ_APP_ID" ] || [ -z "$AZ_APP_CLIENT_SECRET" ] || [ -z "$AZ_GROUP_NAME" ] || [ -z "$AZ_LOCATION" ] || [ -z "$AZ_AKS_CLUSTER_NAME" ] || [ -z "$AZ_AKS_VM_SIZE" ] || [ -z "$AZ_AKS_NODE_COUNT" ]
     then
