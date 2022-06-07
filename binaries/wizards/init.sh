@@ -40,7 +40,7 @@ then
         read -p "which k8s cluster would you like to create? [aks, none]: " inp
         if [[ $inp == 'aks' ]]
         then
-            source $HOME/binaries/createakscluster.sh
+            source $HOME/binaries/wizards/createakscluster.sh
             createAKSCluster
             break
         else 
