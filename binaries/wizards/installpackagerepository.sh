@@ -78,8 +78,8 @@ installPackageRepository()
     while true; do
         read -p "Confirm to install tap-repository? [y/n]: " yn
         case $yn in
-            [Yy]* ) confirmed='y'; printf "you confirmed yes\n"; break;
-            [Nn]* ) confirmed='n'; printf "You said no.\n\nExiting...\n\n"; break;
+            [Yy]* ) confirmed='y'; printf "you confirmed yes\n"; break;;
+            [Nn]* ) confirmed='n'; printf "You said no.\n\nExiting...\n\n"; break;;
             * ) echo "Please answer y or n.";;
         esac
     done
