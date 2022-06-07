@@ -141,7 +141,8 @@ installProfile()
     fi
 }
 
-installProfile
+
+installProfile $1
 
 if [[ $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
 then
