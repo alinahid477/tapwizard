@@ -3,10 +3,15 @@
 <img src="images/logo.png" alt="Merlin-TAP" width=200 height=210/>
 
 A wizard like UI (GUI coming soon) for Tanzu Application Platform. The goal is to:
-- Provide an installer experience to get TAP deployed on the k8s cluster
+- Provide an installer experience to get TAP deployed on a k8s cluster
+- Provide an installer experience to get App-Toolkit deployed on a TCE k8s cluster
 - provide a wizard experience to create TAP profile to support the architecture described here: https://github.com/vmware-tanzu-labs/tanzu-validated-solutions/blob/main/src/reference-designs/tap-architecture-planning.md
-- Quick, Easy and Fast way to install TAP 
-- Quick, Easy and Fast way to start using TAP
+- Quick, Easy and Fast way to install TAP or App Toolkit 
+
+This docker will server interface for
+- Tanzu CLI installed (Usage: `tanzu --help` in the bash prompt)
+- kapp cli (Usage: `kapp --help` in the bash prompt)
+- Merlin CLI for Tap or TCE App Toolkit (Usage: `merlin --help` in the bash prompt)
 
 ## pre-req
 - docker ce or ee installed locally
@@ -34,17 +39,23 @@ Run `cp .env.sample .env`
 
 fill out the necessary details (ignore the vsphere related variables for now)
 
-- PVT_REGISTRY_SERVER=eg: my-harbor.io or index.docker.io/v1 or myregistry.azurecr.io
-- PVT_REGISTRY_REPO=eg: registryname like petclinic or supplychain
-- PVT_REGISTRY_USERNAME=eg: your username
-- PVT_REGISTRY_PASSWORD=eg: your password
-- TANZU_CLI_NO_INIT=true (do not change)
-- INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d (change as per value here: https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.1/cluster-essentials/GUID-deploy.html)
-- INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com (do not change)
-- INSTALL_REGISTRY_USERNAME=eg: your tanzu net username
-- INSTALL_REGISTRY_PASSWORD=eg: your tanzu net password
-- TAP_VERSION=1.1.1 (change as per tap version: https://network.pivotal.io/products/tanzu-application-platform/)
-- DESCRIPTOR_NAME=tap-1.1 (do not change)
+- `BASTION_HOST`=IP or FQDN of the bastion host. This wizard does not support password based login. Hence, when using bastion host you must place private key file called `id_rsa` (name must be `id_rsa`) in the `.ssh` dir (and the public key file named `id_rsa.pub` being in the bastion host's user's `.ssh` dir).
+- `BASTION_USERNAME`=username for the bastion host login (the user who's .ssh has the id_rsa.pub file).
+- `AWS_ACCESS_KEY_ID`=delete this variable or leave empty if not eks
+- `AWS_SECRET_ACCESS_KEY`=delete this variable or leave empty if not eks
+- `AWS_SESSION_TOKEN`=delete this variable or leave empty if not eks
+- `AWS_DEFAULT_REGION`=delete this variable or leave empty if not eks
+- `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: index.docker.io, for Harbor: my-harbor.com/io, for GCR: gcr.io, for ACR: azurecr.io etc.
+- `PVT_REGISTRY_REPO`=the repository where workload images (after container images are stored) are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: DockerHub: dockerhub-username, Harbor: my-project/supply-chain, GCR: my-project/supply-chain ACR: my-project/supply-chain
+- `PVT_REGISTRY_USERNAME`=username of the above registry
+- `PVT_REGISTRY_PASSWORD`=password for the above username
+- TANZU_CLI_NO_INIT=true | leave it as it is
+- `TAP_VERSION`=1.1.1 | You MUST DELETE this variable if you want to use TCE app-toolkit. ONLY KEEP this variable if you want to use Tanzu TAP
+- `INSTALL_BUNDLE`=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d | delete the below variable for app-toolkit or if not TAP
+- `INSTALL_REGISTRY_HOSTNAME`=registry.tanzu.vmware.com | delete the below variable for app-toolkit or if not TAP
+- `INSTALL_REGISTRY_USERNAME`=username for tanzunet | delete this variable if not TAP
+- `INSTALL_REGISTRY_PASSWORD`=password for tanzunet | delete this variable if not TAP
+- DESCRIPTOR_NAME=tap-1.1 | delete the below variable if not TAP
 
 
 
