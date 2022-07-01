@@ -28,8 +28,12 @@ awscli
 !.kube/.gitkeep
 
 binaries/*
-binaries/scripts/*
 !binaries/.gitkeep
+
+!binaries/scripts
+binaries/scripts/*.sh
+!binaries/scripts/.gitkeep
+
 !binaries/wizards
 !binaries/tapscripts
 !binaries/templates
