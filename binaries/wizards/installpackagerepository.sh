@@ -100,9 +100,19 @@ installPackageRepository()
         local isclusterroleexist=$(kubectl get clusterrolebinding -A | grep -w default-tkg-admin-privileged-binding)
         if [[ -z $isclusterroleexist ]]
         then
-            printf "NOT FOUND. Creating...."
-            kubectl create clusterrolebinding default-tkg-admin-privileged-binding --clusterrole=psp:vmware-system-privileged --group=system:authenticated
-            printf "clusterrolebinding:default-tkg-admin-privileged-binding....CREATED.\n"
+            
+            if [[ -n $isvmwarepsp ]]
+            then
+                printf "NOT FOUND. Creating for psp:vmware-system-privileged...."
+                kubectl create clusterrolebinding default-tkg-admin-privileged-binding --clusterrole=psp:vmware-system-privileged --group=system:authenticated
+                printf "clusterrolebinding:default-tkg-admin-privileged-binding....CREATED.\n"
+            fi
+            # if [[ -n $istmcpsp ]]
+            # then
+            #     printf "NOT FOUND. Creating for psp:vmware-system-privileged...."
+            #     kubectl create clusterrolebinding default-tkg-admin-privileged-binding --clusterrole=psp:vmware-system-privileged --group=system:authenticated
+            #     printf "clusterrolebinding:default-tkg-admin-privileged-binding....CREATED.\n"
+            # fi
         else
             printf "FOUND.\n"
         fi
