@@ -2,9 +2,9 @@
 
 export $(cat $HOME/.env | xargs)
 
-source $HOME/binaries/scripts/extract-and-take-input.sh
+source $HOME/binaries/tapscripts/extract-and-take-input.sh
 
-installAppToolkit() 
+installTCEAppToolkit() 
 {
 
     printf "\n\n\n********* installing app-toolkit *************\n\n\n"

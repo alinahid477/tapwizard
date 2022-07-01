@@ -3,7 +3,7 @@
 export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/returnOrexit.sh
-source $HOME/binaries/scripts/generate-profile-file.sh
+source $HOME/binaries/tapscripts/generate-profile-file.sh
 
 installTapProfile() 
 {

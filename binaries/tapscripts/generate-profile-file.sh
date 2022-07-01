@@ -5,8 +5,8 @@ templateFilesDIR=$(echo "$HOME/binaries/templates" | xargs)
 
 
 source $HOME/binaries/scripts/contains-element.sh
-source $HOME/binaries/scripts/build-profile-file.sh
-source $HOME/binaries/scripts/extract-and-take-input.sh
+source $HOME/binaries/tapscripts/build-profile-file.sh
+source $HOME/binaries/tapscripts/extract-and-take-input.sh
 source $HOME/binaries/scripts/select-from-available-options.sh
 
 generateProfile () {
