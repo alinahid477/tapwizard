@@ -25,12 +25,12 @@
     },
     {
         "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "This is the hostname of the registry server. Examples.\neg: my-harbor.io or index.docker.io",
+        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.com/io, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
     },
     {
         "name": "<PVT_REGISTRY_REPO>",
-        "hint": "This is where workload images are stored in the registry.\nImages are written to SERVER-NAME/REPO-NAME/workload-name.\neg: my-project/petclinic or my-dockerhub-username",
+        "hint": "the repository where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my-project/supply-chain, \nGCR: my-project/supply-chain \nACR: my-project/supply-chain",
         "isRecordAsEnvVar": true
     },
     {
@@ -129,5 +129,35 @@
         "name": "<AZ_APP_CLIENT_SECRET>",
         "hint": "The service principal app secret",
         "isRecordAsEnvVar": true
+    },
+
+    {
+        "name": "<APP_TOOLKIT_CONTOUR_ENVOY_SERVICE_TYPE>",
+        "hint": "Ingress controller service type. Possible values: [ClusterIP, LoadBalancer]"
+    },
+    {
+        "name": "<APP_TOOLKIT_KNATIVE_DOMAIN_NAME>",
+        "hint": "Domain name deligated for knative apps. EG: 127-0-0-1.sslip.io, apps.example.xyz etc"
+    },
+    {
+        "name": "<APP_TOOLKIT_KPACK_DEFAULT_REGISTRY>",
+        "hint": "Container registry domain-path for kpack. EG: docker.io/my-dockerhub-username/my-repo"
+    },
+    {
+        "name": "<APP_TOOLKIT_KPACK_DEFAULT_REGISTRY_USERNAME>",
+        "hint": "Username for the kpack default registry. EG: my-dockerhub-username"
+    },
+    {
+        "name": "<APP_TOOLKIT_KPACK_DEFAULT_REGISTRY_PASSWORD>",
+        "hint": "Password for the kpack default registry.",
+        "input_type": "password"
+    },
+    {
+        "name": "<PVT_REGISTRY_SERVER>",
+        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.com/io, \nGCR: gcr.io \nACR: azurecr.io"
+    },
+    {
+        "name": "<PVT_REGISTRY_REPO>",
+        "hint": "the repository where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my-project/supply-chain, \nGCR: my-project/supply-chain \nACR: my-project/supply-chain"
     }
 ]

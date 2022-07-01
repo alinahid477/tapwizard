@@ -5,7 +5,7 @@ export $(cat $HOME/.env | xargs)
 source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/generate-profile-file.sh
 
-installProfile() 
+installTapProfile() 
 {
     local bluecolor=$(tput setaf 4)
     local normalcolor=$(tput sgr0)
@@ -27,7 +27,10 @@ installProfile()
     if [[ -n $profilefilename && -f $profilefilename ]]
     then
         unset notifyfile
-        export PROFILE_FILE_NAME=$profilefilename
+        export TAP_PROFILE_FILE_NAME=$profilefilename
+        sed -i '/TAP_PROFILE_FILE_NAME/d' $HOME/.env
+        printf "\nTAP_PROFILE_FILE_NAME=$TAP_PROFILE_FILE_NAME" >> $HOME/.env
+
         local confirmed=''
         if [[ $SILENTMODE != 'YES' ]]
         then            
@@ -133,31 +136,11 @@ installProfile()
             printf "${bluecolor}To update run the below command: ${normalcolor}\n"
             printf "${bluecolor}tanzu package installed update tap -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install${normalcolor}\n"
 
-            INSTALL_TAP_PROFILE='COMPLETED'
+            export INSTALL_TAP_PROFILE='COMPLETED'
             sed -i '/INSTALL_TAP_PROFILE/d' $HOME/.env
             printf "\nINSTALL_TAP_PROFILE=COMPLETED\n" >> $HOME/.env
-            printf "\n\n********TAP profile deployment....COMPLETE**********\n\n\n"
+            printf "\n\n********TAP profile deployment....COMPLETE**********\n\n\n" 
+            sleep 3
         fi                  
     fi
 }
-
-
-installProfile $1
-
-if [[ $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
-then
-    unset confirmed
-    while true; do
-        read -p "Would you like to configure developer workspace now? [y/n] " yn
-        case $yn in
-            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-            [Nn]* ) printf "You confirmed no.\n"; break;;
-            * ) echo "Please answer yes or no.";
-        esac
-    done
-
-    if [[ -n $confirmed && $confirmed == 'y' ]]
-    then
-        source $HOME/binaries/wizards/installdevnamespace.sh
-    fi
-fi

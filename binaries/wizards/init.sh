@@ -217,88 +217,28 @@ while true; do
     esac
 done
 
-printf "\n\n************Checking installed binaries**************\n\n"
-source $HOME/binaries/scripts/install-cluster-essential.sh
+printf "\n\n************Checking Tanzu CLI binaries**************\n\n"
 source $HOME/binaries/scripts/install-tanzu-cli.sh
-installClusterEssential
 installTanzuCLI
 printf "DONE\n\n\n"
 
 
-printf "\n\n************Checking if TAP is already installed on k8s cluster**********\n"
-
-if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL || $INSTALL_TANZU_CLUSTER_ESSENTIAL != 'COMPLETED' ]]
+if [[ $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
 then
-    printf "Checking cluster essential in k8s...\n"
-    isclusteressential=$(kubectl get configmaps -n tanzu-cluster-essentials | grep -sw 'kapp-controller')
-    if [[ -n $isclusteressential ]]
-    then
-        printf "Found kapp-controller in the k8s but .env is not marked as complete. Marking as complete....."
-        sed -i '/INSTALL_TANZU_CLUSTER_ESSENTIAL/d' /root/.env
-        printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED" >> /root/.env
-        export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
-        printf "DONE.\n"
-    fi
+    # The purpose for calling installClusterEssential here again 
+    # is so that the script can perform cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp 
+
+    # The purpose for this code block here is NOT to trigger re-deploy of cluster-essential in k8s cluster
+    # BUT to only add kapp in /usr/local/bin/kapp
+    
+    printf "\n\n************Checking Cluster Essential Kapp binaries**************\n\n"
+    source $HOME/binaries/scripts/install-cluster-essential.sh
+    installClusterEssential
+    printf "DONE\n\n\n"
 fi
 
-# This logic is flawd. Need to change to something solid
-sleep 1
-isexist='y'
-if [[ -z $INSTALL_TAP_PROFILE || $INSTALL_TAP_PROFILE != 'COMPLETED' ]]
-then
-    printf "Checking tap-install in k8s...\n"
-    istapinstall=$(kubectl get packageinstalls.packaging.carvel.dev -n tap-install | grep -w tap)
-    if [[ -n $istapinstall ]]
-    then
-        printf "Found tap in tap-install ns in the k8s but .env is not marked as complete. Marking as complete...."
-        sed -i '/INSTALL_TAP_PROFILE/d' /root/.env
-        printf "\nINSTALL_TAP_PROFILE=COMPLETED" >> /root/.env
-        export INSTALL_TAP_PROFILE=COMPLETED
-        printf "DONE.\n"
-    else
-        printf "TAP is not found in the k8s cluster (ns: tap-install is missing or empty).\n\n"
-        if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
-        then
-            isexist="n"
-        fi
-    fi
-fi
 
-if [[ -n $INSTALL_TAP_PROFILE && $INSTALL_TAP_PROFILE == 'COMPLETED' ]]
-then
-    printf "\n\nINSTALL_TAP_PROFILE is marked as $INSTALL_TAP_PROFILE.\n"
-    if [[ -z $COMPLETE || $COMPLETE == 'NO' ]]
-    then
-        # printf "Checking tap package version..."
-        # istapversion=$(tanzu package available list tap.tanzu.vmware.com --namespace tap-install -o json | jq -r '[ .[] | {version: .version, released: .["released-at"]|split(" ")[0]} ] | sort_by(.released) | reverse[0] | .version')
-        printf "\n\n.env is not marked as overall completed. Marking as complete...."
-        sed -i '/COMPLETE/d' /root/.env
-        printf "\nCOMPLETE=YES" >> /root/.env
-        export COMPLETE=YES
-        printf "DONE.\n\n"
-    fi
-fi
-printf "INIT COMPLETE\n\n\n"
-sleep 2
 
-unset doinstall
-
-if [[ $isexist == "n" ]]
-then
-    while true; do
-        read -p "Confirm if you like to deploy Tanzu Application Platform (TAP) on this k8s cluster now [y/n]: " yn
-        case $yn in
-            [Yy]* ) doinstall="y"; printf "\nyou confirmed yes\n"; break;;
-            [Nn]* ) printf "\n\nYou said no.\n"; break;;
-            * ) echo "Please answer y or n.";;
-        esac
-    done
-fi
-
-if [[ $doinstall == "y" ]] 
-then
-    source $HOME/binaries/wizards/installpackagerepository.sh    
-fi
 
 
 printf "\nUsage merlin --help\n"

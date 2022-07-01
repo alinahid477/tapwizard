@@ -4,10 +4,9 @@
 export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/returnOrexit.sh
-source $HOME/binaries/scripts/install-cluster-essential.sh
-source $HOME/binaries/scripts/install-tanzu-cli.sh
 
-installPackageRepository()
+
+installTapPackageRepository()
 {
     export $(cat /root/.env | xargs)
 
@@ -39,39 +38,13 @@ installPackageRepository()
         printf "\nERROR: tanzu cli not found, meaning it has not been installed.\n"
         returnOrexit || return 1
     fi
-    
-
-
-    unset performinstall
-    if [[ -n $INSTALL_TANZU_CLUSTER_ESSENTIAL && $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
+        
+    if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL || $INSTALL_TANZU_CLUSTER_ESSENTIAL != 'COMPLETED' ]]
     then
-        printf "\nFound tanzu-cluster-essential installation is marked as complete\n"
-        while true; do
-            read -p "Do you want to trigger deployment again? [y/n]: " yn
-            case $yn in
-                [Yy]* ) performinstall="y"; printf "you confirmed yes\n"; break;;
-                [Nn]* ) performinstall="n";printf "You said no.\n"; break;;
-                * ) echo "Please answer y or n.";;
-            esac
-        done
-    else
-        performinstall='y'
+        source $HOME/binaries/scripts/install-cluster-essential.sh
+        installClusterEssential
+        sleep 2
     fi
-    if [[ $performinstall == 'y' ]]
-    then
-        printf "\nInstalling cluster essential in k8s cluster...\n\n"
-        sleep 1
-        cd $HOME/tanzu-cluster-essentials
-        source ./install.sh
-        printf "\nTanzu cluster essential instllation....COMPLETED\n\n"
-    fi
-    if [[ -z $INSTALL_TANZU_CLUSTER_ESSENTIAL ]]
-    then
-        printf "\nINSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED\n" >> $HOME/.env
-        export INSTALL_TANZU_CLUSTER_ESSENTIAL=COMPLETED
-    fi
-    sleep 2
-
     
 
     local confirmed=''
@@ -144,11 +117,12 @@ installPackageRepository()
     TAP_PACKAGE_VERSION=$(tanzu package available list tap.tanzu.vmware.com --namespace tap-install -o json | jq -r '[ .[] | {version: .version, released: .["released-at"]|split(" ")[0]} ] | sort_by(.released) | reverse[0] | .version')
     printf "$TAP_PACKAGE_VERSION"
 
-    sed -i '/TAP_PACKAGE_VERSION/d' /root/.env
-    printf "\nTAP_PACKAGE_VERSION=$TAP_PACKAGE_VERSION" >> /root/.env
+    sed -i '/TAP_PACKAGE_VERSION/d' $HOME/.env
+    printf "\nTAP_PACKAGE_VERSION=$TAP_PACKAGE_VERSION" >> $HOME/.env
     sleep 1
-    sed -i '/INSTALL_TAP_PACKAGE_REPOSITORY/d' /root/.env
+    sed -i '/INSTALL_TAP_PACKAGE_REPOSITORY/d' $HOME/.env
     printf "\nINSTALL_TAP_PACKAGE_REPOSITORY=COMPLETED\n" >> $HOME/.env
+    export INSTALL_TAP_PACKAGE_REPOSITORY=COMPLETED
 
     printf "\nListing available packages in 20s...\n"
     sleep 20s
@@ -156,39 +130,6 @@ installPackageRepository()
     printf "\nDONE\n\n"
 }
 
-unset performinstall
-if [[ -n $INSTALL_TAP_PACKAGE_REPOSITORY && $INSTALL_TAP_PACKAGE_REPOSITORY == 'COMPLETED' ]]
-then
-    printf "\nFound package repository installation is marked as complete\n"
-    while true; do
-        read -p "Do you want to trigger deployment again? [y/n]: " yn
-        case $yn in
-            [Yy]* ) performinstall="y"; printf "you confirmed yes\n"; break;;
-            [Nn]* ) performinstall="n";printf "You said no.\n"; break;;
-            * ) echo "Please answer y or n.";;
-        esac
-    done
-else
-    performinstall='y'
-fi
-if [[ $performinstall == 'y' ]]
-then
-    installPackageRepository
-    printf "\n\n********TAP packages repository add....COMPLETE**********\n\n\n"
-fi
 
 
-confirmed='n'
-while true; do
-    read -p "Would you like to deploy TAP profile now? [y/n]: " yn
-    case $yn in
-        [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-        [Nn]* ) printf "You said no.\n\nExiting...\n\n"; break;;
-        * ) echo "Please answer y or n.\n";;
-    esac
-done
 
-if [[ $confirmed == 'y' ]]
-then
-    source $HOME/binaries/wizards/installprofile.sh
-fi

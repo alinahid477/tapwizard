@@ -1,0 +1,21 @@
+contour:
+  envoy:
+    service:
+      type: <APP_TOOLKIT_CONTOUR_ENVOY_SERVICE_TYPE>
+    hostPorts:
+      enable: true
+
+knative_serving:
+  domain:
+    type: real
+    name: <APP_TOOLKIT_KNATIVE_DOMAIN_NAME>
+
+kpack:
+  kp_default_repository: <APP_TOOLKIT_KPACK_DEFAULT_REGISTRY>
+  kp_default_repository_username: <APP_TOOLKIT_KPACK_DEFAULT_REGISTRY_USERNAME>
+  kp_default_repository_password: <APP_TOOLKIT_KPACK_DEFAULT_REGISTRY_PASSWORD>
+
+cartographer_catalog:
+  registry:
+    server: <APP_TOOLKIT_CARTOGRAPHER_CATALOG_SERVER>
+    repository: my-dockerhub-username

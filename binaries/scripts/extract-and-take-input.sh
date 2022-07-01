@@ -61,6 +61,7 @@ extractVariableAndTakeInput () {
         # fi
         
         local useSpecialReplace=$(jq -r '.[] | select(.name == "'$v'") | .use_special_replace' $templateFilesDIR/$promptsForVariablesJSON)
+        local inputType=$(jq -r '.[] | select(.name == "'$v'") | .input_type' $templateFilesDIR/$promptsForVariablesJSON)
 
         local inp=''
         # dynamic variable-->eg: variable name (NAME_OF_THE_VARIABLE) in a variable ('inputvar')
@@ -72,7 +73,13 @@ extractVariableAndTakeInput () {
             # when does not exist prompt user to input value
             isinputneeded='y'
             while [[ -z $inp ]]; do
-                read -p "input value for $inputvar: " inp
+                if [[ -n $inputType && $inputType == 'password' ]]
+                then
+                    read -s -p "input value for $inputvar: " inp
+                else
+                    read -p "input value for $inputvar: " inp
+                fi
+                
                 if [[ -z $inp ]]
                 then
                     printf "empty value is not allowed.\n"

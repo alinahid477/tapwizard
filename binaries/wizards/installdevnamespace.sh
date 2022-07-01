@@ -42,9 +42,9 @@ createDevNS () {
     fi
 
     local selectedSupplyChainType=''
-    if [[ -n $PROFILE_FILE_NAME ]]
+    if [[ -n $TAP_PROFILE_FILE_NAME ]]
     then
-        isexist=$(cat $PROFILE_FILE_NAME | grep -w 'gitops:$')        
+        isexist=$(cat $TAP_PROFILE_FILE_NAME | grep -w 'gitops:$')        
         selectedSupplyChainType='gitops'
     else
         local supplyChainTypes=("local_iteration" "local_iteration_with_code_from_git" "gitops")
@@ -198,7 +198,3 @@ createDevNS () {
 
     printf "\n\n**** Developer namespace: $namespacename setup...COMPLETE\n\n\n"
 }
-
-
-
-createDevNS

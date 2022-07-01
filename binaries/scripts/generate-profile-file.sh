@@ -78,7 +78,7 @@ generateProfile () {
 
         export PROFILE_TYPE=$selectedProfileType
         printf "\ncreating temporary file for profile...."
-        tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
+        local tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
         cp $templateFilesDIR/profile-$selectedProfileType.template $tmpProfileFile && printf "ok." || printf "failed"
         printf "\n"
 
