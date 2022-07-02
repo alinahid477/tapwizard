@@ -140,7 +140,7 @@ installTap()
                 case $yn in
                     [Yy]* ) printf "you confirmed yes\n"; performinstall='y'; break;;
                     [Nn]* ) printf "You confirmed no.\n"; break;;
-                    * ) echo "Please answer yes or no.";
+                    * ) echo "Please answer y or n.";
                 esac
             done
 

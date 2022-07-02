@@ -72,7 +72,7 @@ createDevNS () {
                 case $yn in
                     [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
                     [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-                    * ) echo "Please answer yes or no.";
+                    * ) echo "Please answer y or n.";
                 esac
             done
 
@@ -109,7 +109,7 @@ createDevNS () {
             case $yn in
                 [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
                 [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-                * ) echo "Please answer yes or no.";
+                * ) echo "Please answer y or n.";
             esac
         done
 

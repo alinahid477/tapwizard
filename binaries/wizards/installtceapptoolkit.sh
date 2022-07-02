@@ -81,8 +81,40 @@ installTCEAppToolkit()
     fi
     printf "\n\n" >> $appToolkitValuesFile
     printf "\n"
-    printf "\nInstalling in namespace tanzu-package-repo-global...\n"
 
+
+    local appToolkitValuesFileName=''
+    while [[ -z $appToolkitValuesFileName ]]; do
+        read -p "Provide a name for this values file: " appToolkitValuesFileName
+        if [[ -z $appToolkitValuesFileName || ! $appToolkitValuesFileName =~ ^[A-Za-z0-9_\-]+$ ]]
+        then
+            printf "WARN: empty or invalid value not allowed. A valid value comprises of numbers, letters, hyphen (-) and underscroe (_).\n"
+        fi
+    done
+    sleep 1
+    appToolkitValuesFileName=$(echo "$HOME/tapconfig/$appToolkitValuesFileName-values.yaml")
+    mv $appToolkitValuesFile $appToolkitValuesFileName
+    appToolkitValuesFile=$(echo $appToolkitValuesFileName | xargs)
+
+    printf "\nApp toolkit values file saved in: $appToolkitValuesFile\n"
+
+    local confirmed=''
+    while true; do
+        read -p "Please check the the file (you may modify too) and confirm to install? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+
+    if [[ $confirmed == 'n' ]]
+    then
+        printf "\nThe wizard will not install app-toolkit.\n"
+        returnOrexit || return 1
+    fi
+
+    printf "\nInstalling app-toolkit in namespace tanzu-package-repo-global...\n"
     tanzu package install app-toolkit --package-name app-toolkit.community.tanzu.vmware.com --version $appToolkitVersion -f $appToolkitValuesFile -n tanzu-package-repo-global
 
     printf "\nwaiting for 4 mins before checking packages status..."
