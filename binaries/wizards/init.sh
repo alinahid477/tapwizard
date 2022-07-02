@@ -23,8 +23,12 @@ then
 fi
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
-ls -l $HOME/binaries/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/tapscripts/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/wizards/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
+
+## housekeeping
+rm /tmp/checkedConnectedK8s > /dev/null 2>&1
 
 source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh

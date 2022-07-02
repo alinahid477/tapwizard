@@ -31,21 +31,21 @@ unset tapPackageRepositoryInstall
 unset tapProfileInstall
 unset tapDeveloperNamespaceCreate
 unset profileFile
-
-checkedConnectedK8s='n'
+unset ishelp
 
 function doCheckK8sOnlyOnce()
 {
-    if [[ $checkedConnectedK8s == 'n' ]]
+    if [[ ! -f /tmp/checkedConnectedK8s  ]]
     then
         source $HOME/binaries/scripts/init-checkk8s.sh
-        checkedConnectedK8s='y'
+        echo "y" >> /tmp/checkedConnectedK8s
     fi
 }
 
 
 function executeCommand()
 {
+    
     doCheckK8sOnlyOnce
 
     sleep 3
@@ -135,11 +135,14 @@ while true ; do
                 "" ) profileFile=''; shift 2 ;;
                 * ) profileFile=$2;  shift 2 ;;
             esac ;;
-        -h | --help ) helpFunction; break;; 
+        -h | --help ) ishelp='y'; helpFunction; break;; 
         -- ) shift; break;; 
         * ) break;;
     esac
 done
 
-
-executeCommand
+if [[ $ishelp != 'y' ]]
+then
+    executeCommand
+fi
+unset ishelp
