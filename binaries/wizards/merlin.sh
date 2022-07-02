@@ -16,7 +16,7 @@ function helpFunction()
     printf "\n"
     echo "Usage:"
     echo -e "\t-r | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise."
-    echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE."
+    echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag."
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
@@ -30,7 +30,7 @@ unset tceAppToolkitInstall
 unset tapPackageRepositoryInstall
 unset tapProfileInstall
 unset tapDeveloperNamespaceCreate
-unset profileFile
+unset argFile
 unset ishelp
 
 function doCheckK8sOnlyOnce()
@@ -60,7 +60,14 @@ function executeCommand()
     if [[ $tceAppToolkitInstall == 'y' ]]
     then
         unset tceAppToolkitInstall
-        installTCEAppToolkit
+        if [[ -z $argFile ]]
+        then
+            installTCEAppToolkit
+        else
+            installTCEAppToolkit $argFile
+        fi
+        unset argFile
+        
         returnOrexit || return 1
     fi
 
@@ -74,13 +81,13 @@ function executeCommand()
     if [[ $tapProfileInstall == 'y' ]]
     then
         unset tapProfileInstall
-        if [[ -z $profileFile ]]
+        if [[ -z $argFile ]]
         then
             installTapProfile
         else
-            installTapProfile $profileFile
+            installTapProfile $argFile
         fi
-        unset profileFile
+        unset argFile
         returnOrexit || return 1
     fi
 
@@ -132,8 +139,8 @@ while true ; do
             esac ;;
         -f | --file )
             case "$2" in
-                "" ) profileFile=''; shift 2 ;;
-                * ) profileFile=$2;  shift 2 ;;
+                "" ) argFile=''; shift 2 ;;
+                * ) argFile=$2;  shift 2 ;;
             esac ;;
         -h | --help ) ishelp='y'; helpFunction; break;; 
         -- ) shift; break;; 

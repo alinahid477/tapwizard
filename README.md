@@ -76,6 +76,14 @@ start.bat
 # That's it
 follow the prompt of the UI for a guided experience of installing TAP on k8s
 
+## Usage
+- `--install-tap` = Signals the wizard to start the process for installing TAP for Tanzu Enterprise.
+- `--install-app-toolkit` = Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using `--file` flag.
+- `--install-tap-package-repository` = Signals the wizard to start the process for installing package repository for TAP.
+- `--install-tap-profile` = Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile created from user input. Optionally pass profile file using `--file` flag.
+- `--create-developer-namespace` signals the wizard to create developer namespace.
+
+
 ## Demo Video:
 
 [![Watch the video](https://img.youtube.com/vi/vHhRGqbM3uU/hqdefault.jpg)](https://youtu.be/vHhRGqbM3uU)
