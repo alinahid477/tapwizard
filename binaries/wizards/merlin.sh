@@ -64,6 +64,7 @@ function executeCommand()
         then
             installTCEAppToolkit
         else
+            printf "\nDBG: Argument file: $argFile\n"
             installTCEAppToolkit $argFile
         fi
         unset argFile

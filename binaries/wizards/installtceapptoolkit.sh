@@ -7,9 +7,14 @@ source $HOME/binaries/tapscripts/extract-and-take-input.sh
 installTCEAppToolkit() 
 {
 
-    local valuesFile=$1
+    local valuesFile=$1 #optional. Then passed this wizard does not prompt user to collect info for values file.
 
-    printf "\n\n\n********* installing app-toolkit *************\n\n\n"
+    if [[ -z $valuesFile ]]
+    then
+        printf "\n\n\n********* installing app-toolkit *************\n\n\n"
+    else
+        printf "\n\n\n********* installing app-toolkit from values file: $valuesFile *************\n\n\n"
+    fi
 
     local installedPackages=$(tanzu package installed list -A -o json)
 
