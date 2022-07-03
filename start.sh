@@ -7,6 +7,8 @@ then
 fi
 if [[ -z $name ]]
 then
+    printf "\nUser did not supply a name. Default container and image name: jenkinsonk8s\n"
+    sleep 2
     name='merlin-tapwizard'
 fi
 isexists=$(docker images | grep "\<$name\>")
