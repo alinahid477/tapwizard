@@ -62,7 +62,7 @@ installTCEAppToolkit()
                         if [[ $TCE_REPO_URL == 'none' ]]
                         then
                             TCE_REPO_URL=''
-                            break;;
+                            break
                         fi
                     done
                     if [[ -n $TCE_REPO_URL ]]
