@@ -43,12 +43,11 @@ function doCheckK8sOnlyOnce()
 }
 
 
-function executeCommand()
-{
+function executeCommand () {
     
     doCheckK8sOnlyOnce
 
-    sleep 3
+    local file=$1
 
     if [[ $tapInstall == 'y' ]]
     then
@@ -60,15 +59,13 @@ function executeCommand()
     if [[ $tceAppToolkitInstall == 'y' ]]
     then
         unset tceAppToolkitInstall
-        if [[ -z $argFile ]]
+        if [[ -z $file ]]
         then
             installTCEAppToolkit
         else
-            printf "\nDBG: Argument file: $argFile\n"
-            installTCEAppToolkit $argFile
-        fi
-        unset argFile
-        
+            printf "\nDBG: Argument file: $file\n"
+            installTCEAppToolkit $file
+        fi        
         returnOrexit || return 1
     fi
 
@@ -82,13 +79,12 @@ function executeCommand()
     if [[ $tapProfileInstall == 'y' ]]
     then
         unset tapProfileInstall
-        if [[ -z $argFile ]]
+        if [[ -z $file ]]
         then
             installTapProfile
         else
-            installTapProfile $argFile
+            installTapProfile $file
         fi
-        unset argFile
         returnOrexit || return 1
     fi
 
@@ -151,6 +147,7 @@ done
 
 if [[ $ishelp != 'y' ]]
 then
-    executeCommand
+    executeCommand $argFile
+    unset argFile
 fi
 unset ishelp
