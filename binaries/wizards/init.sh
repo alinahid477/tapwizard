@@ -54,6 +54,7 @@ installTanzuCLI
 printf "DONE\n\n\n"
 
 
+
 if [[ $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
 then
     # The purpose for calling installClusterEssential here again 
@@ -67,6 +68,44 @@ then
     installClusterEssential
     printf "DONE\n\n\n"
 fi
+
+
+printf "\n\n************Checking essential CLIs...**************\n\n"
+# do not want to prompt user. Hence, installing them anyways.
+# if you want to prompt user, then uncomment the below
+# the install-essential-tools.sh script takes care of the situation where any tool is previously install will not get installed again,
+# eg: kapp-cli will get installed as part to cluster-essential. so the install-essential-tools.sh will take care of that and will NOT install kapp agani.
+source $HOME/binaries/scripts/install-essential-tools.sh
+sleep 1
+installEssentialTools
+# if [ "$(ls -A $HOME/essential-clis)" ]
+# then
+#     installEssentialTools 
+# else
+#     confirmed=''
+#     while true; do
+#         read -p "Would you like to install essential tools (kapp-cli, kpack/kp-cli)? [y/n] " yn
+#         case $yn in
+#             [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+#             [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+#             * ) echo "Please answer y or n.";
+#         esac
+#     done
+#     if [[ $confirmed == 'y' ]]
+#     then
+#        source $HOME/binaries/scripts/install-essential-tools.sh
+#        sleep 1
+#        installEssentialTools
+#     elif [[ $confirmed == 'n' ]]
+#     then
+#         printf "Your confirmation (n) is recorded in the .env file in variable called \"INSTALL_ESSENTIAL_TOOLS\".\n"
+#         printf "Should you wish to install essential tools (kapp-cli, kpack/kp-cli) in future please delete variable INSTALL_ESSENTIAL_TOOLS or change to INSTALL_ESSENTIAL_TOOLS=y.\n"
+#         sed -i '/INSTALL_ESSENTIAL_TOOLS/d' $HOME/.env
+#         printf "\nINSTALL_ESSENTIAL_TOOLS=n" >> $HOME/.env
+#     fi
+# fi
+
+
 
 printf "\n\n\n"
 
