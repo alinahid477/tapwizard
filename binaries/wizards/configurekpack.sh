@@ -58,7 +58,7 @@ function createKpackClusterStore () {
 
 
 
-function configureKpack () {
+function startConfigureKpack () {
 
     sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
 

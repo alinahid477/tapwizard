@@ -102,7 +102,7 @@ function executeCommand () {
     if [[ $wizardConfigureKpack == 'y' ]]
     then
         unset wizardConfigureKpack
-        configureKpack
+        startConfigureKpack
         returnOrexit || return 1
     fi
 
