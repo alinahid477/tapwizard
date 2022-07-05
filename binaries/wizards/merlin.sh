@@ -8,7 +8,9 @@ source $HOME/binaries/wizards/installtap.sh
 
 source $HOME/binaries/wizards/installtappackagerepository.sh
 source $HOME/binaries/wizards/installtapprofile.sh
-source $HOME/binaries/wizards/installdevnamespace.sh 
+source $HOME/binaries/wizards/installdevnamespace.sh
+
+source $HOME/binaries/wizards/configurekpack.sh
 
 
 function helpFunction()
@@ -20,6 +22,7 @@ function helpFunction()
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
+    echo -e "\t-k | --configure-kpack signals the wizard create developer namespace."
     echo -e "\t-h | --help"
     printf "\n"
 }
@@ -30,6 +33,7 @@ unset tceAppToolkitInstall
 unset tapPackageRepositoryInstall
 unset tapProfileInstall
 unset tapDeveloperNamespaceCreate
+unset wizardConfigureKpack
 unset argFile
 unset ishelp
 
@@ -95,6 +99,13 @@ function executeCommand () {
         returnOrexit || return 1
     fi
 
+    if [[ $wizardConfigureKpack == 'y' ]]
+    then
+        unset wizardConfigureKpack
+        configureKpack
+        returnOrexit || return 1
+    fi
+
     printf "\nThis shouldn't have happened. Embarrasing.\n"
 }
 
@@ -103,7 +114,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnf:h --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,file:,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:h --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -133,6 +144,11 @@ while true ; do
             case "$2" in
                 "" ) tapProfileInstall='y'; shift 2 ;;
                 * ) tapProfileInstall='y' ; shift 1 ;;
+            esac ;;
+        -k | --configure-kpack )
+            case "$2" in
+                "" ) wizardConfigureKpack='y'; shift 2 ;;
+                * ) wizardConfigureKpack='y' ; shift 1 ;;
             esac ;;
         -f | --file )
             case "$2" in

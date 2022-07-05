@@ -4,6 +4,9 @@ export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/extract-and-take-input.sh
 source $HOME/binaries/scripts/color-file.sh
+
+
+
 function createKpackClusterStore () {
     
     printf "\n\n**** Creating ClusterStore *****\n\n"
@@ -51,4 +54,32 @@ function createKpackClusterStore () {
             printf "file is saved ($clusterstoreFile). But will not be applied.\n"
         fi
     fi
+}
+
+
+
+function configureKpack () {
+
+    sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
+
+    local confirmed=''
+    while true; do
+        read -p "Would you like configure clusterstore? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+    if [[ $confirmed == 'y' ]]
+    then
+        createKpackClusterStore
+    fi
+
+    printf "\n\ncleanup..."
+    sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
+    sleep 1
+    sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
+    sleep 1
+    printf "DONE\n"
 }
