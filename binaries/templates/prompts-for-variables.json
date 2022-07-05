@@ -153,11 +153,16 @@
         "input_type": "password"
     },
     {
-        "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.com/io, \nGCR: gcr.io \nACR: azurecr.io"
+        "name": "<BUILDPACKS>",
+        "hint": "Type the urls for the buildpacks. Available buildpacks are:\n\tgcr.io/paketo-buildpacks/java\n\tgcr.io/paketo-buildpacks/nodejs\nPress enter to add another. Once finished type 'end' end array input.",
+        "input_type": "array",
+        "use_special_replace": true,
+        "array_per_item_prefix": "  - image: "
+
     },
     {
-        "name": "<PVT_REGISTRY_REPO>",
-        "hint": "the repository where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my-project/supply-chain, \nGCR: my-project/supply-chain \nACR: my-project/supply-chain"
+        "name": "<KPACK_CLUSTERSTORE_NAME>",
+        "hint": "name of the cluster store",
+        "isRecordAsEnvVar": true
     }
 ]
