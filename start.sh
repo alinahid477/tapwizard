@@ -7,7 +7,7 @@ then
 fi
 if [[ -z $name ]]
 then
-    printf "\nUser did not supply a name. Default container and image name: jenkinsonk8s\n"
+    printf "\nUser did not supply a name. Default container and image name: merlin-tapwizard\n"
     sleep 2
     name='merlin-tapwizard'
 fi
