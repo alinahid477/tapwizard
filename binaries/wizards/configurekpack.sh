@@ -48,7 +48,9 @@ function createKpackClusterStore () {
         done
         if [[ $confirmed == 'y' ]]
         then
-            # kubectl apply -f $clusterstoreFile 
+            printf "applying cluster store..."
+            # kubectl apply -f $clusterstoreFile && printf "COMPLETED" || printf "FAILED"
+            printf "\n"
         elif [[ $confirmed == 'n' ]]
         then
             printf "file is saved ($clusterstoreFile). But will not be applied.\n"
