@@ -39,7 +39,7 @@ generateProfile () {
     then
         local customprofilefile=''
         while [[ -z $customprofilefile ]]; do
-            read -p "type full path of the custom profile file (eg: /root/tapconfig/myfile.yaml): " customprofilefile
+            read -p "type full path of the custom profile file (eg: /root/configs/myfile.yaml): " customprofilefile
             if [[ -z $customprofilefile ]]
             then
                 customprofilefile=''
@@ -93,10 +93,10 @@ generateProfile () {
         printf "\nprofile value adjustment...COMPLETE\n"
 
         printf "\nadding file for confirmation..."
-        cp $tmpProfileFile ~/tapconfigs/ && printf "COMPLETE" || printf "FAILED"
+        cp $tmpProfileFile $HOME/configs/ && printf "COMPLETE" || printf "FAILED"
 
-        printf "\n\nGenerated profile file: $HOME/tapconfigs/profile-$profilename.yaml\n\n"
-        echo "$HOME/tapconfigs/profile-$profilename.yaml" >> $(echo $notifyfile)
+        printf "\n\nGenerated profile file: $HOME/configs/profile-$profilename.yaml\n\n"
+        echo "$HOME/configs/profile-$profilename.yaml" >> $(echo $notifyfile)
     fi
 
     

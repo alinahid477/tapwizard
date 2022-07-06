@@ -33,7 +33,7 @@ function createKpackClusterStore () {
         done
     fi
     local issuccessful='n'
-    mv $clusterstoreFile $HOME/tapconfigs/$clusterstoreTemplateName-$KPACK_CLUSTERSTORE_NAME.yaml && clusterstoreFile=$clusterstoreTemplateName-$KPACK_CLUSTERSTORE_NAME.yaml && printf "SAVED\n" && issuccessful='y'
+    mv $clusterstoreFile $HOME/configs/$clusterstoreTemplateName-$KPACK_CLUSTERSTORE_NAME.yaml && clusterstoreFile=$HOME/configs/$clusterstoreTemplateName-$KPACK_CLUSTERSTORE_NAME.yaml && printf "SAVED\n" && issuccessful='y'
     if [[ $issuccessful == 'y' ]]
     then
         printf "please review $clusterstoreFile\n"

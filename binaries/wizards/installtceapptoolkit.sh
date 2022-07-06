@@ -162,7 +162,7 @@ installTCEAppToolkit()
             fi
         done
         sleep 1
-        appToolkitValuesFileName=$(echo "$HOME/tapconfigs/$appToolkitValuesFileName-values.yaml")
+        appToolkitValuesFileName=$(echo "$HOME/configs/$appToolkitValuesFileName-values.yaml")
         mv $appToolkitValuesFile $appToolkitValuesFileName
         appToolkitValuesFile=$(echo $appToolkitValuesFileName | xargs)
 
