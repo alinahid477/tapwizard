@@ -65,7 +65,7 @@ function createKpackClusterStore () {
     if [[ -z $KPACK_CLUSTERSTORE_NAME ]]
     then
         while [[ -z $KPACK_CLUSTERSTORE_NAME ]]; do
-            read -p "input value for $inputvar: " KPACK_CLUSTERSTORE_NAME
+            read -p "input value for kpack clusterstore file: " KPACK_CLUSTERSTORE_NAME
             
             if [[ -z $KPACK_CLUSTERSTORE_NAME ]]
             then
@@ -94,7 +94,7 @@ function createKpackClusterStack () {
     if [[ -z $KPACK_CLUSTERSTACK_NAME ]]
     then
         while [[ -z $KPACK_CLUSTERSTACK_NAME ]]; do
-            read -p "input value for $inputvar: " KPACK_CLUSTERSTACK_NAME
+            read -p "input value for kpack clusterstack file: " KPACK_CLUSTERSTACK_NAME
             
             if [[ -z $KPACK_CLUSTERSTACK_NAME ]]
             then
