@@ -1,0 +1,16 @@
+apiVersion: kpack.io/v1alpha2
+kind: ClusterBuilder
+metadata:
+  name: <KPACK_BUILDER_NAME>
+  namespace: <KPACK_BUILDER_NAMESPACE>
+spec:
+  serviceAccountName: <KPACK_BUILDER_SERVICE_ACCOUNT_NAME>
+  tag: <KPACK_BUILDER_DOCKER_IMAGE_TAG>
+  stack:
+    name: <KPACK_CLUSTERSTACK_NAME>
+    kind: ClusterStack
+  store:
+    name: <KPACK_CLUSTERSTORE_NAME>
+    kind: ClusterStore
+  order:
+<KPACK_BUILDER_BUILDPACKS_ORDER>

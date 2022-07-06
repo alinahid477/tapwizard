@@ -4,4 +4,4 @@ metadata:
   name: <KPACK_CLUSTERSTORE_NAME>
 spec:
   sources:
-  <BUILDPACKS>
+<KPACK_CLUSTERSTORE_BUILDPACKS>
