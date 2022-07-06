@@ -5,6 +5,6 @@ metadata:
 spec:
   id: "io.buildpacks.stacks.bionic"
   buildImage:
-    image: "<KAPP_CLUSTERSTACK_BUILD_IMAGE>"
+    image: "<KPACK_CLUSTERSTACK_BUILD_IMAGE>"
   runImage:
-    image: "<KAPP_CLUSTERSTACK_RUN_IMAGE>"
+    image: "<KPACK_CLUSTERSTACK_RUN_IMAGE>"
