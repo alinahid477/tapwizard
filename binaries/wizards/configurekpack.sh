@@ -149,7 +149,25 @@ function createKpackBuilder () {
 
 function startConfigureKpack () {
 
+
     printf "\n\nconfiguring clusterstack....\n\n"
+    sleep 1
+    sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
+    confirmed=''
+    while true; do
+        read -p "Would you like configure clusterstack? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+    if [[ $confirmed == 'y' ]]
+    then
+        createKpackClusterStack
+    fi
+
+    printf "\n\nconfiguring clusterstore....\n\n"
     sleep 1
     sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
 
@@ -167,30 +185,6 @@ function startConfigureKpack () {
         createKpackClusterStore
     fi
 
-    printf "\n\ncleanup..."
-    sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
-    sleep 1
-    sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
-    sleep 1
-    printf "DONE\n"
-
-
-    printf "\n\nconfiguring clusterstack....\n\n"
-    sleep 1
-    sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
-    local confirmed=''
-    while true; do
-        read -p "Would you like configure clusterstack? [y/n] " yn
-        case $yn in
-            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-            * ) echo "Please answer y or n.";
-        esac
-    done
-    if [[ $confirmed == 'y' ]]
-    then
-        createKpackClusterStack
-    fi
 
     printf "\n\nconfiguring kpack builder....\n\n"
     sleep 1
