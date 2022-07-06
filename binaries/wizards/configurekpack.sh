@@ -22,7 +22,7 @@ function saveAndApplyFile () {
     fi
 
     local issuccessful='n'
-    mv $file $HOME/configs/$fileprefix-$KPACK_CLUSTERSTORE_NAME.yaml && file=$HOME/configs/$fileprefix-$filesuffix.yaml && printf "SAVED\n" && issuccessful='y'
+    mv $file $HOME/configs/$fileprefix-$filesuffix.yaml && file=$HOME/configs/$fileprefix-$filesuffix.yaml && printf "SAVED\n" && issuccessful='y'
     if [[ $issuccessful == 'y' ]]
     then
         printf "please review $file\n"
