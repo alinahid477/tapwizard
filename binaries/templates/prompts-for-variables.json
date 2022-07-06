@@ -154,7 +154,7 @@
     },
     {
         "name": "<KPACK_CLUSTERSTORE_NAME>",
-        "hint": "name of the cluster store (eg: default)",
+        "hint": "Name of the cluster store (eg: default)",
         "isRecordAsEnvVar": true
     },
     {
@@ -167,7 +167,7 @@
     },
     {
         "name": "<KPACK_CLUSTERSTACK_NAME>",
-        "hint": "name of the cluster stack. (eg: base)",
+        "hint": "Name of the cluster stack. (eg: base)",
         "isRecordAsEnvVar": true
     },
     {
@@ -180,7 +180,7 @@
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_NAME>",
-        "hint": "name of the cluster builder. (eg: default)",
+        "hint": "Name of the cluster builder. (eg: default)",
         "isRecordAsEnvVar": true
     },
     {
@@ -190,14 +190,6 @@
     {
         "name": "<KPACK_CLUSTERBUILDER_DOCKER_IMAGE_TAG>",
         "hint": "The Kpack Builder itself will be an image. This is the image tag for the builder image. eg: your-dockerhub-username/defaultbuilder or gcr.io/your-project/defaultbuilder etc\nThis is different to image tag for the application container. The application image tag will be specified during creation of the image [kp image save tutorial-image --tag {IMAGE_TAG} --builder default]."
-    },
-    {
-        "name": "<KPACK_CLUSTERSTACK_NAME>",
-        "hint": "Name of the cluster stack. eg: base"
-    },
-    {
-        "name": "<KPACK_CLUSTERSTORE_NAME>",
-        "hint": "Name of the cluster store. eg: default"
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_BUILDPACKS_ORDER>",
