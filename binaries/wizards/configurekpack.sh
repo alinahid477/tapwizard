@@ -174,12 +174,20 @@ function createKpackBuilder () {
 
 function configureK8sSecretAndServiceAccount () {
 
+    local configureType=$1
+
     printf "**** Configure K8s docker-registry secret and service account for Kpack ******\n"
     local isexist=''
 
-
-    printf "${yellowcolor}Type the name of namespace where you would like to create secrets and sa for kpack builder. If the namespace does not exist a new namespace will be created using the provided name.${normalcolor}\n"
     local namespace=''
+    if [[ -n configureType ]]
+    then
+        printf "${yellowcolor}Setting namespace to default.${normalcolor}\n"    
+        namespace='default'
+    else
+        printf "\n\n${greencolor}Configuring namespace...\n${yellowcolor}Type the name of namespace where you would like to create secrets and sa for kpack builder. If the namespace does not exist a new namespace will be created using the provided name.${normalcolor}\n"
+    fi
+    
     while [[ -z $namespace ]]; do
         read -p "Type the name of namespace: " namespace
         if [[ -z $namespace ]]
@@ -193,13 +201,18 @@ function configureK8sSecretAndServiceAccount () {
         isexist=$(kubectl describe ns $namespace)
         if [[ -z $isexist ]]
         then
-            printf "NOT FOUND\n"
-        else
+            printf "Namespace: $namespace ... NOT FOUND\n"
             kubectl create ns $namespace
             printf "CREATED\n"
+            sleep 2
+        else
+            printf "FOUND\n"
+            sleep 2
         fi
     fi
 
+
+    printf "\n\n${greencolor}Configuring container registry secret for kpack...${normalcolor}\n"
     local dockersecretname=''
     while [[ -z $dockersecretname ]]; do
         read -p "Type the name of existing docker-registry secret in $namespace (type 'new' to create new)? " dockersecretname
@@ -233,6 +246,8 @@ function configureK8sSecretAndServiceAccount () {
         printf "\n"    
     fi
 
+
+    printf "\n\n${greencolor}Configuring git repo secret for kpack...${normalcolor}\n"
     local confirmed=''
     while true; do
         read -p "Would you like to create a secret for git registry in namespace: $namespace? [y/n] " yn
@@ -256,7 +271,7 @@ function configureK8sSecretAndServiceAccount () {
 
 
 
-
+    printf "\n\n${greencolor}Configuring service account for kpack...${normalcolor}\n"
     confirmed=''
     while true; do
         read -p "Would you like to create a service account in namespace: $namespace? [y/n] " yn
@@ -295,6 +310,8 @@ function configureK8sSecretAndServiceAccount () {
         printf "Creating k8s service account in namespace: $namespace...."
         kubectl apply -f $saFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
     fi
+
+    printf "\n\n${greencolor}COMPLETED${normalcolor}\n"
 }
 
 
