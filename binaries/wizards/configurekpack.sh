@@ -388,8 +388,7 @@ function startKpackConfiguration () {
         configureType=''
     fi
 
-    printf "\n\nconfiguring k8s (secret, serviceaccount) for kpack....\n\n"
-    configureK8sSecretAndServiceAccount
+    
 
     local dynamicName=''
 
@@ -397,11 +396,14 @@ function startKpackConfiguration () {
     then
         printf "\nconfiguring $configureType kpack\n"
         sleep 2
+        configureK8sSecretAndServiceAccount $configureType
         createKpackClusterStack $configureType
         createKpackClusterStore $configureType
         createKpackBuilder "clusterbuilder" $configureType
         dynamicName="KPACK_CLUSTERBUILDER_NAME"
     else
+        configureK8sSecretAndServiceAccount
+
         printf "\nconfiguring kpack based on userinput\n"
         sleep 2
         printf "\n\nconfiguring clusterstack....\n\n"
@@ -472,13 +474,24 @@ function startKpackConfiguration () {
     printf "\n\ncleanup..."
     sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
     sleep 1
+    printf ".."
     sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
     sleep 1
+    printf ".."
     if [[ -n $dynamicName ]]
     then
         sed -i '/'$dynamicName'/d' $HOME/.env
         sleep 1
     fi
+    printf ".."
+    sed -i '/DOCKER_REGISTRY_SECRET_NAME/d' $HOME/.env
+    sleep 1
+    printf ".."
+    sed -i '/K8S_BASIC_SECRET_NAME/d' $HOME/.env
+    sleep 1
+    printf ".."
+    sed -i '/K8S_SERVICE_ACCOUNT_NAME/d' $HOME/.env
+    sleep 1
     printf "DONE\n"
 }
 
