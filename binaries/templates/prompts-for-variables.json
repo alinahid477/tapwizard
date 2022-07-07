@@ -185,7 +185,7 @@
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME>",
-        "hint": "Service account (containing container registry and/or private github repo's secret) to be used by this builder. (eg: kpack-default-sa)"
+        "hint": "Service account (containing container registry and/or private github repo's secret) to be used by this builder. (eg: kpack-default-sa)\nYou MUST have this service account existing in the namespace specified before.\nYou MUST have this service accont configured with imagePullSecrets for Container Registry (and GIT Repo Secret if pvt git repo used).\nDoco:https://github.com/pivotal/kpack/blob/main/docs/secrets.md"
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_DOCKER_IMAGE_TAG>",
@@ -197,5 +197,57 @@
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "  - group:\n    - id: "
+    },
+    {
+        "name": "<DOCKER_REGISTRY_SECRET_NAME>",
+        "hint": "Name of the secret. eg: dockerregcred"
+    },
+    {
+        "name": "<DOCKER_REGISTRY_SERVER>",
+        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v1/.\nFor ACR this should be yourregoname.azurecr.io etc"
+    },
+    {
+        "name": "<DOCKER_REGISTRY_USERNAME>",
+        "hint": "Username for the registry."
+    },
+    {
+        "name": "<DOCKER_REGISTRY_PASSWORD>",
+        "hint": "Password for the registry.",
+        "input_type": "password"
+    },
+    {
+        "name": "<K8S_BASIC_SECRET_NAME>",
+        "hint": "Name of the secret."
+    },
+    {
+        "name": "<K8S_BASIC_SECRET_GIT_SERVER>",
+        "hint": "The server of the git repo. eg: https://github.com"
+    },
+    {
+        "name": "<K8S_BASIC_SECRET_USERNAME>",
+        "hint": "Username for the git repo"
+    },
+    {
+        "name": "<K8S_BASIC_SECRET_PASSWORD>",
+        "hint": "Password for the git repo",
+        "input_type": "password"
+    },
+    {
+        "name": "<K8S_SERVICE_ACCOUNT_NAME>",
+        "hint": "Name of the service account"
+    },
+    {
+        "name": "<K8S_SERVICE_ACCOUNT_IMAGE_PULL_SECRETS>",
+        "hint": "Names of the docker-registry secretes to be associated with this service account.",
+        "input_type": "array",
+        "use_special_replace": true,
+        "array_per_item_prefix": "- name: "
+    },
+    {
+        "name": "<K8S_SERVICE_ACCOUNT_SECRETS>",
+        "hint": "Names of the secretes (eg: git repo) to be associated with this service account.",
+        "input_type": "array",
+        "use_special_replace": true,
+        "array_per_item_prefix": "- name: "
     }
 ]
