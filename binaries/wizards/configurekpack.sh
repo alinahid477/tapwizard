@@ -232,6 +232,8 @@ function configureK8sSecretAndServiceAccount () {
             then
                 dockersecretname=''
                 printf "${yellowcolor}Secret: $dockersecretname not found in namespace: $namespace ${normalcolor}\n"
+            else
+                printf "FOUND\n"
             fi
         fi
     done
@@ -283,6 +285,8 @@ function configureK8sSecretAndServiceAccount () {
                 then
                     gitsecretname=''
                     printf "${yellowcolor}Secret: $gitsecretname not found in namespace: $namespace ${normalcolor}\n"
+                else
+                    printf "FOUND\n"
                 fi
             fi
         done
@@ -320,8 +324,10 @@ function configureK8sSecretAndServiceAccount () {
         if [[ -z $isexist ]]
         then
             saname='new'
+            printf "NOT FOUND\n"
         else
             saname='kpack-default-sa'
+            printf "FOUND\n"
         fi
     fi
     while [[ -z $saname ]]; do
