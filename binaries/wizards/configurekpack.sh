@@ -301,10 +301,16 @@ function configureK8sSecretAndServiceAccount () {
 
 
 
-function startConfigureKpack () {
+function startKpackConfiguration () {
 
     local configureType=$1 #optional. pass merlin-built-in configure type, eg: 'default'
     
+
+    if [[ $configureType == 'custom' ]]
+    then
+        configureType=''
+    fi
+
     printf "\n\nconfiguring k8s (secret, serviceaccount) for kpack....\n\n"
     configureK8sSecretAndServiceAccount
 
@@ -397,4 +403,20 @@ function startConfigureKpack () {
         sleep 1
     fi
     printf "DONE\n"
+}
+
+
+function startConfigureKpack () {
+
+    printf "${yellowcolor}Select what type of kpack configuration you would like to do?${normalcolor}\n"
+    local options=("default" "custom")
+    selectFromAvailableOptions ${options[@]}
+    local ret=$?
+    if [[ $ret == 255 ]]
+    then
+        printf "${redcolor}No selection were made.${normalcolor}\n"
+    else
+        startKpackConfiguration ${options[$ret]}
+        
+    fi
 }
