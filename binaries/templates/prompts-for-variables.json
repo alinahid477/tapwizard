@@ -200,7 +200,8 @@
     },
     {
         "name": "<DOCKER_REGISTRY_SECRET_NAME>",
-        "hint": "Name of the secret. eg: dockerregcred"
+        "hint": "Name of the secret. eg: dockerregcred",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<DOCKER_REGISTRY_SERVER>",
@@ -217,7 +218,8 @@
     },
     {
         "name": "<K8S_BASIC_SECRET_NAME>",
-        "hint": "Name of the secret."
+        "hint": "Name of the secret.",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<K8S_BASIC_SECRET_GIT_SERVER>",
@@ -234,18 +236,19 @@
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_NAME>",
-        "hint": "Name of the service account"
+        "hint": "Name of the service account",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_IMAGE_PULL_SECRETS>",
-        "hint": "Names of the docker-registry secretes to be associated with this service account.",
+        "hint": "Names of the docker-registry secretes to be associated with this service account. $DOCKER_REGISTRY_SECRET_NAME",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "- name: "
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_SECRETS>",
-        "hint": "Names of the secretes (eg: git repo) to be associated with this service account.",
+        "hint": "Names of the secretes (eg: git repo) to be associated with this service account. $K8S_BASIC_SECRET_NAME",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "- name: "

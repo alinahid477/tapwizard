@@ -132,9 +132,14 @@ function createKpackBuilder () {
     then
         configureType="-$configureType"
     fi
-    printf "\n\n**** Creating Builder ($builderType$configureType) *****\n\n"
 
-    local builderTemplateName="kpack-$builderType"
+    printf "\n\n**** Creating Builder ($builderType$configureType) *****\n\n"
+    
+    export $(cat $HOME/.env | xargs)
+    sleep 1
+    export KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME=$K8S_SERVICE_ACCOUNT_NAME
+    
+    local builderTemplateName="kpack-$builderType$configureType"
     local builderFile=/tmp/$builderTemplateName.tmp
     local dynamicVariableNameForBuilderName="KPACK_CLUSTERBUILDER_NAME"
     if [[ $builderType == 'builder' ]]
@@ -180,7 +185,7 @@ function configureK8sSecretAndServiceAccount () {
     local isexist=''
 
     local namespace=''
-    if [[ -n configureType ]]
+    if [[ $configureType == 'default' ]]
     then
         printf "${yellowcolor}Setting namespace to default.${normalcolor}\n"    
         namespace='default'
@@ -241,9 +246,14 @@ function configureK8sSecretAndServiceAccount () {
         extractVariableAndTakeInput $tmpCmdFile
         cmdTemplate=$(cat $tmpCmdFile)
         rm $tmpCmdFile
-        printf "\nCreating new K8s secret of type docker-registry name: $DOCKER_REGISTRY_SECRET_NAME..."
+        printf "\nCreating new K8s secret of type docker-registry..."
         $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
-        printf "\n"    
+        printf "\n"
+    else
+        sed -i '/DOCKER_REGISTRY_SECRET_NAME/d' $HOME/.env
+        sleep 1
+        printf "\nDOCKER_REGISTRY_SECRET_NAME=$dockersecretname\n" >> $HOME/.env
+        sleep 1
     fi
 
 
@@ -259,36 +269,86 @@ function configureK8sSecretAndServiceAccount () {
     done    
     if [[ $confirmed == 'y' ]]
     then
-        printf "User input k8s secret for git....\n"
-        local secretTemplateName="kpack-k8s-basic-auth-git-secret"
-        local secretFile=/tmp/$secretTemplateName.tmp
-        cp $HOME/binaries/templates/$secretTemplateName.template $secretFile
-        extractVariableAndTakeInput $secretFile || returnOrexit || return 1
+        local gitsecretname=''
+        while [[ -z $gitsecretname ]]; do
+            read -p "Type the name of existing secret in $namespace (type 'new' to create new)? " gitsecretname
+            if [[ -z $gitsecretname ]]
+            then
+                printf "Empty value not allowed.\n"
+            elif [[ $gitsecretname != 'new' ]]
+            then
+                printf "Checking secret: $gitsecretname in $namespace..."
+                isexist=$(kubectl describe secret $gitsecretname -n $namespace)
+                if [[ -z $isexist ]]
+                then
+                    gitsecretname=''
+                    printf "${yellowcolor}Secret: $gitsecretname not found in namespace: $namespace ${normalcolor}\n"
+                fi
+            fi
+        done
+        if [[ $gitsecretname == 'new' ]]
+        then
+            printf "Require user input k8s secret for git....\n"
+            local secretTemplateName="kpack-k8s-basic-auth-git-secret"
+            local secretFile=/tmp/$secretTemplateName.tmp
+            cp $HOME/binaries/templates/$secretTemplateName.template $secretFile
+            extractVariableAndTakeInput $secretFile || returnOrexit || return 1
 
-        printf "Creating k8s secret for git...."
-        kubectl apply -f $secretFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
+            printf "Creating k8s secret for git...."
+            kubectl apply -f $secretFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
+        else
+            sed -i '/K8S_BASIC_SECRET_NAME/d' $HOME/.env
+            sleep 1
+            printf "\K8S_BASIC_SECRET_NAME=$gitsecretname\n" >> $HOME/.env
+            sleep 1
+        fi
     fi
 
 
 
     printf "\n\n${greencolor}Configuring service account for kpack...${normalcolor}\n"
-    confirmed=''
-    while true; do
-        read -p "Would you like to create a service account in namespace: $namespace? [y/n] " yn
-        case $yn in
-            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-            * ) echo "Please answer y or n.";
-        esac
-    done    
-    if [[ $confirmed == 'y' ]]
+    local saname=''
+    if [[ $configureType == 'default' ]]
     then
+        sed -i '/K8S_SERVICE_ACCOUNT_NAME/d' $HOME/.env
+        sleep 1
+        printf "\nK8S_SERVICE_ACCOUNT_NAME=kpack-default-sa\n" >> $HOME/.env
+        sleep 1
+        printf "Setting sa name: kpack-default-sa\n"
+        printf "Checking sa: $saname in $namespace..."
+        isexist=$(kubectl describe sa $saname -n $namespace)
+        if [[ -z $isexist ]]
+        then
+            saname='new'
+        else
+            saname='kpack-default-sa'
+        fi
+    fi
+    while [[ -z $saname ]]; do
+        read -p "Type the name of existing Service Account in $namespace (type 'new' to create new)? " saname
+        if [[ -z $saname ]]
+        then
+            printf "Empty value not allowed.\n"
+        elif [[ $saname != 'new' ]]
+        then
+            printf "Checking sa: $saname in $namespace..."
+            isexist=$(kubectl describe sa $saname -n $namespace)
+            if [[ -z $isexist ]]
+            then
+                saname=''
+                printf "${yellowcolor}Secret: $saname not found in namespace: $namespace ${normalcolor}\n"
+            fi
+        fi
+    done
+    if [[ $sname == 'new' ]]
+    then
+        export $(cat $HOME/.env | xargs)
+        sleep 1
         printf "User input k8s service account....\n"
         local saTemplateName="kpack-k8s-service-account"
         local saFile=/tmp/$saTemplateName.tmp
         cp $HOME/binaries/templates/$saTemplateName.template $saFile
         extractVariableAndTakeInput $saFile || returnOrexit || return 1
-
         confirmed=''
         while true; do
             read -p "Would you like to add more secrets (eg: git-secret) to this service account? [y/n] " yn
@@ -310,7 +370,6 @@ function configureK8sSecretAndServiceAccount () {
         printf "Creating k8s service account in namespace: $namespace...."
         kubectl apply -f $saFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
     fi
-
     printf "\n\n${greencolor}COMPLETED${normalcolor}\n"
 }
 

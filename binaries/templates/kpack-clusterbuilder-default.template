@@ -3,7 +3,7 @@ kind: ClusterBuilder
 metadata:
   name: defaultbuilder
 spec:
-  serviceAccountName: kpack-default-sa
+  serviceAccountName: <KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME>
   tag: <KPACK_CLUSTERBUILDER_DOCKER_IMAGE_TAG>
   stack:
     name: base
