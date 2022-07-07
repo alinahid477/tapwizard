@@ -346,7 +346,7 @@ function configureK8sSecretAndServiceAccount () {
             fi
         fi
     done
-    if [[ $sname == 'new' ]]
+    if [[ $saname == 'new' ]]
     then
         export $(cat $HOME/.env | xargs)
         sleep 1
@@ -398,7 +398,20 @@ function startKpackConfiguration () {
         configureType=''
     fi
 
-    
+    printf "\n\nprepare..."
+    sed -i '/KPACK_CLUSTERSTORE_NAME/d' $HOME/.env
+    sed -i '/KPACK_CLUSTERSTACK_NAME/d' $HOME/.env
+    sleep 1
+    printf ".."
+    sed -i '/DOCKER_REGISTRY_SECRET_NAME/d' $HOME/.env
+    sed -i '/K8S_BASIC_SECRET_NAME/d' $HOME/.env
+    sleep 1
+    printf ".."
+    sed -i '/K8S_SERVICE_ACCOUNT_NAME/d' $HOME/.env
+    sleep 1
+    printf ".."
+    sed -i '/KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE/d' $HOME/.env
+    printf "DONE\n"
 
     local dynamicName=''
 
