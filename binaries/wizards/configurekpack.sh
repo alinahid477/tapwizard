@@ -178,9 +178,10 @@ function configureK8sSecretAndServiceAccount () {
     local isexist=''
 
 
+    printf "${yellowcolor}Type the name of namespace where you would like to create secrets and sa for kpack builder. If the namespace does not exist a new namespace will be created using the provided name.${normalcolor}\n"
     local namespace=''
     while [[ -z $namespace ]]; do
-        read -p "Type the name of namespace where you would like to create secrets and sa for kpack builder? [y/n] " namespace
+        read -p "Type the name of namespace: " namespace
         if [[ -z $namespace ]]
         then
             printf "Empty value not allowed.\n"
@@ -192,7 +193,7 @@ function configureK8sSecretAndServiceAccount () {
         isexist=$(kubectl describe ns $namespace)
         if [[ -z $isexist ]]
         then
-            printf "FOUND\n"
+            printf "NOT FOUND\n"
         else
             kubectl create ns $namespace
             printf "CREATED\n"
