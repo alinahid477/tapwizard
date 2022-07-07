@@ -188,6 +188,10 @@
         "hint": "Service account (containing container registry and/or private github repo's secret) to be used by this builder. (eg: kpack-default-sa)\nYou MUST have this service account existing in the namespace specified before.\nYou MUST have this service accont configured with imagePullSecrets for Container Registry (and GIT Repo Secret if pvt git repo used).\nDoco:https://github.com/pivotal/kpack/blob/main/docs/secrets.md"
     },
     {
+        "name": "<KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE>",
+        "hint": "The namespace in which the Service account (input previously) exists."
+    },
+    {
         "name": "<KPACK_CLUSTERBUILDER_DOCKER_IMAGE_TAG>",
         "hint": "The Kpack Builder itself will be an image. This is the image tag for the builder image. eg: your-dockerhub-username/defaultbuilder or gcr.io/your-project/defaultbuilder etc\nThis is different to image tag for the application container. The application image tag will be specified during creation of the image [kp image save tutorial-image --tag {IMAGE_TAG} --builder default]."
     },

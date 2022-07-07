@@ -376,6 +376,10 @@ function configureK8sSecretAndServiceAccount () {
         printf "Creating k8s service account in namespace: $namespace...."
         kubectl apply -f $saFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
     fi
+    sed -i '/KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE/d' $HOME/.env
+    sleep 1
+    printf "\nKPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE=$namespace\n" >> $HOME/.env
+    sleep 1
     printf "\n\n${greencolor}COMPLETED${normalcolor}\n"
 }
 
@@ -498,6 +502,8 @@ function startKpackConfiguration () {
     printf ".."
     sed -i '/K8S_SERVICE_ACCOUNT_NAME/d' $HOME/.env
     sleep 1
+    printf ".."
+    sed -i '/KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE/d' $HOME/.env
     printf "DONE\n"
 }
 

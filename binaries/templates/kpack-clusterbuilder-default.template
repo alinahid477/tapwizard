@@ -3,7 +3,10 @@ kind: ClusterBuilder
 metadata:
   name: defaultbuilder
 spec:
-  serviceAccountName: <KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME>
+  serviceAccountRef:
+    name: <KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME>
+    namespace: <KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAMESPACE>
+  serviceAccountName: 
   tag: <KPACK_CLUSTERBUILDER_DOCKER_IMAGE_TAG>
   stack:
     name: base
