@@ -38,7 +38,7 @@ function saveAndApplyFile () {
         if [[ $confirmed == 'y' ]]
         then
             printf "applying $file..."
-            # kubectl apply -f $file $namespace && printf "COMPLETED" || printf "FAILED"
+            kubectl apply -f $file $namespace && printf "COMPLETED" || printf "FAILED"
             printf "\n"
         elif [[ $confirmed == 'n' ]]
         then
