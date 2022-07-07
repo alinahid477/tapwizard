@@ -319,8 +319,8 @@ function configureK8sSecretAndServiceAccount () {
         printf "\nK8S_SERVICE_ACCOUNT_NAME=kpack-default-sa\n" >> $HOME/.env
         sleep 1
         printf "Setting sa name: kpack-default-sa\n"
-        printf "Checking sa: $saname in $namespace..."
-        isexist=$(kubectl describe sa $saname -n $namespace)
+        printf "Checking sa: kpack-default-sa in $namespace..."
+        isexist=$(kubectl describe sa kpack-default-sa -n $namespace)
         if [[ -z $isexist ]]
         then
             saname='new'
