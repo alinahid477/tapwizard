@@ -235,7 +235,7 @@ function configureK8sSecretAndServiceAccount () {
         printf "Require user input for K8s secret of type docker-registry...\n"
         sleep 1
         local tmpCmdFile=/tmp/kubectl-docker-registry-secret-cmd.tmp
-        local cmdTemplate="kubectl create secret docker-registry <DOCKER_REGISTRY_SECRET_NAME> --server <DOCKER_REGISTRY_SERVER> --username <DOCKER_REGISTRY_USERNAME> --password <DOCKER_REGISTRY_PASSWORD> --namespace $namespace"
+        local cmdTemplate="kubectl create secret docker-registry <DOCKER_REGISTRY_SECRET_NAME> --docker-server <DOCKER_REGISTRY_SERVER> --docker-username <DOCKER_REGISTRY_USERNAME> --docker-password <DOCKER_REGISTRY_PASSWORD> --namespace $namespace"
 
         echo $cmdTemplate > $tmpCmdFile
         extractVariableAndTakeInput $tmpCmdFile
