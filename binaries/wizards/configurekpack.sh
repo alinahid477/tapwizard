@@ -50,7 +50,7 @@ function saveAndApplyFile () {
 
 function createKpackClusterStore () {
     
-    local configureType=$1 # optional
+    local configureType=$2 # optional
     if [[ -n $configureType ]]
     then
         configureType="-$configureType"
@@ -66,11 +66,28 @@ function createKpackClusterStore () {
     export $(cat $HOME/.env | xargs)
     sleep 1
 
-    printf "saving file..."
+    
     if [[ $configureType == '-default' ]]
     then
-        KPACK_CLUSTERSTORE_NAME='default'
+        KPACK_CLUSTERSTORE_NAME='kpdefault'
     fi
+    
+    if [[ -n $KPACK_CLUSTERSTORE_NAME ]]
+    then
+        printf "Checking if $KPACK_CLUSTERSTORE_NAME already exists...."
+        local isexist=$(kubectl describe clusterstore $KPACK_CLUSTERSTORE_NAME)
+        if [[ -n $isexist ]]
+        then
+            printf "FOUND\n"
+            printf "${redcolor}ERROR: Error creating new ClusterStore.\nKpack ClusterStore with name: $KPACK_CLUSTERSTORE_NAME already exists.${normalcolor}\n"
+            sleep 2
+            returnOrexit || return 1
+        else
+            printf "NOT FOUND. OK to create new...\n"
+        fi
+    fi
+
+    printf "saving file..."
     if [[ -z $KPACK_CLUSTERSTORE_NAME ]]
     then
         while [[ -z $KPACK_CLUSTERSTORE_NAME ]]; do
@@ -104,11 +121,28 @@ function createKpackClusterStack () {
     export $(cat $HOME/.env | xargs)
     sleep 1
 
-    printf "saving file..."
+    
     if [[ $configureType == '-default' ]]
     then
-        KPACK_CLUSTERSTACK_NAME='base'
+        KPACK_CLUSTERSTACK_NAME='kpdefaultbase'
     fi
+
+    if [[ -n $KPACK_CLUSTERSTACK_NAME ]]
+    then
+        printf "Checking if $KPACK_CLUSTERSTACK_NAME already exists...."
+        local isexist=$(kubectl describe clusterstack $KPACK_CLUSTERSTACK_NAME)
+        if [[ -n $isexist ]]
+        then
+            printf "FOUND\n"
+            printf "${redcolor}ERROR: Error creating new ClusterStack.\nKpack ClusterStack with name: $KPACK_CLUSTERSTACK_NAME already exists.${normalcolor}\n"
+            sleep 2
+            returnOrexit || return 1
+        else
+            printf "NOT FOUND. OK to create new...\n"
+        fi
+    fi
+
+    printf "saving file..."
     if [[ -z $KPACK_CLUSTERSTACK_NAME ]]
     then
         while [[ -z $KPACK_CLUSTERSTACK_NAME ]]; do
@@ -127,7 +161,8 @@ function createKpackClusterStack () {
 function createKpackBuilder () {
     
     local builderType=$1 # Required, Types: clusterbuilder, builder
-    local configureType=$2 # optional
+    local namespace=$2 # Required if builderType=builder
+    local configureType=$3 # optional
     if [[ -n $configureType ]]
     then
         configureType="-$configureType"
@@ -153,26 +188,43 @@ function createKpackBuilder () {
     export $(cat $HOME/.env | xargs)
     sleep 1
 
-    printf "saving file..."
+    
     if [[ $configureType == '-default' ]]
     then
-        KPACK_CLUSTERBUILDER_NAME='defaultbuilder'
-        KdynamicVariableNameForBuilderName="KPACK_CLUSTERBUILDER_NAME"
+        KPACK_CLUSTERBUILDER_NAME='kpdefaultclusterbuilder'
+        dynamicVariableNameForBuilderName="KPACK_CLUSTERBUILDER_NAME"
     fi
+    
+    if [[ -n ${!dynamicVariableNameForBuilderName} ]]
+    then
+        printf "Checking if -n ${!dynamicVariableNameForBuilderName} already exists...."
+        local isexist=$(kubectl describe $buildertype ${!dynamicVariableNameForBuilderName} -n $namespace)
+        if [[ -n $isexist ]]
+        then
+            printf "FOUND\n"
+            printf "${redcolor}ERROR: Error creating new $buildertype.\nKpack $buildertype with name: ${!dynamicVariableNameForBuilderName} already exists.${normalcolor}\n"
+            sleep 2
+            returnOrexit || return 1
+        else
+            printf "NOT FOUND. OK to create new...\n"
+        fi
+    fi
+
+    printf "saving file..."
     local inp=''
     if [[ -z ${!dynamicVariableNameForBuilderName} ]]
     then
         while [[ -z $inp ]]; do
-            read -p "input value for $inputvar: " inp
+            read -p "input value for $builderType filename: " inp
             
             if [[ -z $inp ]]
             then
                 printf "${redcolor}empty value is not allowed.${normalcolor}\n"                
             fi
         done
-        saveAndApplyFile $builderType $builderTemplateName $inp $builderFile
+        saveAndApplyFile $builderType $builderTemplateName $inp $builderFile $namespace
     else
-        saveAndApplyFile $builderType $builderTemplateName ${!dynamicVariableNameForBuilderName} $builderFile
+        saveAndApplyFile $builderType $builderTemplateName ${!dynamicVariableNameForBuilderName} $builderFile $namespace
     fi    
 }
 
@@ -215,7 +267,7 @@ function configureK8sSecretAndServiceAccount () {
             sleep 2
         fi
     fi
-
+    export KP_CONFIGURE_NAMESPACE=$namespace
 
     printf "\n\n${greencolor}Configuring container registry secret for kpack...${normalcolor}\n"
     local dockersecretname=''
@@ -422,7 +474,7 @@ function startKpackConfiguration () {
         configureK8sSecretAndServiceAccount $configureType
         createKpackClusterStack $configureType
         createKpackClusterStore $configureType
-        createKpackBuilder "clusterbuilder" $configureType
+        createKpackBuilder "clusterbuilder" "default" $configureType
         dynamicName="KPACK_CLUSTERBUILDER_NAME"
     else
         configureK8sSecretAndServiceAccount
@@ -488,7 +540,7 @@ function startKpackConfiguration () {
                 dynamicName="KPACK_BUILDER_NAME"
             fi
             sed -i '/'$dynamicName'/d' $HOME/.env
-            createKpackBuilder $builderTypeX
+            createKpackBuilder $builderTypeX $KP_CONFIGURE_NAMESPACE
         fi
     fi   
 

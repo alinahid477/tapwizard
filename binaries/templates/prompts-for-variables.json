@@ -159,7 +159,7 @@
     },
     {
         "name": "<KPACK_CLUSTERSTORE_BUILDPACKS>",
-        "hint": "Type the urls for the buildpacks. Available buildpacks are:\n\tgcr.io/paketo-buildpacks/java\n\tgcr.io/paketo-buildpacks/nodejs\nPress enter to add another. Once finished type 'end' end array input.",
+        "hint": "Type the urls for the buildpacks. There are many buildpacks available at https://gcr.io/paketo-buildpacks.\nMost commonly used ones are:\n\tgcr.io/paketo-buildpacks/java\n\tgcr.io/paketo-buildpacks/nodejs\n\tgcr.io/paketo-buildpacks/dotnet-core\n\tgcr.io/paketo-buildpacks/go\n\tgcr.io/paketo-buildpacks/php\n\tgcr.io/paketo-buildpacks/python\nType or paste the url and press enter to add another. Once finished type 'end' end array input.",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "  - image: "
@@ -172,15 +172,15 @@
     },
     {
         "name": "<KPACK_CLUSTERSTACK_BUILD_IMAGE>",
-        "hint": "Build image for the clusterstack. EG: paketobuildpacks/build:base-cnb"
+        "hint": "Build image for the clusterstack. EG:\n\tpaketobuildpacks/build:base-cnb\n\npaketobuildpacks/build:full-cnb\n\npaketobuildpacks/build:tiny-cnb"
     },
     {
         "name": "<KPACK_CLUSTERSTACK_RUN_IMAGE>",
-        "hint": "Run image for the clusterstack. EG: paketobuildpacks/run:base-cnb"
+        "hint": "Run image for the clusterstack. EG:\n\tpaketobuildpacks/run:base-cnb\n\npaketobuildpacks/run:full-cnb\n\npaketobuildpacks/run:tiny-cnb"
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_NAME>",
-        "hint": "Name of the cluster builder. (eg: default)",
+        "hint": "Name of the cluster builder. (eg: default, mybuilder, myjavabuilder etc)",
         "isRecordAsEnvVar": true
     },
     {
@@ -197,7 +197,7 @@
     },
     {
         "name": "<KPACK_CLUSTERBUILDER_BUILDPACKS_ORDER>",
-        "hint": "The order of buildpacks by which the detection should occur.\nFor example: if you have mix of java and nodejs applications but the number of java applications are higher than nodejs you may want to put paketo-buildpacks/java before paketo-buildpacks/nodejs.\nThe buildpacks are from the cluster store previously created.",
+        "hint": "The order of buildpacks by which the detection should occur.\nFor example: if you have mix of java and nodejs applications but the number of java applications are higher than nodejs you may want to put paketo-buildpacks/java before paketo-buildpacks/nodejs.\nThe buildpacks are from the cluster store previously created.\nCommonly used orders are:\n\tpaketo-buildpacks/java\n\tpaketo-buildpacks/nodejs\n\tpaketo-buildpacks/dotnet-core\n\tpaketo-buildpacks/python\n\tpaketo-buildpacks/go\n\tpaketo-buildpacks/procfile",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "  - group:\n    - id: "
@@ -209,7 +209,7 @@
     },
     {
         "name": "<DOCKER_REGISTRY_SERVER>",
-        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v1/.\nFor ACR this should be yourregoname.azurecr.io etc"
+        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v1/.\nFor ACR this should be yourreistryoname.azurecr.io etc"
     },
     {
         "name": "<DOCKER_REGISTRY_USERNAME>",
@@ -245,14 +245,14 @@
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_IMAGE_PULL_SECRETS>",
-        "hint": "Names of the docker-registry secretes to be associated with this service account. $DOCKER_REGISTRY_SECRET_NAME",
+        "hint": "Names of the docker-registry secrets to be associated with this service account.\nIf you have created docker-registry secret previously (as part of this installation process) you are most likely to use that (type the name of that secret). Additionally you can use other secrets existing in the namespace too.\nType as many names as you would like to associate with this service account. Once finished type 'end' and press enter.",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "- name: "
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_SECRETS>",
-        "hint": "Names of the secretes (eg: git repo) to be associated with this service account. $K8S_BASIC_SECRET_NAME",
+        "hint": "Names of the secretes (eg: git repo) to be associated with this service account. \nIf you have created secret previously (as part of this installation process) you are most likely to use that (type the name of that secret). Additionally you can use other secrets existing in the namespace too.\nType as many names as you would like to associate with this service account. Once finished type 'end' and press enter.",
         "input_type": "array",
         "use_special_replace": true,
         "array_per_item_prefix": "- name: "

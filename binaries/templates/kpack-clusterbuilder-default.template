@@ -1,7 +1,7 @@
 apiVersion: kpack.io/v1alpha2
 kind: ClusterBuilder
 metadata:
-  name: defaultbuilder
+  name: kpdefaultclusterbuilder
 spec:
   serviceAccountRef:
     name: <KPACK_CLUSTERBUILDER_SERVICE_ACCOUNT_NAME>
@@ -25,8 +25,6 @@ spec:
     - id: paketo-buildpacks/python
   - group:
     - id: paketo-buildpacks/go
-  - group:
-    - id: paketo-buildpacks/php
   - group:
     - id: paketo-buildpacks/ruby
   - group:
