@@ -231,9 +231,23 @@ function createKpackBuilder () {
 
 function configureK8sSecretAndServiceAccount () {
 
+
+    printf "\n\n${yellowcolor}INFO: kpack utilises K8s Secrets and ServiceAccount (with associated secrets) to connect to private container registries and/or private git repositories."
+    printf "\nHence a AerviceAccount, that associates theses secrets (for pvt container registries and pvt git repositories), is required."
+    sleep 1
+    printf "\nThe ServiceAccount is then referenced in kpack's builder or cluster builder." 
+    printf "\nThus, during the build time kpack has the auth information for getting source codes from git repos and push images to container registries.\n"
+    sleep 1
+    printf "\nNOTE: The kp_default_repository,username and password is for kpack's default images (eg: default builder/cluster builder), whereas these secrets (and service accounts) are for the image registries where kpack will push images to and private git reporsity from where kpack will download source codes from."
+    printf "\nIt may seem like that the kp_default_repository,username and password was redundant information, cause it probably was."
+    printf "\nYou may provide the same registry credentials."
+    printf "${normalcolor}\n\n"
+    sleep 1
+    
+
     local configureType=$1
 
-    printf "**** Configure K8s docker-registry secret and service account for Kpack ******\n"
+    printf "**** Configure K8s registry secrets, basic secrets (if needed for pvt git repo) and service account for Kpack ******\n"
     local isexist=''
 
     local namespace=''
@@ -361,24 +375,25 @@ function configureK8sSecretAndServiceAccount () {
     fi
 
 
-
+    
     printf "\n\n${greencolor}Configuring service account for kpack...${normalcolor}\n"
+    
     local saname=''
     if [[ $configureType == 'default' ]]
     then
+        saname='kpack-default-sa'
         sed -i '/K8S_SERVICE_ACCOUNT_NAME/d' $HOME/.env
         sleep 1
-        printf "\nK8S_SERVICE_ACCOUNT_NAME=kpack-default-sa\n" >> $HOME/.env
+        printf "\nK8S_SERVICE_ACCOUNT_NAME=$saname\n" >> $HOME/.env
         sleep 1
-        printf "Setting sa name: kpack-default-sa\n"
-        printf "Checking sa: kpack-default-sa in $namespace..."
-        isexist=$(kubectl describe sa kpack-default-sa -n $namespace)
+        printf "Setting sa name: $saname\n"
+        printf "Checking sa: $saname in $namespace..."
+        isexist=$(kubectl describe sa $saname -n $namespace)
         if [[ -z $isexist ]]
         then
             saname='new'
             printf "NOT FOUND\n"
         else
-            saname='kpack-default-sa'
             printf "FOUND\n"
         fi
     fi
