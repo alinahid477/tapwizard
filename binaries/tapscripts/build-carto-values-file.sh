@@ -38,7 +38,7 @@ function buildCartoValuesFile () {
     printf "\nvalues file of type $valuesType assembly...COMPLETE\n"
 
     printf "\n\nPopulating $baseFile with user input...\n\n"
-    extractVariableAndTakeInput $baseFile
+    extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.carto.json" $baseFile
     printf "\nFile $baseFile generation...COMPLETE\n"
 
     echo $baseFile > $outputLocation
