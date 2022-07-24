@@ -1,4 +1,4 @@
 test:
-  template_name:
-  tekton_task_type:
-  tekton_task_name:
+  template_name: <CARTO_TEST_TEMPLATE_NAME>
+  tekton_task_type: <CARTO_TEST_TEKTON_TASK_TYPE>
+  tekton_task_name: <CARTO_TEST_TEKTON_TASK_NAME>

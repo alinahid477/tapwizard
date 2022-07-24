@@ -1,9 +1,9 @@
 gitwriter:
-  template_name:
-  tekton_task_type:
-  tekton_task_name:
-  repository: https://github.com/example/example.git
-  branch: main
-  user_name: example
-  user_email: example@example.com
-  commit_message: "Update app configuration"
+  template_name: <CARTO_GITWRITER_TEMPLATE_NAME>
+  tekton_task_type: <CARTO_GITWRITER_TEKTON_TASK_TYPE>
+  tekton_task_name: <CARTO_GITWRITER_TEKTON_TASK_NAME>
+  repository: <CARTO_GITWRITER_REPOSITORY>
+  branch: <CARTO_GITWRITER_BRANCH>
+  user_name: <CARTO_GITWRITER_USERNAME>
+  user_email: <CARTO_GITWRITER_EMAIL>
+  commit_message: <CARTO_GITWRITER_COMMIT_MESSAGE>

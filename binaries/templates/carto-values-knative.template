@@ -1,4 +1,4 @@
 knative:
-  template_name:
-  image_registry_secret_name: regcred  
+  template_name: <CARTO_KNATIVE_CONFIG_TEMPLATE_NAME>
+  image_registry_secret_name: <IMAGE_PULL_SECRET_NAME>
   

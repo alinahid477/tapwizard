@@ -1,4 +1,4 @@
 src:
-  template_name:
-  git_secret_name: git-sss
-  git_pull_interval: 60s
+  template_name: <CARTO_GIT_TEMPLATE_NAME>
+  git_secret_name: <CARTO_GIT_SECRET_NAME>
+  git_poll_interval: <CARTO_GIT_POLL_INTERVAL_IN_SECONDS>s

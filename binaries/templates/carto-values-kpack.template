@@ -1,5 +1,5 @@
 kpack:
-  template_name:
-  image_prefix: a-project-id-i-own/an-image-prefix-i-like-
-  builder_type: ClusterBuilder
-  builder_name: Default
+  template_name: <CARTO_IMAGE_TEMPLATE_NAME>
+  image_prefix: <CARTO_IMAGE_PREFIX>
+  builder_type: <CARTO_IMAGE_KPACK_BUILDER_TYPE>
+  builder_name: <CARTO_IMAGE_KPACK_BUILDER_NAME>
