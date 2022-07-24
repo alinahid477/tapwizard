@@ -1,0 +1,51 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: #@ data.values.test.template_name + "-run"
+spec:
+  outputs:
+    url: spec.params[?(@.name=="blob-url")].value
+    revision: spec.params[?(@.name=="blob-revision")].value
+  template:
+    apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: $(runnable.metadata.name)$-
+    spec:
+      taskRef: $(runnable.spec.inputs.taskRef)$
+      params:
+        - name: blob-url
+          value: $(runnable.spec.inputs.blob-url)$
+        - name: blob-revision
+          value: $(runnable.spec.inputs.blob-revision)$
+
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  name: #@ data.values.test.template_name
+spec:
+  urlPath: .status.outputs.url
+  revisionPath: .status.outputs.revision
+
+  template:
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.test.template_name + "-runnable"
+    spec:
+      serviceAccountName: #@ data.values.service_account_name
+      runTemplateRef:
+        name: #@ data.values.test.template_name + "-run"
+
+      inputs:
+        taskRef:
+          kind: #@ data.values.test.tekton_task_type
+          name: #@ data.values.test.tekton_task_name
+        params:
+          - name: blob-url
+            value: $(sources[?(@.name=="source")].url)$
+          - name: blob-revision
+            value: $(sources[?(@.name=="source")].revision)$

@@ -1,0 +1,57 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterConfigTemplate
+metadata:
+  name: #@ data.values.knative.template_name
+spec:
+  configPath: .data.manifest
+  params:
+    - name: data_values_image_registry_secret_name
+      default: #@ data.values.knative.image_registry_secret_name
+  ytt: |
+    #@ load("@ytt:data", "data")
+    #@ load("@ytt:yaml", "yaml")
+    #@ load("@ytt:json", "json")
+    #@ load("@ytt:base64", "base64")
+    
+    #@ def manifest():
+    manifest.yaml: #@ yaml.encode(service())
+    #@ end
+    
+    #@ def service():
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    metadata:
+      name: #@ data.values.workload.metadata.name
+      labels:
+        #@ if hasattr(data.values.workload.metadata, "labels"):
+        #@ if hasattr(data.values.workload.metadata.labels, "app.kubernetes.io/part-of"):
+        app.kubernetes.io/part-of: #@ data.values.workload.metadata.labels["app.kubernetes.io/part-of"]
+        #@ end
+        #@ end
+        carto.run/workload-name: #@ data.values.workload.metadata.name
+        app.kubernetes.io/component: run
+    spec:
+      template:
+        metadata:
+          annotations:
+            autoscaling.knative.dev/minScale: '1'
+        spec:
+          containers:
+            - name: workload
+              image: #@ data.values.image
+              securityContext:
+                runAsUser: 1000
+          imagePullSecrets:
+            - name: $(params.data_values_image_registry_secret_name)$
+    #@ end
+    
+    ---
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: #@ data.values.workload.metadata.name
+    data:
+      manifest: #@ base64.encode(json.encode(manifest()))
+

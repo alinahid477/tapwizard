@@ -1,0 +1,62 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: #@ data.values.gitwriter.template_name + "-run"
+spec:
+  template:
+    apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: $(runnable.metadata.name)$-
+      labels: $(runnable.metadata.labels)$
+    spec:
+      serviceAccountName: $(runnable.spec.inputs.serviceAccount)$
+      taskRef: $(runnable.spec.inputs.taskRef)$
+      params: $(runnable.spec.inputs.params)$
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  name: #@ data.values.gitwriter.template_name
+spec:
+  params:
+    - name: gitwriter_repository
+      default: #@ data.values.gitwriter.repository
+    - name: gitwriter_branch
+      default: #@ data.values.gitwriter.branch
+    - name: gitwriter_user_name
+      default: #@ data.values.gitwriter.user_name
+    - name: gitwriter_user_email
+      default: #@ data.values.gitwriter.user_email
+    - name: gitwriter_commit_message
+      default: #@ data.values.gitwriter.commit_message
+  template:
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.gitwriter.template_name + "-runnable"
+    spec:
+      serviceAccountName: #@ data.values.service_account_name
+      runTemplateRef:
+        name: #@ data.values.gitwriter.template_name + "-run"
+
+      inputs:
+        serviceAccount: #@ data.values.service_account_name
+        taskRef:
+          kind: #@ data.values.gitwriter.tekton_task_type
+          name: #@ data.values.gitwriter.tekton_task_name
+        params:
+          - name: gitwriter_repository
+            value: $(params.gitwriter_repository)$
+          - name: gitwriter_branch
+            value: $(params.gitwriter_branch)$
+          - name: gitwriter_user_name
+            value: $(params.gitwriter_user_name)$
+          - name: gitwriter_user_email
+            value: $(params.gitwriter_user_email)$
+          - name: gitwriter_commit_message
+            value: $(params.gitwriter_commit_message)$
+          - name: gitwriter_files
+            value: $(config)$

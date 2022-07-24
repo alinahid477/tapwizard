@@ -1,0 +1,5 @@
+kpack:
+  template_name:
+  image_prefix: a-project-id-i-own/an-image-prefix-i-like-
+  builder_type: ClusterBuilder
+  builder_name: Default

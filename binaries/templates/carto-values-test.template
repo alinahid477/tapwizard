@@ -1,0 +1,4 @@
+test:
+  template_name:
+  tekton_task_type:
+  tekton_task_name:

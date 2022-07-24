@@ -1,0 +1,4 @@
+src:
+  template_name:
+  git_secret_name: git-sss
+  git_pull_interval: 60s

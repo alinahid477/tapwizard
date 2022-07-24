@@ -1,0 +1,4 @@
+knative:
+  template_name:
+  image_registry_secret_name: regcred  
+  

@@ -1,0 +1,23 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  name: #@ data.values.kpack.template_name
+spec:
+  imagePath: .status.latestImage
+
+  template:
+    apiVersion: kpack.io/v1alpha1
+    kind: Image
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      tag: #@ data.values.kpack.image_prefix + "$(workload.metadata.name)$"
+      serviceAccount: service-account
+      builder:
+        kind: #@ data.values.kpack.builder_type
+        name: #@ data.values.kpack.builder_name
+      source:
+        blob:
+          url: $(sources.source.url)$

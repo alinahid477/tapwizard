@@ -1,0 +1,9 @@
+gitwriter:
+  template_name:
+  tekton_task_type:
+  tekton_task_name:
+  repository: https://github.com/example/example.git
+  branch: main
+  user_name: example
+  user_email: example@example.com
+  commit_message: "Update app configuration"

@@ -11,18 +11,19 @@ source $HOME/binaries/wizards/installtapprofile.sh
 source $HOME/binaries/wizards/installdevnamespace.sh
 
 source $HOME/binaries/wizards/configurekpack.sh
-
+source $HOME/binaries/wizards/carto.sh
 
 function helpFunction()
 {
     printf "\n"
     echo "Usage:"
-    echo -e "\t-r | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise."
+    echo -e "\t-t | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise."
     echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag."
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
     echo -e "\t-k | --configure-kpack signals the wizard create developer namespace."
+    echo -e "\t-c | --configure-carto-templates signals the wizard start creating cartographer templates for supply-chain."
     echo -e "\t-h | --help"
     printf "\n"
 }
@@ -34,6 +35,7 @@ unset tapPackageRepositoryInstall
 unset tapProfileInstall
 unset tapDeveloperNamespaceCreate
 unset wizardConfigureKpack
+unset wizardConfigureCartoTemplates
 unset argFile
 unset ishelp
 
@@ -106,6 +108,13 @@ function executeCommand () {
         returnOrexit || return 1
     fi
 
+    if [[ $wizardConfigureCartoTemplates == 'y' ]]
+    then
+        unset wizardConfigureCartoTemplates
+        createCartoTemplates
+        returnOrexit || return 1
+    fi
+
     printf "\nThis shouldn't have happened. Embarrasing.\n"
 }
 
@@ -114,7 +123,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:h --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:ch --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -149,6 +158,11 @@ while true ; do
             case "$2" in
                 "" ) wizardConfigureKpack='y'; shift 2 ;;
                 * ) wizardConfigureKpack='y' ; shift 1 ;;
+            esac ;;
+        -c | --configure-carto-templates )
+            case "$2" in
+                "" ) wizardConfigureCartoTemplates='y'; shift 2 ;;
+                * ) wizardConfigureCartoTemplates='y' ; shift 1 ;;
             esac ;;
         -f | --file )
             case "$2" in
