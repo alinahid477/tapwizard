@@ -24,6 +24,12 @@ function buildCartoValuesFile () {
     local templatedBaseFile="$HOME/binaries/templates/carto-values-base-$valuesType.template"
     local baseFile="$cartoDir/values.$valuesType.yaml"
 
+    if [[ ! -f $templatedBaseFile ]]
+    then
+        printf "\n${redcolor}Error: $templateBaseFile not found.${normalcolor}\n"
+        returnOrexit || return 1
+    fi
+
     local isexist=''
     mkdir -p $cartoDir && cp $templatedBaseFile $baseFile && isexist='y'
 
