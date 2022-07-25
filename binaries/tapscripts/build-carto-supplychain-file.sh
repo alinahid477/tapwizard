@@ -9,7 +9,7 @@ source $HOME/binaries/scripts/extract-and-take-input.sh
 
 function buildCartoSupplyChainFile () {
     local cartoDir=$1 # REQUIRED. the directory where carto files will be created
-    local outputLocation=$1 # REQUIRED. A file containing the location/path of the generated values file. eg: file /tmp/vlocation containing this line "~/configs/carto/values.templates.yaml"
+    local outputLocation=$2 # REQUIRED. A file containing the location/path of the generated values file. eg: file /tmp/vlocation containing this line "~/configs/carto/values.templates.yaml"
 
     if [[ -z $cartoDir || -z $outputLocation ]]
     then
