@@ -5,7 +5,7 @@ source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh
 
 source $HOME/binaries/tapscripts/build-carto-values-file.sh
-source $HOME/binaries/scripts/build-carto-supplychain-file.sh
+source $HOME/binaries/tapscripts/build-carto-supplychain-file.sh
 source $HOME/binaries/scripts/extract-and-take-input.sh
 
 
