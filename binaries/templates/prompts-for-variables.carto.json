@@ -4,6 +4,11 @@
         "hint": "Service account name to be used in cartographer template. The service account is typically asigned with appropriate roles and binding to that the supply chain can have necessary permissions to do its job."
     },
     {
+        "name": "<CARTO_SERVICE_ACCOUNT_NAMESPACE>",
+        "hint": "Namespace for Service account.",
+        "defaultvalue": "default"
+    },
+    {
         "name": "<CARTO_GIT_TEMPLATE_NAME>",
         "hint": "The name of the cluster source template that is responsible for defining GitRepository from FluxCD. eg: source",
         "defaultvalue": "source"
