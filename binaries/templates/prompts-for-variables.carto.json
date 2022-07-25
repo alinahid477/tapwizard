@@ -98,5 +98,13 @@
         "name": "<CARTO_GITWRITER_COMMIT_MESSAGE>",
         "hint": "Commit message. Keep it short and simple. eg: git-ops operation",
         "use_special_replace": true
+    },
+    {
+        "name": "<TEKTON_TASK_NAME_FOR_GITWRITER>",
+        "hint": "Name for the ConfigMap GITWRITER tekton Task. You can view the generatefile here: $HOME/configs/carto/carto-gitwriter.tekton-task.configwriter.yaml"
+    },
+    {
+        "name": "<TEKTON_TASK_NAME_FOR_MAVEN_TEST>",
+        "hint": "Name for the tekton Task that will perform maven. You can view the generatefile here: $HOME/configs/carto/carto-test.tekton-task.maven.yaml"
     }
 ]

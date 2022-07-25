@@ -36,7 +36,7 @@ spec:
     metadata:
       name: #@ data.values.test.template_name + "-runnable"
     spec:
-      serviceAccountName: #@ data.values.service_account_name
+      serviceAccountName: #@ data.values.service_account.name
       runTemplateRef:
         name: #@ data.values.test.template_name + "-run"
 

@@ -38,12 +38,12 @@ spec:
     metadata:
       name: #@ data.values.gitwriter.template_name + "-runnable"
     spec:
-      serviceAccountName: #@ data.values.service_account_name
+      serviceAccountName: #@ data.values.service_account.name
       runTemplateRef:
         name: #@ data.values.gitwriter.template_name + "-run"
 
       inputs:
-        serviceAccount: #@ data.values.service_account_name
+        serviceAccount: #@ data.values.service_account.name
         taskRef:
           kind: #@ data.values.gitwriter.tekton_task_type
           name: #@ data.values.gitwriter.tekton_task_name
