@@ -17,5 +17,17 @@
         "prompt": "Would you like add kpack image builder to supply chain?",
         "options": ["test-image","source-image"],
         "hint": "Step to create image using kpack source code."
+    },
+    {
+        "name": "configprovider",
+        "filename":"carto-supplychain.configprovider.template",
+        "prompt": "Would you like add config generator to supply chain?",
+        "hint": "Step that generates config/deployable for git-ops operations."
+    },
+    {
+        "name": "git-writer",
+        "filename":"carto-supplychain.gitwriter.template",
+        "prompt": "Would you like add git-writer to supply chain?",
+        "hint": "Step that commits the config/deployable to git for git-ops operations."
     }
 ]

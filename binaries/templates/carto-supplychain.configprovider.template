@@ -1,0 +1,7 @@
+    - name: config-provider
+      templateRef:
+        kind: ClusterConfigTemplate
+        name: <CONFIG_TEMPLATE_NAME>
+      images:
+        - resource: image-builder
+          name: image

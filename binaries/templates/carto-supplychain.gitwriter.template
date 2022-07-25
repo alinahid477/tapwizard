@@ -1,0 +1,7 @@
+    - name: git-writer
+      templateRef:
+        kind: ClusterTemplate
+        name: <GIT_WRITER_TEMPLATE_NAME>
+      configs:
+        - resource: config-provider
+          name: data

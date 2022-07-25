@@ -24,7 +24,17 @@
     },
     {
         "name": "<IMAGE_TEMPLATE_NAME>",
-        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: image.",
-        "defaultvalue": "image"
+        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: kpackimage.",
+        "defaultvalue": "kpackimage"
+    },
+    {
+        "name": "<CONFIG_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterConfigTemplate that is responsible for generating config/deployable for git-ops. eg: app-config.",
+        "defaultvalue": "app-config"
+    },
+    {
+        "name": "<GIT_WRITER_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterTemplate that is responsible for writting config/deployable to git repo for git-ops. eg: git-writer.",
+        "defaultvalue": "git-writer"
     }
 ]
