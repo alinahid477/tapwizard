@@ -12,6 +12,10 @@ spec:
       generateName: $(runnable.metadata.name)$-
       labels: $(runnable.metadata.labels)$
     spec:
+      workspaces:
+      - name: ssh-directory
+        secret:
+          secretName: $(runnable.spec.inputs.git_ssh_secret)$
       serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
       taskRef: $(runnable.spec.inputs.taskRef)$
       params: $(runnable.spec.inputs.params)$
@@ -22,6 +26,8 @@ metadata:
   name: #@ data.values.gitwriter.template_name
 spec:
   params:
+    - name: gitwriter_git_ssh_secret
+      default: #@ data.values.gitwriter.ssh_secret
     - name: gitwriter_repository
       default: #@ data.values.gitwriter.repository
     - name: gitwriter_branch
@@ -47,16 +53,17 @@ spec:
         taskRef:
           kind: #@ data.values.gitwriter.tekton_task_type
           name: #@ data.values.gitwriter.tekton_task_name
+        git_ssh_secret: $(params.gitwriter_git_ssh_secret)$
         params:
-          - name: gitwriter_repository
+          - name: git_repository
             value: $(params.gitwriter_repository)$
-          - name: gitwriter_branch
+          - name: git_branch
             value: $(params.gitwriter_branch)$
-          - name: gitwriter_user_name
+          - name: git_user_name
             value: $(params.gitwriter_user_name)$
-          - name: gitwriter_user_email
+          - name: git_user_email
             value: $(params.gitwriter_user_email)$
-          - name: gitwriter_commit_message
+          - name: git_commit_message
             value: $(params.gitwriter_commit_message)$
-          - name: gitwriter_files
+          - name: git_files
             value: $(config)$

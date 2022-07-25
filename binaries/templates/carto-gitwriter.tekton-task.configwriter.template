@@ -7,7 +7,29 @@ spec:
   description: |-
     A task that writes a given set of files (provided as a json base64-encoded)
     to git repository under a specific directory (`./config`).
+  workspaces:
+    - name: ssh-directory
+      optional: true
+      description: |
+        A .ssh directory with private key, known_hosts, config, etc. Copied to
+        the user's home before git commands are executed. Used to authenticate
+        with the git remote when performing the clone. Binding a Secret to this
+        Workspace is strongly recommended over other volume types.
+    - name: basic-auth
+      optional: true
+      description: |
+        A Workspace containing a .gitconfig and .git-credentials file. These
+        will be copied to the user's home before any git commands are run. Any
+        other files in this Workspace are ignored. It is strongly recommended
+        to use ssh-directory over basic-auth whenever possible and to bind a
+        Secret to this Workspace over other volume types.
   params:
+    - name: USER_HOME
+      description: |
+        Absolute path to the user's home directory. Set this explicitly if you are running the image as a non-root user or have overridden
+        the gitInitImage param with an image containing custom user configuration.
+      type: string
+      default: "/root"
     - name: git_repository
       description: The repository path
       type: string
@@ -35,6 +57,17 @@ spec:
   steps:
     - name: git-clone-and-push
       image: paketobuildpacks/build:base
+      env:
+      - name: PARAM_USER_HOME
+        value: $(params.USER_HOME)
+      - name: WORKSPACE_SSH_DIRECTORY_BOUND
+        value: $(workspaces.ssh-directory.bound)
+      - name: WORKSPACE_SSH_DIRECTORY_PATH
+        value: $(workspaces.ssh-directory.path)
+      - name: WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND
+        value: $(workspaces.basic-auth.bound)
+      - name: WORKSPACE_BASIC_AUTH_DIRECTORY_PATH
+        value: $(workspaces.basic-auth.path)
       securityContext:
         runAsUser: 0
       workingDir: /root
@@ -42,6 +75,19 @@ spec:
         #!/usr/bin/env bash
         set -o errexit
         set -o xtrace
+
+        if [ "${WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND}" = "true" ] ; then
+          cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials" "${PARAM_USER_HOME}/.git-credentials"
+          cp "${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig" "${PARAM_USER_HOME}/.gitconfig"
+          chmod 400 "${PARAM_USER_HOME}/.git-credentials"
+          chmod 400 "${PARAM_USER_HOME}/.gitconfig"
+        fi
+        if [ "${WORKSPACE_SSH_DIRECTORY_BOUND}" = "true" ] ; then
+          cp -R "${WORKSPACE_SSH_DIRECTORY_PATH}" "${PARAM_USER_HOME}"/.ssh
+          chmod 700 "${PARAM_USER_HOME}"/.ssh
+          chmod -R 400 "${PARAM_USER_HOME}"/.ssh/*
+        fi
+
         git clone $(params.git_repository) ./repo
         cd repo
         git checkout -b $(params.git_branch) || git checkout $(params.git_branch)

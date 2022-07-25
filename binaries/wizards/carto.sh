@@ -3,6 +3,7 @@ export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh
+source $HOME/binaries/scripts/create-secrets.sh
 
 source $HOME/binaries/tapscripts/build-carto-values-file.sh
 source $HOME/binaries/tapscripts/build-carto-supplychain-file.sh
@@ -136,23 +137,7 @@ function resolveTektonTaskForTest () {
 function resolveTektonTaskForGitWriter () {
     local confirmed=''
     while true; do
-        read -p "Would you like to install tekton git-cli task from tekton catalog (needed for git-ops)? [y/n] " yn
-        case $yn in
-            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-            * ) echo "Please answer y or n.";
-        esac
-    done    
-    if [[ $confirmed == 'y' ]]
-    then
-        printf "Installing Tekton git cli....\n"
-        kapp deploy --yes -a tekton-git-cli -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-cli/0.2/git-cli.yaml
-        printf "\nTekton git cli...COMPLETE\n"
-        sleep 2       
-    fi
-    confirmed=''
-    while true; do
-        read -p "Would you like create tekton-task for git-writer (needed for git-ops)? [y/n] " yn
+        read -p "Would you like create tekton-task for writing to git (needed for git-ops)? [y/n] " yn
         case $yn in
             [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
             [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
@@ -194,6 +179,7 @@ function createCartoTemplates () {
     local isTektonRequired='n'
     local isTektonTestRequired='n'
     local isTektonGitWriterRequired='n'
+    local isGitSSHRequired='n'
 
     local cartoDir=$HOME/configs/carto
     buildCartoValuesFile "templates" $cartoDir "/tmp/cartoValuesFilePath"
@@ -242,6 +228,7 @@ function createCartoTemplates () {
     then
         isTektonRequired='y'
         isTektonGitWriterRequired='y'
+        isGitSSHRequired='y'
         cp $HOME/binaries/templates/carto-gitwriter.template /tmp/carto/carto-gitwriter.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-gitwriter.yaml > $cartoDir/carto-gitwriter.yaml
     fi
     printf "\nfile generation complete...\n"
@@ -288,6 +275,11 @@ function createCartoTemplates () {
     rm -r /tmp/carto/ && printf "DONE" || printf "FAILED"
     printf "\n"
 
+    if [[ $isGitSSHRequired == 'y' ]]
+    then
+        local serviceAccountNamespace=$(cat $cartoValuesFile | yq -e '.service_account.namespace' --no-colors)
+        createGitSSHSecret $serviceAccountNamespace
+    fi
     if [[ $isTektonRequired == 'y' ]]
     then
         resolveTekton

@@ -7,7 +7,7 @@ metadata:
 spec:
   configPath: .data.manifest
   params:
-    - name: data_values_image_registry_secret_name
+    - name: image_registry_secret_name
       default: #@ data.values.knative.image_registry_secret_name
   ytt: |
     #@ load("@ytt:data", "data")
@@ -44,7 +44,7 @@ spec:
               securityContext:
                 runAsUser: 1000
           imagePullSecrets:
-            - name: $(params.data_values_image_registry_secret_name)$
+            - name: #@ data.values.params.image_registry_secret_name
     #@ end
     
     ---

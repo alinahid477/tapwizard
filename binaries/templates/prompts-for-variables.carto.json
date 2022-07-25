@@ -82,6 +82,11 @@
         "hint": "Tekton Task name that will execute the git writing."
     },
     {
+        "name": "<CARTO_GITWRITER_SSH_SECRET_NAME>",
+        "hint": "The name k8s ssh (not basicauth) secret. If you do not have one, then, when this will prompt for creating a new one please confirm yes. This input only needs a name.",
+        "defaultvalue": "git-ssh"
+    },
+    {
         "name": "<CARTO_GITWRITER_REPOSITORY>",
         "hint": "The url of the git reposity where the deployable config file will be written for git-ops.",
         "use_special_replace": true
