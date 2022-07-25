@@ -14,7 +14,8 @@ spec:
     metadata:
       name: $(workload.metadata.name)$
     spec:
-      secretRef: #@ data.values.src.git_secret_name
+      secretRef: 
+        name: #@ data.values.src.git_secret_name
       interval: #@ data.values.src.git_poll_interval
       url: $(workload.spec.source.git.url)$
       ref: $(workload.spec.source.git.ref)$

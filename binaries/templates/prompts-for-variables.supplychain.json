@@ -4,6 +4,10 @@
         "hint": "Name of the supply chain."
     },
     {
+        "name": "<CARTO_SERVICE_ACCOUNT_NAME>",
+        "hint": "The name of the service account that has necessary permission to run carto-template. eg: carto-sa, the one you created during clustertemplates configurations process"
+    },
+    {
         "name": "<WORKLOAD_TYPE_NAME>",
         "hint": "Workload type for which the supply chain will be triggered. eg: web",
         "defaultvalue": "web"

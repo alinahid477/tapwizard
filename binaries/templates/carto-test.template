@@ -14,13 +14,9 @@ spec:
     metadata:
       generateName: $(runnable.metadata.name)$-
     spec:
+      serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
       taskRef: $(runnable.spec.inputs.taskRef)$
-      params:
-        - name: blob-url
-          value: $(runnable.spec.inputs.blob-url)$
-        - name: blob-revision
-          value: $(runnable.spec.inputs.blob-revision)$
-
+      params: $(runnable.spec.inputs.params)$
 ---
 apiVersion: carto.run/v1alpha1
 kind: ClusterSourceTemplate
@@ -41,11 +37,13 @@ spec:
         name: #@ data.values.test.template_name + "-run"
 
       inputs:
+        serviceAccountName: #@ data.values.service_account.name
         taskRef:
           kind: #@ data.values.test.tekton_task_type
           name: #@ data.values.test.tekton_task_name
+        source: $(source)$
         params:
           - name: blob-url
-            value: $(sources[?(@.name=="source")].url)$
+            value: $(source.url)$
           - name: blob-revision
-            value: $(sources[?(@.name=="source")].revision)$
+            value: $(source.revision)$

@@ -11,8 +11,8 @@ spec:
     - name: blob-revision
   steps:
     - name: test
-      image: maven:3.8.5-openjdk-18-slim
+      image: maven:3.8.5-openjdk-18-slim 
       script: |-
         cd `mktemp -d`
-        wget -qO- $(params.blob-url) | tar xvz -m
+        curl -SL $(params.blob-url) | tar xvzf -
         mvn test

@@ -24,6 +24,7 @@ function resolveServiceAccountClusterRolesAndBindings () {
     if [[ -z $serviceAccountName || -z $serviceAccountNamespace ]]
     then
         printf "\n${redcolor}Error: ValuesFile does not container service account name or its namespace.${normalcolor}\n"
+        returnOrexit || return 1
     fi
 
     printf "Checking SA: $serviceAccountName..."
@@ -31,8 +32,34 @@ function resolveServiceAccountClusterRolesAndBindings () {
     if [[ -z $isexist ]]
     then
         printf "NOT FOUND. Creating new...\n"
-        kubectl create sa $serviceAccountName -n $serviceAccountNamespace || returnOrexit || return 1
-        printf "CREATED\n"
+        export K8S_SERVICE_ACCOUNT_NAME=$serviceAccountName
+        printf "User input k8s service account....\n"
+        local saTemplateName="k8s-service-account"
+        local saFile=$HOME/configs/$saTemplateName.$serviceAccountName.yaml
+        cp $HOME/binaries/templates/$saTemplateName.template $saFile
+        extractVariableAndTakeInput $saFile || returnOrexit || return 1
+        local confirmed=''
+        while true; do
+            read -p "Would you like to add more secrets (eg: git-secret) to this service account? [y/n] " yn
+            case $yn in
+                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                * ) echo "Please answer y or n.";
+            esac
+        done  
+        if [[ $confirmed == 'y' ]]
+        then
+            local secretTemplateName="k8s-service-account-secrets"
+            local secretFile=/tmp/$secretTemplateName.tmp
+            cp $HOME/binaries/templates/$secretTemplateName.template $secretFile
+            extractVariableAndTakeInput $secretFile || returnOrexit || return 1
+            cat $secretFile >> $saFile
+            rm $secretFile
+        fi
+        printf "Creating k8s service account $serviceAccountName in namespace: $namespace...."
+        kubectl apply -f $saFile -n $serviceAccountNamespace && printf "CREATED\n" || printf "FAILED\n"
+
+        sleep 2
     else
         printf "FOUND. Continuing...\n"
     fi

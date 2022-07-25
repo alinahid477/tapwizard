@@ -359,7 +359,7 @@ function configureK8sSecretAndServiceAccount () {
         if [[ $gitsecretname == 'new' ]]
         then
             printf "Require user input k8s secret for git....\n"
-            local secretTemplateName="kpack-k8s-basic-auth-git-secret"
+            local secretTemplateName="k8s-basic-auth-git-secret"
             local secretFile=/tmp/$secretTemplateName.tmp
             cp $HOME/binaries/templates/$secretTemplateName.template $secretFile
             extractVariableAndTakeInput $secretFile || returnOrexit || return 1
@@ -418,7 +418,7 @@ function configureK8sSecretAndServiceAccount () {
         export $(cat $HOME/.env | xargs)
         sleep 1
         printf "User input k8s service account....\n"
-        local saTemplateName="kpack-k8s-service-account"
+        local saTemplateName="k8s-service-account"
         local saFile=/tmp/$saTemplateName.tmp
         cp $HOME/binaries/templates/$saTemplateName.template $saFile
         extractVariableAndTakeInput $saFile || returnOrexit || return 1
@@ -433,7 +433,7 @@ function configureK8sSecretAndServiceAccount () {
         done  
         if [[ $confirmed == 'y' ]]
         then
-            local secretTemplateName="kpack-k8s-service-account-secrets"
+            local secretTemplateName="k8s-service-account-secrets"
             local secretFile=/tmp/$secretTemplateName.tmp
             cp $HOME/binaries/templates/$secretTemplateName.template $secretFile
             extractVariableAndTakeInput $secretFile || returnOrexit || return 1

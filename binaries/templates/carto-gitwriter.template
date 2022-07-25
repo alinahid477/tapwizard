@@ -12,7 +12,7 @@ spec:
       generateName: $(runnable.metadata.name)$-
       labels: $(runnable.metadata.labels)$
     spec:
-      serviceAccountName: $(runnable.spec.inputs.serviceAccount)$
+      serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
       taskRef: $(runnable.spec.inputs.taskRef)$
       params: $(runnable.spec.inputs.params)$
 ---
@@ -43,7 +43,7 @@ spec:
         name: #@ data.values.gitwriter.template_name + "-run"
 
       inputs:
-        serviceAccount: #@ data.values.service_account.name
+        serviceAccountName: #@ data.values.service_account.name
         taskRef:
           kind: #@ data.values.gitwriter.tekton_task_type
           name: #@ data.values.gitwriter.tekton_task_name

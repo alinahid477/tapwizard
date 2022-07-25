@@ -39,8 +39,8 @@
     },
     {
         "name": "<CARTO_IMAGE_TEMPLATE_NAME>",
-        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: image.",
-        "defaultvalue": "image"
+        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: kpackimage.",
+        "defaultvalue": "kpackimage"
     },
     {
         "name": "<CARTO_IMAGE_PREFIX>",

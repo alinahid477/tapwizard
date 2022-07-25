@@ -6,4 +6,7 @@ metadata:
 spec:
   selector:
     app.tanzu.vmware.com/workload-type: <WORKLOAD_TYPE_NAME>
+  serviceAccountRef:
+    name: <CARTO_SERVICE_ACCOUNT_NAME>
+    namespace: default
   resources:
