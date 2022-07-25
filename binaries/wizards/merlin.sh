@@ -117,6 +117,13 @@ function executeCommand () {
         returnOrexit || return 1
     fi
 
+    if [[ $wizardCreateCartoSupplychain == 'y' ]]
+    then
+        unset wizardCreateCartoSupplychain
+        createSupplyChain
+        returnOrexit || return 1
+    fi
+
     printf "\nThis shouldn't have happened. Embarrasing.\n"
 }
 
