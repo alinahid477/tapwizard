@@ -1,0 +1,9 @@
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSupplyChain
+metadata:
+  name: <SUPPLY_CHAIN_NAME>
+spec:
+  selector:
+    app.tanzu.vmware.com/workload-type: <WORKLOAD_TYPE_NAME>
+  resources:

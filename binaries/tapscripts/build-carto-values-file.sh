@@ -31,7 +31,8 @@ function buildCartoValuesFile () {
     fi
 
     local isexist=''
-    mkdir -p $cartoDir && cp $templatedBaseFile $baseFile && isexist='y'
+    mkdir -p $cartoDir
+    cp $templatedBaseFile $baseFile && isexist='y'
 
     if [[ $isexist != 'y' ]]
     then

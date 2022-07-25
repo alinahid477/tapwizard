@@ -24,6 +24,7 @@ function helpFunction()
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
     echo -e "\t-k | --configure-kpack signals the wizard create developer namespace."
     echo -e "\t-c | --configure-carto-templates signals the wizard start creating cartographer templates for supply-chain."
+    echo -e "\t-s | --create-carto-supplychain signals the wizard start creating cartographer supply-chain."
     echo -e "\t-h | --help"
     printf "\n"
 }
@@ -36,6 +37,7 @@ unset tapProfileInstall
 unset tapDeveloperNamespaceCreate
 unset wizardConfigureKpack
 unset wizardConfigureCartoTemplates
+unset wizardCreateCartoSupplychain
 unset argFile
 unset ishelp
 
@@ -123,7 +125,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:ch --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:csh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -163,6 +165,11 @@ while true ; do
             case "$2" in
                 "" ) wizardConfigureCartoTemplates='y'; shift 2 ;;
                 * ) wizardConfigureCartoTemplates='y' ; shift 1 ;;
+            esac ;;
+        -s | --create-carto-supplychain )
+            case "$2" in
+                "" ) wizardCreateCartoSupplychain='y'; shift 2 ;;
+                * ) wizardCreateCartoSupplychain='y' ; shift 1 ;;
             esac ;;
         -f | --file )
             case "$2" in

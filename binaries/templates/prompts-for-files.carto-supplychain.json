@@ -1,0 +1,21 @@
+[
+    {
+        "name": "source",
+        "filename":"carto-supplychain.source.template",
+        "prompt": "Would you like add source to supply chain?",
+        "hint": "Step to read from GitRepository."
+    },
+    {
+        "name": "test",
+        "filename":"carto-supplychain.test.template",
+        "prompt": "Would you like add test to supply chain?",
+        "hint": "Step to test source code."
+    },
+    {
+        "name": "kpackimage",
+        "filename":"carto-supplychain.$.kpack.template",
+        "prompt": "Would you like add kpack image builder to supply chain?",
+        "options": ["test-image","source-image"],
+        "hint": "Step to create image using kpack source code."
+    }
+]

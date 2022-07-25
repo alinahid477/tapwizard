@@ -14,7 +14,7 @@ spec:
       name: $(workload.metadata.name)$
     spec:
       tag: #@ data.values.kpack.image_prefix + "$(workload.metadata.name)$"
-      serviceAccount: service-account
+      serviceAccount: #@ data.values.kpack.service_account
       builder:
         kind: #@ data.values.kpack.builder_type
         name: #@ data.values.kpack.builder_name

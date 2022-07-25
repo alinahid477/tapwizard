@@ -1,0 +1,26 @@
+[
+    {
+        "name": "<SUPPLY_CHAIN_NAME>",
+        "hint": "Name of the supply chain."
+    },
+    {
+        "name": "<WORKLOAD_TYPE_NAME>",
+        "hint": "Workload type for which the supply chain will be triggered. eg: web",
+        "defaultvalue": "web"
+    },
+    {
+        "name": "<SOURCE_TEMPLATE_NAME>",
+        "hint": "The name of the cluster source template that is responsible for defining GitRepository from FluxCD. eg: source",
+        "defaultvalue": "source"
+    },
+    {
+        "name": "<TEST_TEMPLATE_NAME>",
+        "hint": "The name of the cluster source template that is responsible for defining process for source code test. eg: test.",
+        "defaultvalue": "test"
+    },
+    {
+        "name": "<IMAGE_TEMPLATE_NAME>",
+        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: image.",
+        "defaultvalue": "image"
+    }
+]

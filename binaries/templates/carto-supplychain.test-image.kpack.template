@@ -1,0 +1,7 @@
+    - name: image-builder
+      templateRef:
+        kind: ClusterImageTemplate
+        name: <IMAGE_TEMPLATE_NAME>
+      sources:
+        - resource: source-tester
+          name: <SOURCE_TEMPLATE_NAME>

@@ -5,7 +5,9 @@ source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh
 
 source $HOME/binaries/tapscripts/build-carto-values-file.sh
+source $HOME/binaries/scripts/build-carto-supplychain-file.sh
 source $HOME/binaries/scripts/extract-and-take-input.sh
+
 
 function resolveServiceAccountClusterRolesAndBindings () {
     local cartoValuesFile=$1 # REQUIRED
@@ -162,8 +164,6 @@ function cartoTemplateWizardPrompts () {
 function createCartoTemplates () {
     cartoTemplateWizardPrompts
 
-
-
     local isTektonRequired='n'
     local isTektonTestRequired='n'
     local isTektonGitWriterRequired='n'
@@ -275,4 +275,25 @@ function createCartoTemplates () {
     fi
 
     printf "\nCarto Template Wizard...COMPLETE\n"
+}
+
+function createSupplyChain () {
+
+    local cartoDir=$HOME/configs/carto
+    buildCartoSupplyChainFile $cartoDir "/tmp/cartoSupplyChainFilePath"
+
+    if [[ ! -f /tmp/cartoSupplyChainFilePath ]]
+    then
+        returnOrexit || return 1
+    fi
+
+    local supplychainFile=$(cat /tmp/cartoSupplyChainFilePath)
+    if [[ -z $supplychainFile || ! -f $supplychainFile ]]
+    then
+        printf "\n${redcolor}Error: carto values file not found. ${normalcolor}\n"
+        returnOrexit || return 1
+    fi
+
+    printf "\nCreating SupplyChain from file: $supplychainFile...\n"
+    kubectl apply -f $supplychainFile
 }
