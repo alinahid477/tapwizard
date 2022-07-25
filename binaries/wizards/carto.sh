@@ -242,7 +242,7 @@ function createCartoTemplates () {
     then
         isTektonRequired='y'
         isTektonGitWriterRequired='y'
-        cp $HOME/binaries/templates/carto-gitwriter.template /tmp/carto/carto-gitwriter.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-gitwriter.template > $cartoDir/carto-gitwriter.yaml
+        cp $HOME/binaries/templates/carto-gitwriter.template /tmp/carto/carto-gitwriter.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-gitwriter.yaml > $cartoDir/carto-gitwriter.yaml
     fi
     printf "\nfile generation complete...\n"
     local confirmed=''
