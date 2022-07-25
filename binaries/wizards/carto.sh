@@ -183,7 +183,7 @@ function createCartoTemplates () {
         returnOrexit || return 1
     fi
 
-    resolveServiceAccountClusterRolesAndBindings
+    resolveServiceAccountClusterRolesAndBindings $cartoValuesFile
 
     mkdir /tmp/carto
     local isexist=''
