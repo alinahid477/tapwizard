@@ -12,7 +12,7 @@ source $HOME/binaries/scripts/extract-and-take-input.sh
 
 function resolveServiceAccountClusterRolesAndBindings () {
     local cartoValuesFile=$1 # REQUIRED
-    local cartoRBAC=$HOME/binaries/templates/carto-rbac.yaml
+    local cartoRBAC=$2 #REQUIRED -- file. eg: $HOME/binaries/templates/carto-rbac.yaml
 
     printf "\nStarting ClusterRole and ClusterBinding configuring...\n"
 
@@ -65,8 +65,10 @@ function resolveServiceAccountClusterRolesAndBindings () {
         printf "FOUND. Continuing...\n"
     fi
 
-    printf "Checking ClusterRole: carto-clusterrole..."
-    isexist=$(kubectl describe clusterrole carto-clusterrole)
+    local clusterRoleName=$(yq 'select(di == 1)' $cartoRBAC | yq -e '.metadata.name')
+
+    printf "Checking ClusterRole: $clusterRoleName..."
+    isexist=$(kubectl describe clusterrole $clusterRoleName)
     if [[ -z $isexist ]]
     then
         printf "NOT FOUND. Creating NEW and binding with sa $serviceAccountName in ns: $serviceAccountNamespace...\n"
@@ -222,9 +224,9 @@ function createCartoTemplates () {
         returnOrexit || return 1
     fi
 
-    resolveServiceAccountClusterRolesAndBindings $cartoValuesFile
+    resolveServiceAccountClusterRolesAndBindings $cartoValuesFile $HOME/binaries/templates/carto-rbac.yaml
 
-    mkdir /tmp/carto
+    mkdir -p /tmp/carto
     local isexist=''
 
     isexist=$(cat $cartoValuesFile | yq -e '.src' --no-colors)
@@ -369,4 +371,35 @@ function createSupplyChain () {
 
     printf "\nCreating SupplyChain from file: $supplychainFile...\n"
     kubectl apply -f $supplychainFile
+}
+
+
+function createDeliveryBasic () {
+
+    printf "\n\n\nCreating Carto Basic Delivery...\n\n"
+
+    local filename=''
+    while [[ -z $filename ]]; do
+        read -p "Type the carto delivery values file name: " filename
+        if [[ -z $filename ]]
+        then
+            printf "Empty value not allowed.\n"
+        fi
+    done
+
+    mkdir -p $HOME/configs/carto
+    mkdir -p /tmp/carto
+    local templatedBaseFile="$HOME/binaries/templates/carto-delivery-values.template"
+    local baseFile="$HOME/configs/carto/values.delivery.$filename.yaml"
+
+
+    extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.delivery.json" $baseFile
+
+    resolveServiceAccountClusterRolesAndBindings $baseFile $HOME/binaries/templates/carto-delivery-rbac.yaml
+
+    cp $HOME/binaries/templates/carto-delivery.basic.template /tmp/carto/carto-delivery.basic.yaml && ytt --ignore-unknown-comments -f $baseFile -f /tmp/carto/carto-delivery.basic.yaml > $HOME/configs/carto/carto-delivery.basic.$filename.yaml
+
+    kubectl apply -f $HOME/configs/carto/carto-delivery.basic.$filename.yaml
+
+    printf "\nCreating Carto Basic Delivery...COMPLETE\n\n"
 }

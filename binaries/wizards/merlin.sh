@@ -25,6 +25,7 @@ function helpFunction()
     echo -e "\t-k | --configure-kpack signals the wizard create developer namespace."
     echo -e "\t-c | --configure-carto-templates signals the wizard start creating cartographer templates for supply-chain."
     echo -e "\t-s | --create-carto-supplychain signals the wizard start creating cartographer supply-chain."
+    echo -e "\t-d | --create-carto-delivery signals the wizard start creating cartographer delivery (for git-ops)."
     echo -e "\t-h | --help"
     printf "\n"
 }
@@ -38,6 +39,7 @@ unset tapDeveloperNamespaceCreate
 unset wizardConfigureKpack
 unset wizardConfigureCartoTemplates
 unset wizardCreateCartoSupplychain
+unset wizardCreateCartoDelivery
 unset argFile
 unset ishelp
 
@@ -124,6 +126,13 @@ function executeCommand () {
         returnOrexit || return 1
     fi
 
+    if [[ $wizardCreateCartoDelivery == 'y' ]]
+    then
+        unset wizardCreateCartoDelivery
+        createDeliveryBasic
+        returnOrexit || return 1
+    fi
+
     printf "\nThis shouldn't have happened. Embarrasing.\n"
 }
 
@@ -132,7 +141,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:csh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:csdh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -177,6 +186,11 @@ while true ; do
             case "$2" in
                 "" ) wizardCreateCartoSupplychain='y'; shift 2 ;;
                 * ) wizardCreateCartoSupplychain='y' ; shift 1 ;;
+            esac ;;
+        -s | --create-carto-delivery )
+            case "$2" in
+                "" ) wizardCreateCartoDelivery='y'; shift 2 ;;
+                * ) wizardCreateCartoDelivery='y' ; shift 1 ;;
             esac ;;
         -f | --file )
             case "$2" in

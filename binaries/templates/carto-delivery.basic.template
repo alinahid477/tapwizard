@@ -1,0 +1,96 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  name: gitops-source
+spec:
+  urlPath: .status.artifact.url
+  revisionPath: .status.artifact.revision
+
+  template:
+    apiVersion: source.toolkit.fluxcd.io/v1beta1
+    kind: GitRepository
+    metadata:
+      name: $(deliverable.metadata.name)$
+    spec:
+      interval: 1m0s
+      url: $(deliverable.spec.source.git.url)$
+      ref: $(deliverable.spec.source.git.ref)$
+      gitImplementation: libgit2
+      ignore: ""
+
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterDeploymentTemplate
+metadata:
+  name: app-deploy
+spec:
+
+  observedCompletion:
+    succeeded:
+      key: '.status.conditions[?(@.type=="ReconcileSucceeded")].status'
+      value: 'True'
+    failed:
+      key: '.status.conditions[?(@.type=="ReconcileFailed")].status'
+      value: 'True'
+
+  template:
+    apiVersion: kappctrl.k14s.io/v1alpha1
+    kind: App
+    metadata:
+      name: $(deliverable.metadata.name)$
+    spec:
+      serviceAccountName: #@ data.values.service_account.name
+      fetch:
+        - http:
+            url: $(deployment.url)$
+      template:
+        - ytt:
+            inline:
+              paths:
+                config.yaml: |
+                  apiVersion: kapp.k14s.io/v1alpha1
+                  kind: Config
+                  rebaseRules:
+                    - path:
+                        - metadata
+                        - annotations
+                        - serving.knative.dev/creator
+                      type: copy
+                      sources: [new, existing]
+                      resourceMatchers: &matchers
+                        - apiVersionKindMatcher:
+                            apiVersion: serving.knative.dev/v1
+                            kind: Service
+                    - path:
+                        - metadata
+                        - annotations
+                        - serving.knative.dev/lastModifier
+                      type: copy
+                      sources: [new, existing]
+                      resourceMatchers: *matchers
+      deploy:
+        - kapp: {}
+
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterDelivery
+metadata:
+  name: deliver
+spec:
+  selector:
+    app.tanzu.vmware.com/workload-type: deliver
+
+  resources:
+    - name: source-provider
+      templateRef:
+        kind: ClusterSourceTemplate
+        name: gitops-source
+
+    - name: deployer
+      templateRef:
+        kind: ClusterDeploymentTemplate
+        name: app-deploy
+      deployment:
+        resource: source-provider

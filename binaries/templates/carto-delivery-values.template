@@ -1,0 +1,5 @@
+#@data/values
+---
+service_account:
+  name: <CARTO_SERVICE_ACCOUNT_NAME>
+  namespace: <CARTO_SERVICE_ACCOUNT_NAMESPACE>
