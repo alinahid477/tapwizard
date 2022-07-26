@@ -58,16 +58,36 @@
         "defaultvalue": "default"
     },
     {
-        "name": "<CARTO_GRYPE_TEMPLATE_NAME>",
-        "hint": "The name of the ClusterImageTemplate (for image scanning) or ClusterSourceTemplate (for source scanning) that is responsible for defining image or source scanning process. eg: imgscan, srcscan."
+        "name": "<CARTO_IMAGE_GRYPE_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterImageTemplate (for image scanning) that is responsible for defining image scanning process. eg: imgscanner.",
+        "defaultvalue": "imgscanner"
+    },
+    {
+        "name": "<CARTO_SOURCE_GRYPE_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterSourceTemplate (for source scanning) that is responsible for defining source scanning process. eg: srcscanner.",
+        "defaultvalue": "srcscanner"
     },
     {
         "name": "<CARTO_GRYPE_REGISTRY_SECRET_NAME>",
-        "hint": "Docker Registry Secret (of type kubernetes.io/dockerconfigjson) name that gype will use to access image from registry. eg: registry-regcred\nThis secret does not have to exist now, you can create it at a later point."
+        "hint": "Docker Registry Secret (of type kubernetes.io/dockerconfigjson) name that gype will use to access image from registry. eg: registry-regcred\nThis secret does not have to exist now, you can create it at a later point.",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<CARTO_GRYPE_CONFIG_SECRET_NAME>",
-        "hint": "Grype Config Secret (of type Opaque with stringData) name that gype will use to mount policies. eg: grype-config.\nPlease perform ${greencolor}'cat binaries/templates/grype-config-secret.sample.yaml'${normalcolor} to see a sample for guidance on how to create.\nThis secret does not have to exist now, you can create it at a later point."
+        "hint": "Grype Config Secret (of type Opaque with stringData) name that gype will use to mount policies. eg: grype-config.\nPlease perform ${greencolor}'cat binaries/templates/grype-config-secret.sample.yaml'${normalcolor} to see a sample for guidance on how to create.\nThis secret does not have to exist now, you can create it at a later point.",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<CARTO_GRYPE_TEKTON_TASK_TYPE>",
+        "hint": "Tekton Task type that will execute grype scanning.",
+        "options": ["ClusterTask", "Task"],
+        "defaultvalue": "ClusterTask",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<CARTO_GRYPE_TEKTON_TASK_NAME>",
+        "hint": "Tekton Task name that will execute the grype scanning.",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<CARTO_KNATIVE_CONFIG_TEMPLATE_NAME>",
@@ -128,5 +148,9 @@
     {
         "name": "<TEKTON_TASK_NAME_FOR_MAVEN_TEST>",
         "hint": "Name for the tekton Task that will perform maven. You can view the generatefile here: $HOME/configs/carto/carto-test.tekton-task.maven.yaml"
+    },
+    {
+        "name": "<TEKTON_TASK_NAME_FOR_GRYPE_SCANNER>",
+        "hint": "Name for the tekton Task that will perform grype scan. You can view the generatefile here: $HOME/configs/carto/carto-scanner.tekton-task.grype.yaml"
     }
 ]

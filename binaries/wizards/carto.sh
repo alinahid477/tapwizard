@@ -81,34 +81,36 @@ function resolveServiceAccountClusterRolesAndBindings () {
 
 
 function resolveTekton () {
-    printf "\nStarting Tekton configuration...\n"
+    
+    printf "\nThis wizard implements few cartographer processes using TektonTask.\n"
     sleep 2
-    printf "Looking for ns: tekton-pipelines..."
-    sleep 1
-    local isexist=$(kubectl get ns | grep -i tekton-pipelines)
+    
+    printf "Looking for tekton-controller in ns: tekton-pipeline..."
+    local isexist=$(kubectl get pods -n tekton-pipelines | grep -i tekton-pipelines-controller)
     if [[ -z $isexist ]]
     then
-        printf "NOT FOUND.\n"
+        printf "NOT FOUND. Installing tekton...\n"
+        local confirmed=''
+        while true; do
+            read -p "Would you like to install tekton (needed for test, git-ops operations)? [y/n] " yn
+            case $yn in
+                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                * ) echo "Please answer y or n.";
+            esac
+        done    
+        if [[ $confirmed == 'y' ]]
+        then
+            printf "Installing Tekton....\n"
+            local TEKTON_VERSION=0.30.0 
+            kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v$TEKTON_VERSION/release.yaml
+            printf "\nTekton installation...COMPLETE\n"
+            sleep 2
+        fi
     else
         printf "FOUND.\n"
     fi
-    local confirmed=''
-    while true; do
-        read -p "Would you like to install tekton (needed for test, git-ops operations)? [y/n] " yn
-        case $yn in
-            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
-            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
-            * ) echo "Please answer y or n.";
-        esac
-    done    
-    if [[ $confirmed == 'y' ]]
-    then
-        printf "Installing Tekton....\n"
-        local TEKTON_VERSION=0.30.0 
-        kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/previous/v$TEKTON_VERSION/release.yaml
-        printf "\nTekton installation...COMPLETE\n"
-        sleep 2
-    fi
+    sleep 1    
 }
 
 function resolveTektonTaskForTest () {
@@ -157,7 +159,29 @@ function resolveTektonTaskForGitWriter () {
     fi
 }
 
-
+function resolveTektonTaskForGrypeScanning () {
+    local confirmed=''
+    while true; do
+        printf "\nGrype TektonTask is needed for source or image scanning. Only one is enough to be used by both CartoSourceScanner and CartoImagerScanner templates. Hence, if you have already created one before no need to create again.\n"
+        read -p "Would you like create tekton-task for grype scanner? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done    
+    if [[ $confirmed == 'y' ]]
+    then
+        printf "Creating TektonTask: for source or image scanning...\n"
+        local templateFile=$HOME/binaries/templates/carto-scanner.tekton-task.grype.template
+        local baseFile=$HOME/configs/carto/carto-scanner.tekton-task.grype.yaml
+        cp $templateFile $baseFile
+        extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.carto.json" $baseFile
+        kubectl create -f $baseFile
+        printf "\nTektonTask create...COMPLETE\n"
+        sleep 2
+    fi
+}
 
 function cartoTemplateWizardPrompts () {
 
@@ -179,7 +203,9 @@ function createCartoTemplates () {
     local isTektonRequired='n'
     local isTektonTestRequired='n'
     local isTektonGitWriterRequired='n'
+    local isTektonGrypeRequired='n'
     local isGitSSHRequired='n'
+
 
     local cartoDir=$HOME/configs/carto
     buildCartoValuesFile "templates" $cartoDir "/tmp/cartoValuesFilePath"
@@ -212,6 +238,20 @@ function createCartoTemplates () {
         isTektonRequired='y'
         isTektonTestRequired='y'
         cp $HOME/binaries/templates/carto-test.template /tmp/carto/carto-test.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-test.yaml > $cartoDir/carto-test.yaml
+    fi
+    isexist=$(cat $cartoValuesFile | yq -e '.image_grype' --no-colors)
+    if [[ -n $isexist && $isexist != null ]]
+    then
+        isTektonRequired='y'
+        isTektonGrypeRequired='y'
+        cp $HOME/binaries/templates/carto-scanner.image-grype.template /tmp/carto/carto-scanner.image-grype.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.image-grype.yaml > $cartoDir/carto-scanner.image-grype.yaml
+    fi
+    isexist=$(cat $cartoValuesFile | yq -e '.source_grype' --no-colors)
+    if [[ -n $isexist && $isexist != null ]]
+    then
+        isTektonRequired='y'
+        isTektonGrypeRequired='y'
+        cp $HOME/binaries/templates/carto-scanner.source-grype.template /tmp/carto/carto-scanner.srouce-grype.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.source-grype.yaml > $cartoDir/carto-scanner.source-grype.yaml
     fi
     isexist=$(cat $cartoValuesFile | yq -e '.kpack' --no-colors)
     if [[ -n $isexist && $isexist != null ]]
@@ -253,10 +293,20 @@ function createCartoTemplates () {
         then
             kubectl create -f $cartoDir/carto-test.yaml
         fi
+        isexist=$(cat $cartoValuesFile | yq -e '.source_grype' --no-colors)
+        if [[ -n $isexist && $isexist != null ]]
+        then
+            kubectl create -f $cartoDir/carto-scanner.source-grype.yaml
+        fi
         isexist=$(cat $cartoValuesFile | yq -e '.kpack' --no-colors)
         if [[ -n $isexist && $isexist != null ]]
         then
             kubectl create -f $cartoDir/carto-clusterimage-kpack.yaml
+        fi
+        isexist=$(cat $cartoValuesFile | yq -e '.image_grype' --no-colors)
+        if [[ -n $isexist && $isexist != null ]]
+        then
+            kubectl create -f $cartoDir/carto-scanner.image-grype.yaml
         fi
         isexist=$(cat $cartoValuesFile | yq -e '.knative' --no-colors)
         if [[ -n $isexist && $isexist != null ]]
@@ -291,6 +341,10 @@ function createCartoTemplates () {
     if [[ $isTektonGitWriterRequired == 'y' ]]
     then
         resolveTektonTaskForGitWriter
+    fi
+    if [[ $isTektonGrypeRequired == 'y' ]]
+    then
+        resolveTektonTaskForGrypeScanning
     fi
 
     printf "\nCarto Template Wizard...COMPLETE\n"

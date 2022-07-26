@@ -3,7 +3,7 @@
 apiVersion: carto.run/v1alpha1
 kind: ClusterRunTemplate
 metadata:
-  name: #@ data.values.grype.template_name + "-run"
+  name: #@ data.values.image_grype.template_name + "-run"
 spec:
 
   outputs:
@@ -30,31 +30,31 @@ spec:
 apiVersion: carto.run/v1alpha1
 kind: ClusterImageTemplate
 metadata:
-  name: #@ data.values.grype.template_name
+  name: #@ data.values.image_grype.template_name
 spec:
   imagePath: .status.outputs.latestImage
 
   params:
     - name: grype_registry_secret
-      default: #@ data.values.grype.registry_secret
+      default: #@ data.values.image_grype.registry_secret
     - name: grype_config_secret
-      default: #@ data.values.grype.config_secret
+      default: #@ data.values.image_grype.config_secret
   
   template:
     apiVersion: carto.run/v1alpha1
     kind: Runnable
     metadata:
-      name: #@ data.values.grype.template_name + "-runnable"
+      name: #@ data.values.image_grype.template_name + "-runnable"
     spec:
       serviceAccountName: #@ data.values.service_account.name
       runTemplateRef:
-        name: #@ data.values.grype.template_name + "-run"
+        name: #@ data.values.image_grype.template_name + "-run"
 
       inputs:
         serviceAccountName: #@ data.values.service_account.name
         taskRef:
-          kind: #@ data.values.grype.tekton_task_type
-          name: #@ data.values.grype.tekton_task_name
+          kind: #@ data.values.image_grype.tekton_task_type
+          name: #@ data.values.image_grype.tekton_task_name
         grype_registry_secret: $(params.grype_registry_secret)$
         grype_config_secret: $(params.grype_config_secret)$
         params:
