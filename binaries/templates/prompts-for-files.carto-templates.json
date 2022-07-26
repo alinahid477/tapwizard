@@ -14,8 +14,14 @@
     {
         "name": "test",
         "filename":"carto-values-test.template",
-        "prompt": "Would you like to create carto test using tekton task?",
-        "hint": "Create a carto ClusterSourceTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing test). If you already have one then re-using is recommended."
+        "prompt": "Would you like to create carto mvn test?",
+        "hint": "Create a carto ClusterSourceTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing test).\nIf you have a tekton task created aready for running test then when this wizard prompts for creating tekton task confirm 'n'.\nIf you already have one then re-using is recommended."
+    },
+    {
+        "name": "grype-scan",
+        "filename":"carto-values-grype.template",
+        "prompt": "Would you like to create carto scan using grype scanner?",
+        "hint": "Create a carto ClusterSourceTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan).If you have a tekton task created aready for running test then when this wizard prompts for creating tekton task confirm 'n'.\nIf you already have one then re-using is recommended."
     },
     {
         "name": "knative",

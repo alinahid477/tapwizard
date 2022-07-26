@@ -1,0 +1,7 @@
+    - name: image-scanner
+      templateRef:
+        kind: ClusterImageTemplate
+        name: <IMAGE_SCANNER_TEMPLATE_NAME>
+      images:
+        - resource: image-builder
+          name: image

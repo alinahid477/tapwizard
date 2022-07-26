@@ -1,0 +1,63 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: #@ data.values.grype.template_name + "-run"
+spec:
+
+  outputs:
+    latestImage: spec.params[?(@.name=="image-url")].value
+
+  template:
+    apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: $(runnable.metadata.name)$-
+      labels: $(runnable.metadata.labels)$
+    spec:
+      workspaces:
+      - name: registry-credentials
+        secret:
+          secretName: $(runnable.spec.inputs.grype_registry_secret)$
+      - name: grype-config
+        secret:
+          secretName: $(runnable.spec.inputs.grype_config_secret)$
+      serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
+      taskRef: $(runnable.spec.inputs.taskRef)$
+      params: $(runnable.spec.inputs.params)$
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  name: #@ data.values.grype.template_name
+spec:
+  imagePath: .status.outputs.latestImage
+
+  params:
+    - name: grype_registry_secret
+      default: #@ data.values.grype.registry_secret
+    - name: grype_config_secret
+      default: #@ data.values.grype.config_secret
+  
+  template:
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.grype.template_name + "-runnable"
+    spec:
+      serviceAccountName: #@ data.values.service_account.name
+      runTemplateRef:
+        name: #@ data.values.grype.template_name + "-run"
+
+      inputs:
+        serviceAccountName: #@ data.values.service_account.name
+        taskRef:
+          kind: #@ data.values.grype.tekton_task_type
+          name: #@ data.values.grype.tekton_task_name
+        grype_registry_secret: $(params.grype_registry_secret)$
+        grype_config_secret: $(params.grype_config_secret)$
+        params:
+          - name: image-url
+            value: $(image)$
+

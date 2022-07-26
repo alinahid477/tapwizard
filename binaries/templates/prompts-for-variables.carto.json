@@ -39,7 +39,7 @@
     },
     {
         "name": "<CARTO_IMAGE_TEMPLATE_NAME>",
-        "hint": "The name of the cluster image template that is responsible for defining image creation process. eg: kpackimage.",
+        "hint": "The name of the ClusterImageTemplate that is responsible for defining image creation process. eg: kpackimage.",
         "defaultvalue": "kpackimage"
     },
     {
@@ -58,13 +58,25 @@
         "defaultvalue": "default"
     },
     {
+        "name": "<CARTO_GRYPE_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterImageTemplate (for image scanning) or ClusterSourceTemplate (for source scanning) that is responsible for defining image or source scanning process. eg: imgscan, srcscan."
+    },
+    {
+        "name": "<CARTO_GRYPE_REGISTRY_SECRET_NAME>",
+        "hint": "Docker Registry Secret (of type kubernetes.io/dockerconfigjson) name that gype will use to access image from registry. eg: registry-regcred\nThis secret does not have to exist now, you can create it at a later point."
+    },
+    {
+        "name": "<CARTO_GRYPE_CONFIG_SECRET_NAME>",
+        "hint": "Grype Config Secret (of type Opaque with stringData) name that gype will use to mount policies. eg: grype-config.\nPlease perform ${greencolor}'cat binaries/templates/grype-config-secret.sample.yaml'${normalcolor} to see a sample for guidance on how to create.\nThis secret does not have to exist now, you can create it at a later point."
+    },
+    {
         "name": "<CARTO_KNATIVE_CONFIG_TEMPLATE_NAME>",
         "hint": "The name of the cluster config template that is responsible for templating the yaml file to be generated for the workload that will be appliable on top of knative. eg: app-config",
         "defaultvalue": "app-config"
     },
     {
         "name": "<CARTO_IMAGE_PULL_SECRET_NAME>",
-        "hint": "Image pull secret name that k8s will use when it will try to pull the image (as defined in the app-config file). This value is used in the config map template. eg: registry-credentials"
+        "hint": "Image pull secret name (eg: secret type: kubernetes.io/dockerconfigjson) that k8s will use when it will try to pull the image (as defined in the app-config file). This value is used in the config map template. eg: registry-credentials"
     },
     {
         "name": "<CARTO_GITWRITER_TEMPLATE_NAME>",
@@ -88,7 +100,7 @@
     },
     {
         "name": "<CARTO_GITWRITER_REPOSITORY>",
-        "hint": "The url of the git reposity where the deployable config file will be written for git-ops.",
+        "hint": "The url of the git reposity where the deployable config file will be written for git-ops. format must be in like= ssh://git@github.com/username/git-repo.git",
         "use_special_replace": true
     },
     {

@@ -1,0 +1,7 @@
+    - name: source-scanner
+      templateRef:
+        kind: ClusterSourceTemplate
+        name: <SOURCE_SCANNER_TEMPLATE_NAME>
+      sources:
+        - resource: <SOURCE_SCANNER_DEPENDENCY_RESOURCE_NAME>
+          name: source

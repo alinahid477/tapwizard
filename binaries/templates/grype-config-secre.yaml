@@ -1,0 +1,10 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: grype-config
+type: Opaque
+stringData:
+  .grypeconfig: |-
+    ignore:
+      - package:
+          name: spring-core

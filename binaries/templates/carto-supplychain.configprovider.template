@@ -3,5 +3,5 @@
         kind: ClusterConfigTemplate
         name: <CONFIG_TEMPLATE_NAME>
       images:
-        - resource: image-builder
+        - resource: <CONFIG_PROVIDER_DEPENDENCY_RESOURCE_NAME>
           name: image

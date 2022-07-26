@@ -3,5 +3,5 @@
         kind: ClusterImageTemplate
         name: <IMAGE_TEMPLATE_NAME>
       sources:
-        - resource: source-tester
-          name: <SOURCE_TEMPLATE_NAME>
+        - resource: <IMAGE_BUILDER_DEPENDENCY_RESOURCE_NAME>
+          name: source

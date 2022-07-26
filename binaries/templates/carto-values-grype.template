@@ -1,0 +1,5 @@
+grype:
+  template_name: <CARTO_GRYPE_TEMPLATE_NAME>
+  registry_secret: <CARTO_GRYPE_REGISTRY_SECRET_NAME>
+  config_secret: <CARTO_GRYPE_CONFIG_SECRET_NAME>
+
