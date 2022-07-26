@@ -20,9 +20,18 @@ function buildCartoValuesFile () {
 
     printf "\n\n\nGenerating carto values of type $valuesType file\n\n"
 
+    local filename=''
+    while [[ -z $filename ]]; do
+        read -p "Type the carto template values file name: " filename
+        if [[ -z $filename ]]
+        then
+            printf "Empty value not allowed.\n"
+        fi
+    done
+
     local promptsForFilesJSON="prompts-for-files.carto-$valuesType.json"
     local templatedBaseFile="$HOME/binaries/templates/carto-values-base-$valuesType.template"
-    local baseFile="$cartoDir/values.$valuesType.yaml"
+    local baseFile="$cartoDir/values.$valuesType.$filename.yaml"
 
     if [[ ! -f $templatedBaseFile ]]
     then

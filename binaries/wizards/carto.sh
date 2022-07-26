@@ -251,7 +251,7 @@ function createCartoTemplates () {
     then
         isTektonRequired='y'
         isTektonGrypeRequired='y'
-        cp $HOME/binaries/templates/carto-scanner.source-grype.template /tmp/carto/carto-scanner.srouce-grype.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.source-grype.yaml > $cartoDir/carto-scanner.source-grype.yaml
+        cp $HOME/binaries/templates/carto-scanner.source-grype.template /tmp/carto/carto-scanner.source-grype.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.source-grype.yaml > $cartoDir/carto-scanner.source-grype.yaml
     fi
     isexist=$(cat $cartoValuesFile | yq -e '.kpack' --no-colors)
     if [[ -n $isexist && $isexist != null ]]
