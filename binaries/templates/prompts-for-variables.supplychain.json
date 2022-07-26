@@ -8,9 +8,11 @@
         "hint": "The name of the service account that has necessary permission to run carto-template. eg: carto-sa, the one you created during clustertemplates configurations process"
     },
     {
-        "name": "<WORKLOAD_TYPE_NAME>",
-        "hint": "Workload type for which the supply chain will be triggered. eg: web",
-        "defaultvalue": "web"
+        "name": "<WORKLOAD_SELECTORS>",
+        "hint": "The selector that will also appear in workload.yaml based on which Cartographer will trigger the appropriate supply-chain.\neg: app.tanzu.vmware.com/workload-type: web or app.tanzu.vmware.com/workload-path: secured etc",
+        "input_type": "array",
+        "use_special_replace": true,
+        "array_per_item_prefix": "  "
     },
     {
         "name": "<SOURCE_TEMPLATE_NAME>",

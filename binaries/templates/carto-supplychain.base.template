@@ -5,7 +5,7 @@ metadata:
   name: <SUPPLY_CHAIN_NAME>
 spec:
   selector:
-    app.tanzu.vmware.com/workload-type: <WORKLOAD_TYPE_NAME>
+<WORKLOAD_SELECTORS>
   serviceAccountRef:
     name: <CARTO_SERVICE_ACCOUNT_NAME>
     namespace: default
