@@ -12,7 +12,7 @@
         "hint": "The selector that will also appear in workload.yaml based on which Cartographer will trigger the appropriate supply-chain.\neg: app.tanzu.vmware.com/workload-type: web or app.tanzu.vmware.com/workload-path: secured etc",
         "input_type": "array",
         "use_special_replace": true,
-        "array_per_item_prefix": "  "
+        "array_per_item_prefix": "    "
     },
     {
         "name": "<SOURCE_TEMPLATE_NAME>",
