@@ -15,11 +15,33 @@ installTCEAppToolkit()
     else
         printf "\n\n\n********* installing app-toolkit from values file: $valuesFile *************\n\n\n"
     fi
+    local isexist=''
+    printf "Check privilleges vmware-system-privileged...."
+    isexist=$(kubectl describe psp vmware-system-privileged)
+    if [[ -n $isexist ]]
+    then
+        printf "FOUND.\nCreating clusterrolebinding: default-tkg-admin-privileged-binding...\n"
+        kubectl create clusterrolebinding default-tkg-admin-privileged-binding --clusterrole=psp:vmware-system-privileged --group=system:authenticated
+        printf "CREATED\n"
+    else
+        printf "NOT FOUND.\n"
+    fi
+    printf "Check privilleges privileged (for aks)....\n"
+    isexist=$(kubectl describe psp privileged)
+    if [[ -n $isexist ]]
+    then
+        printf "FOUND.\nCreating clusterrolebinding: default-admin-privileged-binding..."
+        kubectl create clusterrolebinding default-admin-privileged-binding --clusterrole=psp:privileged --group=system:authenticated
+        printf "CREATED\n"
+    else
+        printf "NOT FOUND.\n"
+    fi
+
 
     local installedPackages=$(tanzu package installed list -A -o json)
 
     printf "\nChecking for app-toolkit from installed list..."
-    local isexist=$(echo $installedPackages | jq -rc '.[] | select(."package-name" | contains("app-toolkit.")) | ."package-version"')
+    isexist=$(echo $installedPackages | jq -rc '.[] | select(."package-name" | contains("app-toolkit.")) | ."package-version"')
     if [[ -n $isexist ]]
     then
         printf "FOUND"
