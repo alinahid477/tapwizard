@@ -46,7 +46,7 @@ fill out the necessary details (ignore the vsphere related variables for now)
 - `AWS_SECRET_ACCESS_KEY`=delete this variable or leave empty if not eks
 - `AWS_SESSION_TOKEN`=delete this variable or leave empty if not eks
 - `AWS_DEFAULT_REGION`=delete this variable or leave empty if not eks
-- `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: index.docker.io, for Harbor: my-harbor.com/io, for GCR: gcr.io, for ACR: azurecr.io etc.
+- `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: https://index.docker.io/v2/, for Harbor: my-harbor.example.com, for GCR: gcr.io, for ACR: azurecr.io etc.
 - `PVT_REGISTRY_REPO`=the repository where workload images (after container images are stored) are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: DockerHub: dockerhub-username, Harbor: my-project/supply-chain, GCR: my-project/supply-chain ACR: my-project/supply-chain
 - `PVT_REGISTRY_USERNAME`=username of the above registry
 - `PVT_REGISTRY_PASSWORD`=password for the above username

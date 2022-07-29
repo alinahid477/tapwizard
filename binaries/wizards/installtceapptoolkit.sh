@@ -7,6 +7,19 @@ source $HOME/binaries/tapscripts/extract-and-take-input.sh
 installTCEAppToolkit() 
 {
 
+    # PATCH: Dockerhub is special case
+    # This patch is so that 
+    #   tanzu secret registry add registry-credentials --server PVT-REGISTRY-SERVER requires dockerhub to be: https://index.docker.io/v2/
+    #   BUT
+    #   Apptoolkit.values files AND tap-profile values file expects: index.docker.io.
+    # Hence I am using CARTO_CATALOG_PVT_REGISTRY_SERVER for the values file just in case.
+    # AND doing the below if block to export (derive) the value of CARTO_CATALOG_PVT_REGISTRY_SERVER just for dockerhub.
+    # CARTO_CATALOG_PVT_REGISTRY_SERVER is a fail safe.
+    if [[ -n $PVT_REGISTRY_SERVER && $PVT_REGISTRY_SERVER =~ .*"index.docker.io".* ]]
+    then
+        export CARTO_CATALOG_PVT_REGISTRY_SERVER='index.docker.io'
+    fi
+
     local valuesFile=$1 #optional. Then passed this wizard does not prompt user to collect info for values file.
 
     if [[ -z $valuesFile ]]

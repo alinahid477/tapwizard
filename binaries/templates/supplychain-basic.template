@@ -2,7 +2,7 @@ supply_chain: basic
 
 ootb_supply_chain_basic:
   registry:
-    server: "<PVT_REGISTRY_SERVER>"
+    server: "<CARTO_CATALOG_PVT_REGISTRY_SERVER>"
     repository: "<PVT_REGISTRY_REPO>"
   gitops:
     repository_prefix: "<DELIVERABLE_REPOSITORY_PREFIX>"
