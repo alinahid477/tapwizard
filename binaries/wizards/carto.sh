@@ -362,6 +362,21 @@ function createCartoTemplates () {
         sleep 1
         if [[ -n $CARTO_GRYPE_REGISTRY_SECRET_NAME ]]
         then
+            confirmed=''
+            while true; do
+                read -p "Would you like to create k8s secret: $CARTO_GRYPE_REGISTRY_SECRET_NAME for image registry? [y/n] " yn
+                case $yn in
+                    [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                    [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                    * ) echo "Please answer y or n.";
+                esac
+            done    
+            if [[ $confirmed == 'y' ]]
+            then
+                export DOCKER_REGISTRY_SECRET_NAME=$CARTO_GRYPE_REGISTRY_SECRET_NAME
+                createDockerRegistrySecret
+                unset DOCKER_REGISTRY_SECRET_NAME
+            fi
         fi
     fi
     
