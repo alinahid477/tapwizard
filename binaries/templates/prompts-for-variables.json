@@ -24,7 +24,7 @@
     },
     {
         "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: https://index.docker.io/v2/ \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
+        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: https://index.docker.io/v1/ \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
     },
     {
@@ -207,7 +207,7 @@
     },
     {
         "name": "<DOCKER_REGISTRY_SERVER>",
-        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v2/.\nFor ACR this should be yourreistryoname.azurecr.io\nFor gcr it shoulf be gcr.io etc"
+        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v1/.\nFor ACR this should be yourreistryoname.azurecr.io\nFor gcr it shoulf be gcr.io etc"
     },
     {
         "name": "<DOCKER_REGISTRY_USERNAME>",

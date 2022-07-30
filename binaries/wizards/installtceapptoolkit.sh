@@ -9,7 +9,7 @@ installTCEAppToolkit()
 
     # PATCH: Dockerhub is special case
     # This patch is so that 
-    #   tanzu secret registry add registry-credentials --server PVT-REGISTRY-SERVER requires dockerhub to be: https://index.docker.io/v2/
+    #   tanzu secret registry add registry-credentials --server PVT-REGISTRY-SERVER requires dockerhub to be: https://index.docker.io/v1/
     #   BUT
     #   Apptoolkit.values files AND tap-profile values file expects: index.docker.io.
     # Hence I am using CARTO_CATALOG_PVT_REGISTRY_SERVER for the values file just in case.
