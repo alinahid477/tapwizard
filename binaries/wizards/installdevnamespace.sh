@@ -144,7 +144,7 @@ createDevNS () {
 
                 export $(cat $HOME/.env | xargs)
 
-                printf "\nCreating new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
+                printf "\nCreating new secret for private git repository access..."
                 $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
                 printf "\n\n\n"
                 sleep 4
@@ -156,13 +156,13 @@ createDevNS () {
                 export GIT_SSH_PUBLIC_KEY=$(cat $HOME/.git-ops/identity.pub | base64 -w 0)
                 export GIT_SERVER_HOST_FILE=$(cat $HOME/.git-ops/known_hosts | base64 -w 0)
 
-                cp $HOME/binaries/templates/gitops-secret.yaml /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
-                extractVariableAndTakeInput /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml
+                cp $HOME/binaries/templates/gitops-secret.yaml /tmp/gitops-secret.yaml
+                extractVariableAndTakeInput /tmp/gitops-secret.yaml
 
                 export $(cat $HOME/.env | xargs)
 
-                printf "\nApplying kubectl for new secret for private git repository access, named: $GITOPS_SECRET_NAME..."
-                kubectl apply -f /tmp/gitops-secret-$GITOPS_SECRET_NAME.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
+                printf "\nApplying kubectl for new secret for private git repository access..."
+                kubectl apply -f /tmp/gitops-secret.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
                 printf "\n\n\n"
                 sleep 3
                 unset GIT_SERVER_HOST

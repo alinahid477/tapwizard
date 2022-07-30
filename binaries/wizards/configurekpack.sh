@@ -317,11 +317,6 @@ function configureK8sSecretAndServiceAccount () {
         printf "\nCreating new K8s secret of type docker-registry..."
         $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
         printf "\n"
-    else
-        sed -i '/DOCKER_REGISTRY_SECRET_NAME/d' $HOME/.env
-        sleep 1
-        printf "\nDOCKER_REGISTRY_SECRET_NAME=$dockersecretname\n" >> $HOME/.env
-        sleep 1
     fi
 
 
@@ -366,11 +361,6 @@ function configureK8sSecretAndServiceAccount () {
 
             printf "Creating k8s secret for git...."
             kubectl apply -f $secretFile -n $namespace && printf "CREATED\n" || printf "FAILED\n"
-        else
-            sed -i '/K8S_BASIC_SECRET_NAME/d' $HOME/.env
-            sleep 1
-            printf "\K8S_BASIC_SECRET_NAME=$gitsecretname\n" >> $HOME/.env
-            sleep 1
         fi
     fi
 

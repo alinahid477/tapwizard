@@ -1,8 +1,7 @@
 [
     {
         "name": "<GITOPS-SECRET-NAME>",
-        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during developer namespace config).\nFor now it is just name of the secret.\nBUT you must record this name and use the exact same name to create secret.",
-        "isRecordAsEnvVar": true
+        "hint": "input the name of the k8s secret to access git server.\nThe secret will be created in k8s cluster at later point (during developer namespace config).\nFor now it is just name of the secret.\nBUT you must record this name and use the exact same name to create secret."
     },
     {
         "name": "<GIT_SERVER_HOST>",
@@ -225,8 +224,7 @@
     },
     {
         "name": "<K8S_BASIC_SECRET_NAME>",
-        "hint": "Name of the secret.",
-        "isRecordAsEnvVar": true
+        "hint": "Name of the secret."
     },
     {
         "name": "<K8S_BASIC_SECRET_GIT_SERVER>",
