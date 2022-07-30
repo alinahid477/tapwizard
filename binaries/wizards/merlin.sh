@@ -26,6 +26,10 @@ function helpFunction()
     echo -e "\t-c | --configure-carto-templates signals the wizard start creating cartographer templates for supply-chain."
     echo -e "\t-s | --create-carto-supplychain signals the wizard start creating cartographer supply-chain."
     echo -e "\t-d | --create-carto-delivery signals the wizard start creating cartographer delivery (for git-ops)."
+    echo -e "\t-v | --create-service-account signals the wizard start creating service account."
+    echo -e "\t-x | --create-docker-registry-secret signals the wizard start creating docker registry secret."
+    echo -e "\t-y | --create-basic-auth-secret signals the wizard start creating basic auth secret."
+    echo -e "\t-z | --create-git-ssh-secret signals the wizard start creating git ssh secret."
     echo -e "\t-h | --help"
     printf "\n"
 }
@@ -40,6 +44,10 @@ unset wizardConfigureKpack
 unset wizardConfigureCartoTemplates
 unset wizardCreateCartoSupplychain
 unset wizardCreateCartoDelivery
+unset wizardUTILCreateServiceAccount
+unset wizardUTILCreateDockerSecret
+unset wizardUTILCreateBasicAuthSecret
+unset wizardUTILCreateGitSSHSecret
 unset argFile
 unset ishelp
 
@@ -133,6 +141,34 @@ function executeCommand () {
         returnOrexit || return 1
     fi
 
+    if [[ $wizardUTILCreateBasicAuthSecret == 'y' ]]
+    then
+        unset wizardUTILCreateBasicAuthSecret
+        cretaBasicAuthSecret
+        returnOrexit || return 1
+    fi
+
+    if [[ $wizardUTILCreateDockerSecret == 'y' ]]
+    then
+        unset wizardUTILCreateDockerSecret
+        createDockerRegistrySecret
+        returnOrexit || return 1
+    fi
+
+    if [[ $wizardUTILCreateServiceAccount == 'y' ]]
+    then
+        unset wizardUTILCreateServiceAccount
+        createServiceAccount
+        returnOrexit || return 1
+    fi
+
+    if [[ $wizardUTILCreateGitSSHSecret == 'y' ]]
+    then
+        unset wizardUTILCreateGitSSHSecret
+        createGitSSHSecret
+        returnOrexit || return 1
+    fi
+
     printf "\nThis shouldn't have happened. Embarrasing.\n"
 }
 
@@ -192,6 +228,28 @@ while true ; do
                 "" ) wizardCreateCartoDelivery='y'; shift 2 ;;
                 * ) wizardCreateCartoDelivery='y' ; shift 1 ;;
             esac ;;
+
+        -v | --create-service-account )
+            case "$2" in
+                "" ) wizardUTILCreateServiceAccount='y'; shift 2 ;;
+                * ) wizardUTILCreateServiceAccount='y' ; shift 1 ;;
+            esac ;;
+        -x | --create-docker-registry-secret )
+            case "$2" in
+                "" ) wizardUTILCreateDockerSecret='y'; shift 2 ;;
+                * ) wizardUTILCreateDockerSecret='y' ; shift 1 ;;
+            esac ;;
+        -y | --create-basic-auth-secret )
+            case "$2" in
+                "" ) wizardUTILCreateBasicAuthSecret='y'; shift 2 ;;
+                * ) wizardUTILCreateBasicAuthSecret='y' ; shift 1 ;;
+            esac ;;
+        -z | --create-git-ssh-secret )
+            case "$2" in
+                "" ) wizardUTILCreateGitSSHSecret='y'; shift 2 ;;
+                * ) wizardUTILCreateGitSSHSecret='y' ; shift 1 ;;
+            esac ;;
+
         -f | --file )
             case "$2" in
                 "" ) argFile=''; shift 2 ;;
