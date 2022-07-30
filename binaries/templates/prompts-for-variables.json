@@ -222,8 +222,7 @@
     },
     {
         "name": "<DOCKER_REGISTRY_PASSWORD>",
-        "hint": "Password for the registry.",
-        "input_type": "password"
+        "hint": "Password for the registry."
     },
     {
         "name": "<K8S_BASIC_SECRET_NAME>",
@@ -240,8 +239,7 @@
     },
     {
         "name": "<K8S_BASIC_SECRET_PASSWORD>",
-        "hint": "Password for the git repo",
-        "input_type": "password"
+        "hint": "Password for the git repo"
     },
     {
         "name": "<K8S_SERVICE_ACCOUNT_NAME>",

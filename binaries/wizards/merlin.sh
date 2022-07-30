@@ -144,7 +144,7 @@ function executeCommand () {
     if [[ $wizardUTILCreateBasicAuthSecret == 'y' ]]
     then
         unset wizardUTILCreateBasicAuthSecret
-        cretaBasicAuthSecret
+        cretaBasicAuthSecret $HOME/configs
         returnOrexit || return 1
     fi
 
@@ -158,7 +158,7 @@ function executeCommand () {
     if [[ $wizardUTILCreateServiceAccount == 'y' ]]
     then
         unset wizardUTILCreateServiceAccount
-        createServiceAccount
+        createServiceAccount $HOME/configs
         returnOrexit || return 1
     fi
 
