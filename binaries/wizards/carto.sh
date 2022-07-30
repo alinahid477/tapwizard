@@ -563,7 +563,10 @@ function createDeliveryBasic () {
 
     resolveServiceAccountClusterRolesAndBindings $baseFile $HOME/binaries/templates/carto-delivery-rbac.yaml
 
-    cp $HOME/binaries/templates/carto-delivery.basic.template /tmp/carto/carto-delivery.basic.yaml && ytt --ignore-unknown-comments -f $baseFile -f /tmp/carto/carto-delivery.basic.yaml > $HOME/configs/carto/carto-delivery.basic.$filename.yaml
+    cp $HOME/binaries/templates/carto-delivery.basic.template /tmp/carto/carto-delivery.basic.yaml
+    extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.delivery.json" /tmp/carto/carto-delivery.basic.yaml
+
+    ytt --ignore-unknown-comments -f $baseFile -f /tmp/carto/carto-delivery.basic.yaml > $HOME/configs/carto/carto-delivery.basic.$filename.yaml
 
     kubectl apply -f $HOME/configs/carto/carto-delivery.basic.$filename.yaml
 
