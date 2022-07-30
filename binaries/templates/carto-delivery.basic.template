@@ -3,7 +3,7 @@
 apiVersion: carto.run/v1alpha1
 kind: ClusterSourceTemplate
 metadata:
-  name: gitops-source
+  name: #@ data.values.source.name
 spec:
   urlPath: .status.artifact.url
   revisionPath: .status.artifact.revision
@@ -24,7 +24,7 @@ spec:
 apiVersion: carto.run/v1alpha1
 kind: ClusterDeploymentTemplate
 metadata:
-  name: app-deploy
+  name: #@ data.values.deployment.name
 spec:
 
   observedCompletion:
@@ -77,20 +77,20 @@ spec:
 apiVersion: carto.run/v1alpha1
 kind: ClusterDelivery
 metadata:
-  name: deliver
+  name: #@ data.values.delivery_chain_name
 spec:
   selector:
-    app.tanzu.vmware.com/workload-type: deliver
+<DELIVERY_SELECTORS>
 
   resources:
     - name: source-provider
       templateRef:
         kind: ClusterSourceTemplate
-        name: gitops-source
+        name: #@ data.values.source.name
 
     - name: deployer
       templateRef:
         kind: ClusterDeploymentTemplate
-        name: app-deploy
+        name: #@ data.values.deployment.name
       deployment:
         resource: source-provider

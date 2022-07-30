@@ -1,5 +1,10 @@
 #@data/values
 ---
+delivery_chain_name: <DELIVERY_CHAIN_NAME>
 service_account:
   name: <CARTO_SERVICE_ACCOUNT_NAME>
   namespace: <CARTO_SERVICE_ACCOUNT_NAMESPACE>
+source:
+  name: <SOURCE_TEMPLATE_NAME>
+deployment:
+  name: <DEPLOYMENT_TEMPLATE_NAME>
