@@ -177,7 +177,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:csdh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:csdvxyzh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
