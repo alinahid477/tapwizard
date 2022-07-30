@@ -185,6 +185,30 @@ function resolveTektonTaskForGrypeScanning () {
     fi
 }
 
+function resolveTektonTaskForTrivyScanning () {
+    local confirmed=''
+    while true; do
+        printf "\nTrivy TektonTask is needed for source or image scanning. Only one is enough to be used by both CartoSourceScanner and CartoImagerScanner templates. Hence, if you have already created one before no need to create again.\n"
+        read -p "Would you like create tekton-task for trivy scanner? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done    
+    if [[ $confirmed == 'y' ]]
+    then
+        printf "Creating TektonTask: for source or image scanning...\n"
+        local templateFile=$HOME/binaries/templates/carto-scanner.tekton-task.trivy.template
+        local baseFile=$HOME/configs/carto/carto-scanner.tekton-task.trivy.yaml
+        cp $templateFile $baseFile
+        extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.carto.json" $baseFile
+        kubectl create -f $baseFile
+        printf "\nTektonTask create...COMPLETE\n"
+        sleep 2
+    fi
+}
+
 function cartoTemplateWizardPrompts () {
 
     printf "\n\n${yellowcolor}Cartographer Supply Chain templating wizard. It will perform the followings..."
@@ -206,6 +230,7 @@ function createCartoTemplates () {
     local isTektonTestRequired='n'
     local isTektonGitWriterRequired='n'
     local isTektonGrypeRequired='n'
+    local isTektonTrivyRequired='n'
     local isGitSSHRequired='n'
     local isKPackServiceAccountCheck='n'
     local isCreateGitSecret='n'
@@ -249,6 +274,13 @@ function createCartoTemplates () {
         isTektonRequired='y'
         isTektonGrypeRequired='y'
         cp $HOME/binaries/templates/carto-scanner.image-grype.template /tmp/carto/carto-scanner.image-grype.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.image-grype.yaml > $cartoDir/carto-scanner.image-grype.yaml
+    fi
+    isexist=$(cat $cartoValuesFile | yq -e '.image_trivy' --no-colors)
+    if [[ -n $isexist && $isexist != null ]]
+    then
+        isTektonRequired='y'
+        isTektonTrivyRequired='y'
+        cp $HOME/binaries/templates/carto-scanner.image-trivy.template /tmp/carto/carto-scanner.image-trivy.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-scanner.image-trivy.yaml > $cartoDir/carto-scanner.image-trivy.yaml
     fi
     isexist=$(cat $cartoValuesFile | yq -e '.source_grype' --no-colors)
     if [[ -n $isexist && $isexist != null ]]
@@ -313,6 +345,11 @@ function createCartoTemplates () {
         then
             kubectl create -f $cartoDir/carto-scanner.image-grype.yaml
         fi
+        isexist=$(cat $cartoValuesFile | yq -e '.image_trivy' --no-colors)
+        if [[ -n $isexist && $isexist != null ]]
+        then
+            kubectl create -f $cartoDir/carto-scanner.image-trivy.yaml
+        fi
         isexist=$(cat $cartoValuesFile | yq -e '.knative' --no-colors)
         if [[ -n $isexist && $isexist != null ]]
         then
@@ -374,6 +411,39 @@ function createCartoTemplates () {
             if [[ $confirmed == 'y' ]]
             then
                 export DOCKER_REGISTRY_SECRET_NAME=$CARTO_GRYPE_REGISTRY_SECRET_NAME
+                createDockerRegistrySecret
+                unset DOCKER_REGISTRY_SECRET_NAME
+            fi
+        fi
+    fi
+
+    if [[ $isTektonTrivyRequired == 'y' ]]
+    then
+        resolveTektonTaskForTrivyScanning
+        printf "cleaning env...\n"
+        sleep 1
+        sed -i '/CARTO_TRIVY_TEKTON_TASK_TYPE/d' $HOME/.env
+        sed -i '/CARTO_TRIVY_TEKTON_TASK_NAME/d' $HOME/.env
+        sleep 1
+        printf "Cleanup .env...COMPLETE"
+
+        printf "Reloading env variable to check for secret requirements...\n"
+        export $(cat $HOME/.env | xargs)
+        sleep 1
+        if [[ -n $CARTO_TRIVY_REGISTRY_SECRET_NAME ]]
+        then
+            confirmed=''
+            while true; do
+                read -p "Would you like to create k8s secret: $CARTO_TRIVY_REGISTRY_SECRET_NAME for image registry? [y/n] " yn
+                case $yn in
+                    [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                    [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                    * ) echo "Please answer y or n.";
+                esac
+            done    
+            if [[ $confirmed == 'y' ]]
+            then
+                export DOCKER_REGISTRY_SECRET_NAME=$CARTO_TRIVY_REGISTRY_SECRET_NAME
                 createDockerRegistrySecret
                 unset DOCKER_REGISTRY_SECRET_NAME
             fi

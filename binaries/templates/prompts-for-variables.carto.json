@@ -95,6 +95,35 @@
         "hint": "Tekton Task name that will execute the grype scanning.",
         "isRecordAsEnvVar": true
     },
+
+    {
+        "name": "<CARTO_IMAGE_TRIVY_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterImageTemplate (for image scanning) that is responsible for defining image scanning process. eg: imgscanner.",
+        "defaultvalue": "imgscanner-trivy"
+    },
+    {
+        "name": "<CARTO_SOURCE_TRIVY_TEMPLATE_NAME>",
+        "hint": "The name of the ClusterSourceTemplate (for source scanning) that is responsible for defining source scanning process. eg: srcscanner.",
+        "defaultvalue": "srcscanner-trivy"
+    },
+    {
+        "name": "<CARTO_TRIVY_REGISTRY_SECRET_NAME>",
+        "hint": "Docker Registry Secret (of type kubernetes.io/dockerconfigjson) name that gype will use to access image from registry. eg: registry-regcred\nThis secret does not have to exist now, you can create it at a later point.",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<CARTO_TRIVY_TEKTON_TASK_TYPE>",
+        "hint": "Tekton Task type that will execute trivy scanning.",
+        "options": ["ClusterTask", "Task"],
+        "defaultvalue": "ClusterTask",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<CARTO_TRIVY_TEKTON_TASK_NAME>",
+        "hint": "Tekton Task name that will execute the trivy scanning.",
+        "isRecordAsEnvVar": true
+    },
+
     {
         "name": "<CARTO_KNATIVE_CONFIG_TEMPLATE_NAME>",
         "hint": "The name of the cluster config template that is responsible for templating the yaml file to be generated for the workload that will be appliable on top of knative. eg: app-config",

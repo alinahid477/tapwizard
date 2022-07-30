@@ -30,6 +30,12 @@
         "hint": "Create a carto ClusterImageTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan). If you have a tekton task created aready for running scan (eg: as part of creating Caro Source Scanner) then when this wizard prompts for creating tekton task for scanning using grype confirm 'n'.\nIf you already have one then re-using is recommended."
     },
     {
+        "name": "trivy-imgscanner",
+        "filename":"carto-values-trivy.image.template",
+        "prompt": "Would you like to create image scan using trivy scanner for container image scanning?",
+        "hint": "Create a carto ClusterImageTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan). If you have a tekton task created aready for running scan (eg: as part of creating Caro Source Scanner) then when this wizard prompts for creating tekton task for scanning using trivy confirm 'n'.\nIf you already have one then re-using is recommended."
+    },
+    {
         "name": "knative",
         "filename":"carto-values-knative.template",
         "prompt": "Would you like create carto config to deploy for knative service?",

@@ -1,0 +1,71 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: ClusterTask
+metadata:
+  name: <TEKTON_TASK_NAME_FOR_TRIVY_SCANNER>
+spec:
+  description: |-
+    A task that uses trivy to scan source code or image
+  workspaces:
+    - name: registry-credentials
+      optional: true
+      description: |
+        registry credentials eg: contnet of ~/.docker/config.json
+  params:
+    - name: image-url
+      description: The image url
+      type: string
+      default: "none"
+    - name: blob-url
+      description: The source code blob url
+      type: string
+      default: "none"
+    - name: blob-revision
+      description: The source code blob revision, not currently used.
+      type: string
+      default: "none"
+    - name: args
+      type: string
+      default: "--severity CRITICAL --exit-code 1"
+  steps:
+    - name: grype-scanner
+      image: centos:latest
+      env:
+      - name: DOCKER_CONFIG
+        value: /config
+      - name: WORKSPACE_REGCRED_BOUND
+        value: $(workspaces.registry-credentials.bound)
+      - name: WORKSPACE_REGCRED_PATH
+        value: $(workspaces.registry-credentials.path)
+      - name: WORKSPACE_GRYPE_CONFIG_BOUND
+        value: $(workspaces.grype-config.bound)
+      - name: WORKSPACE_GRYPE_CONFIG_PATH
+        value: $(workspaces.grype-config.path)
+      securityContext:
+        runAsUser: 0
+      workingDir: /root
+      script: |
+        #!/usr/bin/env bash
+        set -o errexit
+        set -o xtrace
+
+        if [ "${WORKSPACE_REGCRED_BOUND}" = "true" ] ; then
+          mkdir -p /config
+          cp "${WORKSPACE_REGCRED_PATH}/.dockerconfigjson" "/config/config.json"
+          chmod 755 "/config/config.json"
+        fi
+        
+        cd /etc/yum.repos.d/
+        sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+        sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+        cd ~
+        version=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        trivy_rpm=trivy_$(echo $version | sed 's/v//')_Linux-64bit.rpm
+        yum localinstall https://github.com/aquasecurity/trivy/releases/download/$version/$trivy_rpm -y
+        
+        if [ "$(params.image-url)" != "none" ] ; then
+            trivy image $(params.image-url) $(params.args)
+        elif [ "$(params.blob-url)" != "none" ] ; then
+            curl -SL $(params.blob-url) | tar xvzf - 
+            trivy fs $(params.args) ./
+        fi

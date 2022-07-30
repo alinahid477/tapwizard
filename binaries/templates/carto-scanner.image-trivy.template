@@ -1,0 +1,57 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: #@ data.values.image_trivy.template_name + "-run"
+spec:
+
+  outputs:
+    latestImage: spec.params[?(@.name=="image-url")].value
+
+  template:
+    apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: $(runnable.metadata.name)$-
+      labels: $(runnable.metadata.labels)$
+    spec:
+      workspaces:
+      - name: registry-credentials
+        secret:
+          secretName: $(runnable.spec.inputs.trivy_registry_secret)$
+      serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
+      taskRef: $(runnable.spec.inputs.taskRef)$
+      params: $(runnable.spec.inputs.params)$
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  name: #@ data.values.image_trivy.template_name
+spec:
+  imagePath: .status.outputs.latestImage
+
+  params:
+    - name: image_registry_secret
+      default: #@ data.values.image_trivy.registry_secret
+  
+  template:
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.image_trivy.template_name + "-runnable"
+    spec:
+      serviceAccountName: #@ data.values.service_account.name
+      runTemplateRef:
+        name: #@ data.values.image_trivy.template_name + "-run"
+
+      inputs:
+        serviceAccountName: #@ data.values.service_account.name
+        taskRef:
+          kind: #@ data.values.image_trivy.tekton_task_type
+          name: #@ data.values.image_trivy.tekton_task_name
+        trivy_registry_secret: $(params.trivy_registry_secret)$
+        params:
+          - name: image-url
+            value: $(image)$
+
