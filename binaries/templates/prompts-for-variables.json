@@ -204,8 +204,7 @@
     },
     {
         "name": "<DOCKER_REGISTRY_SECRET_NAME>",
-        "hint": "Name of the secret. eg: dockerregcred",
-        "isRecordAsEnvVar": true
+        "hint": "Name of the secret. eg: dockerregcred"
     },
     {
         "name": "<DOCKER_REGISTRY_SERVER>",
