@@ -557,6 +557,7 @@ function createDeliveryBasic () {
     local templatedBaseFile="$HOME/binaries/templates/carto-delivery-values.template"
     local baseFile="$HOME/configs/carto/values.delivery.$filename.yaml"
 
+    cp $templatedBaseFile $baseFile
 
     extractVariableAndTakeInputUsingCustomPromptsFile "prompts-for-variables.delivery.json" $baseFile
 

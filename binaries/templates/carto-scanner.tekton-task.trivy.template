@@ -28,7 +28,7 @@ spec:
       type: string
       default: "--severity CRITICAL --exit-code 1"
   steps:
-    - name: grype-scanner
+    - name: trivy-scanner
       image: centos:latest
       env:
       - name: DOCKER_CONFIG
@@ -37,10 +37,6 @@ spec:
         value: $(workspaces.registry-credentials.bound)
       - name: WORKSPACE_REGCRED_PATH
         value: $(workspaces.registry-credentials.path)
-      - name: WORKSPACE_GRYPE_CONFIG_BOUND
-        value: $(workspaces.grype-config.bound)
-      - name: WORKSPACE_GRYPE_CONFIG_PATH
-        value: $(workspaces.grype-config.path)
       securityContext:
         runAsUser: 0
       workingDir: /root

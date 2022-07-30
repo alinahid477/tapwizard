@@ -32,7 +32,7 @@ spec:
   imagePath: .status.outputs.latestImage
 
   params:
-    - name: image_registry_secret
+    - name: trivy_registry_secret
       default: #@ data.values.image_trivy.registry_secret
   
   template:
