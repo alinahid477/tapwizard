@@ -2,38 +2,38 @@
     {
         "name": "source",
         "filename":"carto-values-source.template",
-        "prompt": "Would you like create carto source?",
+        "prompt": "Would you like create source pull?",
         "hint": "Create a carto ClusterSourceTemplate. If you already have one then re-using is recommended."
-    },
-    {
-        "name": "kpack-image",
-        "filename":"carto-values-kpack.template",
-        "prompt": "Would you like create carto image using kpack?",
-        "hint": "Create a carto ClusterImageTemplate configured kpack. If you already have one then re-using is recommended."
     },
     {
         "name": "test",
         "filename":"carto-values-test.template",
-        "prompt": "Would you like to create carto mvn test?",
+        "prompt": "Would you like to create mvn test?",
         "hint": "Create a carto ClusterSourceTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing test).\nIf you have a tekton task created aready for running test then when this wizard prompts for creating tekton task confirm 'n'.\nIf you already have one then re-using is recommended."
     },
     {
         "name": "grype-srcscanner",
         "filename":"carto-values-grype.source.template",
-        "prompt": "Would you like to create carto source scan using grype scanner for source code scanning?",
+        "prompt": "Would you like to create scan using grype scanner for source code scanning?",
         "hint": "Create a carto ClusterSourceTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan). If you have a tekton task created aready for running scan then when this wizard prompts for creating tekton task tekton task for scanning using grype confirm 'n'.\nIf you already have one then re-using is recommended."
+    },
+    {
+        "name": "kpack-image",
+        "filename":"carto-values-kpack.template",
+        "prompt": "Would you like create image build using kpack?",
+        "hint": "Create a carto ClusterImageTemplate configured kpack. If you already have one then re-using is recommended."
+    },
+    {
+        "name": "grype-imgscanner",
+        "filename":"carto-values-grype.image.template",
+        "prompt": "Would you like to create image scan using grype scanner for container image scanning?",
+        "hint": "Create a carto ClusterImageTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan). If you have a tekton task created aready for running scan (eg: as part of creating Caro Source Scanner) then when this wizard prompts for creating tekton task for scanning using grype confirm 'n'.\nIf you already have one then re-using is recommended."
     },
     {
         "name": "knative",
         "filename":"carto-values-knative.template",
         "prompt": "Would you like create carto config to deploy for knative service?",
         "hint": "Create a carto ClusterConfigTemplate configured to produce a knative deployment. If you already have one then re-using is recommended."
-    },
-    {
-        "name": "grype-imgscanner",
-        "filename":"carto-values-grype.image.template",
-        "prompt": "Would you like to create carto image scan using grype scanner for container image scanning?",
-        "hint": "Create a carto ClusterImageTemplate in combination with ClusterRunTemplate configured to run a tekton task (executing scan). If you have a tekton task created aready for running scan (eg: as part of creating Caro Source Scanner) then when this wizard prompts for creating tekton task for scanning using grype confirm 'n'.\nIf you already have one then re-using is recommended."
     },
     {
         "name": "gitwriter",

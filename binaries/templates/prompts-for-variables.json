@@ -209,11 +209,16 @@
     },
     {
         "name": "<DOCKER_REGISTRY_SERVER>",
-        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v2/.\nFor ACR this should be yourreistryoname.azurecr.io etc"
+        "hint": "The Docker server must be the registry prefix for its corresponding registry.\nFor Dockerhub this should be https://index.docker.io/v2/.\nFor ACR this should be yourreistryoname.azurecr.io\nFor gcr it shoulf be gcr.io etc"
     },
     {
         "name": "<DOCKER_REGISTRY_USERNAME>",
         "hint": "Username for the registry."
+    },
+    {
+        "name": "<DOCKER_REGISTRY_SECRET_NAMESPACE>",
+        "hint": "Namespace of the secret. eg: default",
+        "defaultvalue": "default"
     },
     {
         "name": "<DOCKER_REGISTRY_PASSWORD>",

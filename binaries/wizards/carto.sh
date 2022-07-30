@@ -207,7 +207,8 @@ function createCartoTemplates () {
     local isTektonGitWriterRequired='n'
     local isTektonGrypeRequired='n'
     local isGitSSHRequired='n'
-
+    local isKPackServiceAccountCheck='n'
+    local isCreateGitSecret='n'
 
     local cartoDir=$HOME/configs/carto
     buildCartoValuesFile "templates" $cartoDir "/tmp/cartoValuesFilePath"
@@ -233,6 +234,7 @@ function createCartoTemplates () {
     if [[ -n $isexist && $isexist != null ]]
     then
         cp $HOME/binaries/templates/carto-clustersource.template /tmp/carto/carto-clustersource.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-clustersource.yaml > $cartoDir/carto-clustersource.yaml
+        isCreateGitSecret='y'
     fi
     isexist=$(cat $cartoValuesFile | yq -e '.test' --no-colors)
     if [[ -n $isexist && $isexist != null ]]
@@ -259,6 +261,7 @@ function createCartoTemplates () {
     if [[ -n $isexist && $isexist != null ]]
     then
         cp $HOME/binaries/templates/carto-clusterimage-kpack.template /tmp/carto/carto-clusterimage-kpack.yaml && ytt --ignore-unknown-comments -f $cartoValuesFile -f /tmp/carto/carto-clusterimage-kpack.yaml > $cartoDir/carto-clusterimage-kpack.yaml
+        isKPackServiceAccountCheck='y'
     fi
     isexist=$(cat $cartoValuesFile | yq -e '.knative' --no-colors)
     if [[ -n $isexist && $isexist != null ]]
@@ -347,6 +350,83 @@ function createCartoTemplates () {
     if [[ $isTektonGrypeRequired == 'y' ]]
     then
         resolveTektonTaskForGrypeScanning
+        printf "cleaning env...\n"
+        sleep 1
+        sed -i '/CARTO_GRYPE_TEKTON_TASK_TYPE/d' $HOME/.env
+        sed -i '/CARTO_GRYPE_TEKTON_TASK_NAME/d' $HOME/.env
+        sleep 1
+        printf "Cleanup .env...COMPLETE"
+
+        printf "Reloading env variable to check for secret requirements...\n"
+        export $(cat $HOME/.env | xargs)
+        sleep 1
+        if [[ -n $CARTO_GRYPE_REGISTRY_SECRET_NAME ]]
+        then
+        fi
+    fi
+    
+    if [[ $isCreateGitSecret == 'y' ]]
+    then
+        printf "Reloading env variable to check for Git secrets...\n"
+        export $(cat $HOME/.env | xargs)
+        sleep 1
+        if [[ -n $CARTO_GIT_SECRET_NAME ]]
+        then
+            confirmed=''
+            while true; do
+                read -p "Would you like to create k8s secret: CARTO_GIT_SECRET_NAME=$CARTO_GIT_SECRET_NAME for your Git repository? [y/n] " yn
+                case $yn in
+                    [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                    [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                    * ) echo "Please answer y or n.";
+                esac
+            done    
+            if [[ $confirmed == 'y' ]]
+            then
+                export K8S_BASIC_SECRET_NAME=$CARTO_GIT_SECRET_NAME
+                cretaBasicSecret
+                unset K8S_BASIC_SECRET_NAME
+            fi
+        fi
+    fi
+
+    if [[ $isKPackServiceAccountCheck == 'y' ]]
+    then
+        printf "Reloading env variable to check for Kpack Service Account...\n"
+        export $(cat $HOME/.env | xargs)
+        sleep 1
+        confirmed=''
+        while true; do
+            read -p "Would you like to create k8s secret for image registry (to associate with service account)? [y/n] " yn
+            case $yn in
+                [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                * ) echo "Please answer y or n.";
+            esac
+        done    
+        if [[ $confirmed == 'y' ]]
+        then
+            createDockerRegistrySecret
+        fi
+
+        if [[ -n $CARTO_IMAGE_KPACK_SERVICE_ACCOUNT ]]
+        then
+            confirmed=''
+            while true; do
+                read -p "Would you like to create service account:$CARTO_IMAGE_KPACK_SERVICE_ACCOUNT in namespace: default? [y/n] " yn
+                case $yn in
+                    [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                    [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                    * ) echo "Please answer y or n.";
+                esac
+            done    
+            if [[ $confirmed == 'y' ]]
+            then
+                export K8S_SERVICE_ACCOUNT_NAME=$CARTO_IMAGE_KPACK_SERVICE_ACCOUNT
+                createServiceAccount
+                unset K8S_SERVICE_ACCOUNT_NAME
+            fi
+        fi
     fi
 
     printf "\nCarto Template Wizard...COMPLETE\n"

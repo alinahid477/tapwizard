@@ -15,7 +15,8 @@
     },
     {
         "name": "<CARTO_GIT_SECRET_NAME>",
-        "hint": "K8s secret name for private git reposity that will be specified in the workload.yaml. FluxCD uses this secret to authenticate with the git repository. This wizard must take this value."
+        "hint": "K8s secret name for private git reposity that will be specified in the workload.yaml. FluxCD uses this secret to authenticate with the git repository. This wizard must take this value.",
+        "isRecordAsEnvVar": true
     },
     {
         "name": "<CARTO_GIT_POLL_INTERVAL_IN_SECONDS>",
@@ -58,6 +59,11 @@
         "defaultvalue": "default"
     },
     {
+        "name": "<CARTO_IMAGE_KPACK_SERVICE_ACCOUNT>",
+        "hint": "The service account name (with imagepullsecret associated) to be used for kpack so that it can push built images to the image registry (as mentioned in CARTO_IMAGE_PREFIX).\nYou may use the same Service Account for Cartographer permissions mentioned for CARTO_SERVICE_ACCOUNT_NAME if you will be associating the secret for private image registry with that service account.",
+        "isRecordAsEnvVar": true
+    },
+    {
         "name": "<CARTO_IMAGE_GRYPE_TEMPLATE_NAME>",
         "hint": "The name of the ClusterImageTemplate (for image scanning) that is responsible for defining image scanning process. eg: imgscanner.",
         "defaultvalue": "imgscanner"
@@ -96,7 +102,7 @@
     },
     {
         "name": "<CARTO_IMAGE_PULL_SECRET_NAME>",
-        "hint": "Image pull secret name (eg: secret type: kubernetes.io/dockerconfigjson) that k8s will use when it will try to pull the image (as defined in the app-config file). This value is used in the config map template. eg: registry-credentials"
+        "hint": "Image pull secret name (eg: secret type: kubernetes.io/dockerconfigjson) that k8s will use when it will try to pull the image (as defined in the app-config file). This value is used in the config map template. eg: registry-credentials\nYOU MUST CREATE THIS SECRET IN THE TARGET CLUSTER WHERE YOU DEPLOY THIS DELIVERABLE (knative config file from git-ops repository).\nIf this k8s cluster is your target environment then you can use the same image pull secret name"
     },
     {
         "name": "<CARTO_GITWRITER_TEMPLATE_NAME>",
