@@ -14,6 +14,8 @@ spec:
     metadata:
       name: $(deliverable.metadata.name)$
     spec:
+      secretRef:
+        name: #@ data.values.source.git_secret_name
       interval: 1m0s
       url: $(deliverable.spec.source.git.url)$
       ref: $(deliverable.spec.source.git.ref)$
