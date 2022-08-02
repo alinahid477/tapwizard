@@ -44,7 +44,7 @@ spec:
     apiVersion: carto.run/v1alpha1
     kind: Runnable
     metadata:
-      name: #@ data.values.image_grype.template_name + "-" + $(workload.metadata.name)$ + "-runnable"
+      name: #@ data.values.image_grype.template_name + "-$(workload.metadata.name)$-runnable"
     spec:
       serviceAccountName: #@ data.values.service_account.name
       runTemplateRef:
