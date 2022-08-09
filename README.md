@@ -7,9 +7,8 @@ Merlin's TAP Wizard for is a bootstrapped docker instance that has
 - Many automations built in to achieve the below feature set
 
 A wizard like UI (with automation) for 
-- Tanzu Application Platform
-    - Installing TAP using UI for the TAP profile to support the architecture described here: https://github.com/vmware-tanzu-labs/tanzu-validated-solutions/blob/main/src/reference-designs/tap-architecture-planning.md
-    - UI interface to AppToolkit
+- Installing TAP using UI for the TAP profile to support the architecture described here: https://github.com/vmware-tanzu-labs/tanzu-validated-solutions/blob/main/src/reference-designs/tap-architecture-planning.md (Not needed for OpenSource Cartographer)
+- UI interface to AppToolkit (Not needed for commercial TAP)
 - UI for configuring Cartographer
     - Interactive UI to Create Cartographer Templates for common scenarios such as 
         - GitPull (private repository)
