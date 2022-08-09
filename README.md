@@ -118,10 +118,15 @@ follow the prompt of the UI for a guided experience of installing TAP on k8s
 ## Demo Video:
 
 TAP: 
+
 [![Watch the video](https://img.youtube.com/vi/vHhRGqbM3uU/hqdefault.jpg)](https://youtu.be/vHhRGqbM3uU)
 
 
+
+
+
 Cartographer:
+
 [![Watch the video](https://img.youtube.com/vi/rnIVsDjxhS0/hqdefault.jpg)](https://youtu.be/rnIVsDjxhS0)
 
 
