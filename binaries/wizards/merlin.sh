@@ -22,7 +22,7 @@ function helpFunction()
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
-    echo -e "\t-k | --configure-kpack signals the wizard create developer namespace."
+    echo -e "\t-k | --configure-kpack signals the wizard to configure kpack."
     echo -e "\t-c | --configure-carto-templates signals the wizard start creating cartographer templates for supply-chain."
     echo -e "\t-s | --create-carto-supplychain signals the wizard start creating cartographer supply-chain."
     echo -e "\t-d | --create-carto-delivery signals the wizard start creating cartographer delivery (for git-ops)."
