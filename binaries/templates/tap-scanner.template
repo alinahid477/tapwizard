@@ -1,3 +1,8 @@
 grype:
   namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
   targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>"
+
+scanning:
+  metadataStore:
+    url: "" # Disable embedded integration since it's deprecated
+
