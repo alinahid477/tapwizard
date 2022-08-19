@@ -15,6 +15,7 @@ metadata:
 secrets:
   - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
   - name: <GITOPS-SECRET-NAME>
+  - name: tap-registry
 imagePullSecrets:
   - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
   - name: tap-registry

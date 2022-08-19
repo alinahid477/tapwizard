@@ -1,4 +1,8 @@
-profile: view
+profile: full
+
+shared:
+  ingress_domain: "<INGRESS-DOMAIN>"
+
 ceip_policy_disclosed: true 
 
 metadata_store:
@@ -18,6 +22,10 @@ contour:
     service:
       type: LoadBalancer
 
+grype:
+  namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
+  targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>"
+
 tap_gui:
   service_type: ClusterIP
   ingressEnabled: "true"
@@ -34,9 +42,12 @@ tap_gui:
       cors:
         origin: http://tap-gui.<INGRESS-DOMAIN>
 
-appliveview:
-  ingressEnabled: <IS-APP-LIVE-VIEW-SSL-DISABLED>
-  ingressDomain: <APP-LIVE-VIEW-INGRESS-DOMAIN>
+cnrs:
+  domain_name: apps.<INGRESS-DOMAIN>
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+
+
+
 
 
 

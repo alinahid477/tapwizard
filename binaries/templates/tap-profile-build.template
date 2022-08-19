@@ -1,4 +1,8 @@
-profile: full
+profile: build
+
+shared:
+  ingress_domain: "<INGRESS-DOMAIN>"
+
 ceip_policy_disclosed: true 
 
 metadata_store:
@@ -13,39 +17,14 @@ buildservice:
   descriptor_name: "<DESCRIPTOR_NAME>"
   enable_automatic_dependency_updates: true
 
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
+# contour:
+#   envoy:
+#     service:
+#       type: LoadBalancer
 
 grype:
   namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
   targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>"
-
-tap_gui:
-  service_type: ClusterIP
-  ingressEnabled: "true"
-  ingressDomain: "<INGRESS-DOMAIN>"
-  app_config:
-    app:
-      baseUrl: http://tap-gui.<INGRESS-DOMAIN>
-    catalog:
-      locations:
-        - type: url
-          target: https://<GIT-CATALOG-URL>/catalog-info.yaml
-    backend:
-      baseUrl: http://tap-gui.<INGRESS-DOMAIN>
-      cors:
-        origin: http://tap-gui.<INGRESS-DOMAIN>
-
-cnrs:
-  domain_name: apps.<INGRESS-DOMAIN>
-  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-
-
-
-
-
 
 
 

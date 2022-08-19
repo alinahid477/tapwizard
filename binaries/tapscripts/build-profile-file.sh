@@ -97,10 +97,10 @@ buildProfileFile () {
 
                 # when multiple options exists (eg: ootb-supplychain basic or basic-with-testing or basic-with-testing-and-scanning)
                 # I have mentioned the filename in the JSON prompt in this format supplychain-$.template
-                # AND the physical file exists with name supplychain-basic.template, supplychain-basic-testing.template etc
+                # AND the physical file exists with name tap-supplychain-basic.template, supplychain-basic-testing.template etc
                 # Thus based on the input from user (eg: basic or basic-with-testing or basic-with-testing-and-scanning)
                 #   I will dynamically form the filename eg: replace the '$' sign with userinput. 
-                #   eg: filename='supplychain-$.template' will become filename='supplychain-basic.template' 
+                #   eg: filename='tap-supplychain-$.template' will become filename='tap-supplychain-basic.template' 
                 filename=$(echo $filename | sed 's|\$|'$selectedOption'|g')
             fi
 
@@ -149,7 +149,7 @@ buildProfileFile () {
     then
         exclProfileType='full'
     fi
-    local exclFilename="excluded_packages-$exclProfileType.template"
+    local exclFilename="tap-excluded_packages-$exclProfileType.template"
     local exclReplace='<EXCLUDED-PACKAGES-LIST>'
     printf "\n"
     printf "Adding excluded_packages...."

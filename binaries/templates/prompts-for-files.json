@@ -3,7 +3,7 @@
         "name": "buildservice",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["buildservice.tanzu.vmware.com", "build.appliveview.tanzu.vmware.com"],
-        "filename":"buildservice.template",
+        "filename":"tap-buildservice.template",
         "prompt": "Would you like to add build service?",
         "hint": "recommended for devsecops (build/dev cluster)"
     },
@@ -18,7 +18,7 @@
         "name": "ingress",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "contour.tanzu.vmware.com",
-        "filename":"ingress.template",
+        "filename":"tap-ingress.template",
         "prompt": "Would you like to add ingress?",
         "hint": "recommended for CNR and GUIs"
     },
@@ -26,20 +26,20 @@
         "name": "learningcentre",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["learningcenter.tanzu.vmware.com", "workshops.learningcenter.tanzu.vmware.com"],
-        "filename":"learningcentre.template",
+        "filename":"tap-learningcentre.template",
         "prompt": "Would you like to add GUI learing centre?"
     },
     {
         "name": "scanner",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["grype.scanning.apps.tanzu.vmware.com", "scanning.apps.tanzu.vmware.com"],
-        "filename":"scanner.template",
+        "filename":"tap-scanner.template",
         "prompt": "Would you like to add scanner for image scanning? (Recommended for dev, build clusters)"
     },
     {
         "name": "supply chain",
         "packagenames": ["ootb-supply-chain-basic.tanzu.vmware.com", "ootb-supply-chain-testing.tanzu.vmware.com", "ootb-supply-chain-testing-scanning.tanzu.vmware.com"],
-        "filename":"supplychain-$.template",
+        "filename":"tap-supplychain-$.template",
         "prompt": "Would you like to add supply chain?",
         "options": ["basic","testing","testing-scanning"],
         "hint": "recommended for build, iterate clusters"
@@ -48,7 +48,7 @@
         "name": "TapGUI",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagenames": ["tap-gui.tanzu.vmware.com", "accelerator.apps.tanzu.vmware.com"],
-        "filename":"tapgui.template",
+        "filename":"tap-tapgui.template",
         "prompt": "Would you like to add tap-gui?",
         "hint": "recommended for dev, gui cluster"
     },
@@ -56,7 +56,7 @@
         "name": "CNR",
         "conditionalvalue": "PROFILE_TYPE==full||PROFILE_TYPE==lite;defaultvalue=true",
         "packagename": "cnrs.tanzu.vmware.com",
-        "filename":"cnrs.template",
+        "filename":"tap-cnrs.template",
         "prompt": "Would you like to add cloud native runtime?",
         "hint": "This enables to deploy serverless on the k8s cluster."
     },

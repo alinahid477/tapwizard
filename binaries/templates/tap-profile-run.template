@@ -1,4 +1,8 @@
 profile: run
+
+shared:
+  ingress_domain: "<INGRESS-DOMAIN>"
+
 ceip_policy_disclosed: true 
 
 metadata_store:

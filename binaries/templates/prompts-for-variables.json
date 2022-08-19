@@ -33,20 +33,36 @@
         "isRecordAsEnvVar": true
     },
     {
-        "name": "<DELIVERABLE_REPOSITORY_PREFIX>",
-        "hint": "the repository prefix where deliverable.yaml file will be written.\nNOTE: this is a repository prefix (and not repository URL). eg: ssh://git@github.com:alinahid477\nIf you want to use full repository url use \"spec.params.name=gitops_repository\" and \"spec.params.value=ssh://git@github.com/<username>/sourcecode.git\" in workload.yaml instead.\nRepository name will be appended as the same name as mentioned in the workload.yaml\nRead details at: https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-scc-ootb-supply-chain-basic.html"
+        "name": "<GITOPS_REPOSITORY_SERVER_ADDRESS>",
+        "hint": "the git repository server address (eg: https://github.com) where deliverable will be written as per git-ops process."
     },
     {
-        "name": "<DELIVERABLE_REPOSITORY_BRANCH_NAME>",
-        "hint": "the branch name of the deliverable reposity (where deliverable.yaml will be written by TAP). eg: release or main etc"
+        "name": "<GITOPS_REPOSITORY_OWNER>",
+        "hint": "username of the repository owner. (eg: https://github.com/OWNER meaning https://github.com/alinahid477)"
     },
     {
-        "name": "<DELIVERABLE_REPOSITORY_USER_NAME>",
-        "hint": "Username that TAP tekton will use to commit deliverable.yaml. eg: supplychain. This user does not necessarily need to exist as a user in git server (eg: github) as contributor of the repository. Just a name."
+        "name": "<GITOPS_REPOSITORY_NAME>",
+        "hint": "name of the reposity. (eg: https://github.com/OWNER/REPO meaning https://github.com/alinahid477/apps-gitops)"
     },
     {
-        "name": "<DELIVERABLE_REPOSITORY_USER_EMAIL>",
-        "hint": "Email address that TAP tekton will use to commit deliverable.yaml. eg: supplychain@cluster.local. This email does not necessarily need to exist or associated with a contributor of the repository."
+        "name": "<GITOPS_REPOSITORY_BRANCH>",
+        "hint": "the branch name of the gitops reposity (where deliverable config will be written by TAP). eg: release, main etc"
+    },
+    {
+        "name": "<GITOPS_COMMIT_USERNAME>",
+        "hint": "Username that TAP will use to commit to gitops repository. eg: supplychain. This user does not necessarily need to exist as a user in git server (eg: github) as contributor of the repository. Just a name."
+    },
+    {
+        "name": "<GITOPS_COMMIT_EMAIL>",
+        "hint": "Email address that TAP will use to commit to gitops repository. eg: supplychain@cluster.local. This email does not necessarily need to exist or associated with a contributor of the repository."
+    },
+    {
+        "name": "<GITOPS_COMMIT_MESSAGE>",
+        "hint": "Commit message for git-ops commit."
+    },
+    {
+        "name": "<SUPPLY_CHAIN_TBS_CLUSTER_BUILDER_NAME>",
+        "hint": "Cluster builder name for building source to image. Hint: default"
     },
     {
         "name": "<KP-DEFAULT-REPO>",

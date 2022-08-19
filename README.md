@@ -74,8 +74,8 @@ fill out the necessary details (ignore the vsphere related variables for now)
 - `PVT_REGISTRY_USERNAME`=username of the above registry
 - `PVT_REGISTRY_PASSWORD`=password for the above username
 - TANZU_CLI_NO_INIT=true | leave it as it is
-- `TAP_VERSION`=1.1.1 | You MUST DELETE this variable if you want to use TCE app-toolkit. ONLY KEEP this variable if you want to use Tanzu TAP
-- `INSTALL_BUNDLE`=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d | delete the below variable for app-toolkit or if not TAP
+- `TAP_VERSION`=1.2.1 | You MUST DELETE this variable if you want to use TCE app-toolkit. ONLY KEEP this variable if you want to use Tanzu TAP. Get the value from https://network.tanzu.vmware.com/products/tanzu-application-platform/
+- `INSTALL_BUNDLE`=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d | delete the below variable for app-toolkit or if not TAP or get it from here: https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.2/cluster-essentials/GUID-deploy.html
 - `INSTALL_REGISTRY_HOSTNAME`=registry.tanzu.vmware.com | delete the below variable for app-toolkit or if not TAP
 - `INSTALL_REGISTRY_USERNAME`=username for tanzunet | delete this variable if not TAP
 - `INSTALL_REGISTRY_PASSWORD`=password for tanzunet | delete this variable if not TAP

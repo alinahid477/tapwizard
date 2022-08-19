@@ -78,8 +78,8 @@ generateProfile () {
 
         export PROFILE_TYPE=$selectedProfileType
         printf "\ncreating temporary file for profile...."
-        local tmpProfileFile=$(echo "/tmp/profile-$profilename.yaml" | xargs)
-        cp $templateFilesDIR/profile-$selectedProfileType.template $tmpProfileFile && printf "ok." || printf "failed"
+        local tmpProfileFile=$(echo "/tmp/tap-profile-$profilename.yaml" | xargs)
+        cp $templateFilesDIR/tap-profile-$selectedProfileType.template $tmpProfileFile && printf "ok." || printf "failed"
         printf "\n"
 
         printf "generate profile file...\n"
@@ -95,8 +95,8 @@ generateProfile () {
         printf "\nadding file for confirmation..."
         cp $tmpProfileFile $HOME/configs/ && printf "COMPLETE" || printf "FAILED"
 
-        printf "\n\nGenerated profile file: $HOME/configs/profile-$profilename.yaml\n\n"
-        echo "$HOME/configs/profile-$profilename.yaml" >> $(echo $notifyfile)
+        printf "\n\nGenerated profile file: $HOME/configs/tap-profile-$profilename.yaml\n\n"
+        echo "$HOME/configs/tap-profile-$profilename.yaml" >> $(echo $notifyfile)
     fi
 
     
