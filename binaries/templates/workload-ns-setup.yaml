@@ -16,9 +16,11 @@ secrets:
   - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
   - name: <GITOPS-SECRET-NAME>
   - name: tap-registry
+  - name: dockerhubregcred
 imagePullSecrets:
   - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
   - name: tap-registry
+  - name: dockerhubregcred
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

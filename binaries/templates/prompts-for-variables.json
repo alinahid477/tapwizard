@@ -5,7 +5,15 @@
     },
     {
         "name": "<GIT_SERVER_HOST>",
-        "hint": "Gitrepo host name. eg: github.com, bitbucket.org."
+        "hint": "Gitrepo host name. eg: https://github.com, https://bitbucket.org."
+    },
+    {
+        "name": "<GITOPS_GIT_USERNAME>",
+        "hint": "Gitrepo username. eg: cooldude1234."
+    },
+    {
+        "name": "<GITOPS_GIT_PASSWORD>",
+        "hint": "Gitrepo token (recommended) or password. eg: sdeyriue938498_uhdjsd or supersecretpass."
     },
     {
         "name": "<GIT_SSH_PRIVATE_KEY>",
@@ -86,7 +94,7 @@
     },
     {
         "name": "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>",
-        "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credential here.",
+        "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credentials here.",
         "isRecordAsEnvVar": true
     },
     {
@@ -277,5 +285,13 @@
         "name": "<CARTO_CATALOG_PVT_REGISTRY_SERVER>",
         "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<DOCKERHUB_USERNAME>",
+        "hint": "Dockerhub username. eg: cooldude1234"
+    },
+    {
+        "name": "<DOCKERHUB_PASSWORD>",
+        "hint": "Dockerhub password or token (recommended)."
     }
 ]

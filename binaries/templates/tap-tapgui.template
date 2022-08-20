@@ -3,6 +3,14 @@ tap_gui:
   ingressEnabled: "true"
   ingressDomain: "<INGRESS-DOMAIN>"
   app_config:
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        headers:
+          Authorization: "Bearer TAPGUI_READONLY_CLIENT_SA_TOKEN"
+          X-Custom-Source: project-star
     app:
       baseUrl: http://tap-gui.<INGRESS-DOMAIN>
     catalog:

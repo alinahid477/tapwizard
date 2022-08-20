@@ -45,6 +45,25 @@ installTapProfile()
         sed -i '/TAP_PROFILE_FILE_NAME/d' $HOME/.env
         printf "\nTAP_PROFILE_FILE_NAME=$TAP_PROFILE_FILE_NAME" >> $HOME/.env
 
+        local isexist=$(cat $profilefilename | grep -w 'grype:$')
+        if [[ -n $isexist ]]
+        then
+            printf "\nDetected user input for scanning functionlity (grype). Metadata store needs to be wired with TAP-GUI in order for scan result to get displayed in the GUI supply chain."
+            printf "\nCreating readonly service account name 'metadata-store-read-client' and rolebindings for it...\n"
+            kubectl apply -f $HOME/binaries/templates/tap-metadata-store-readonly-sa.yaml
+            printf "\nGetting access token for the above create SA..."
+            local METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets -n metadata-store -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='metadata-store-read-write-client')].data.token}" | base64 -d)
+            printf "OBTAINED.\nSee below:\n"
+            echo $METADATA_STORE_ACCESS_TOKEN
+            printf "\n\nReplacing TAPGUI_READONLY_CLIENT_SA_TOKEN in $profilefilename file with the access token...\n"
+            local replaceText='TAPGUI_READONLY_CLIENT_SA_TOKEN'
+            awk -v old=$replaceText -v new="$METADATA_STORE_ACCESS_TOKEN" 's=index($0,old){$0=substr($0,1,s-1) new substr($0,s+length(old))} 1' $profilefilename > $profilefilename.tmp && mv $profilefilename.tmp $profilefilename
+            sleep 1
+            printf "DONE.\n"
+        fi
+        
+               
+
         local confirmed=''
         if [[ $SILENTMODE != 'YES' ]]
         then            
@@ -87,6 +106,7 @@ installTapProfile()
                 done
             fi
         fi
+
         printf "\ninstalling tap.tanzu.vmware.com in namespace tap-install...\n"
         #printf "DEBUG: tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_PACKAGE_VERSION --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s"
         tanzu package install tap -p tap.tanzu.vmware.com -v $tapPackageVersion --values-file $profilefilename -n tap-install --poll-interval 5s --poll-timeout 15m0s

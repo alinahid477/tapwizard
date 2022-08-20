@@ -7,7 +7,8 @@ ceip_policy_disclosed: true
 
 metadata_store:
   app_service_type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
-
+  ns_for_export_app_cert: "*"
+  
 buildservice:
   kp_default_repository: "<KP-DEFAULT-REPO>"
   kp_default_repository_username: "<KP-DEFAULT-REPO-USERNAME>"
