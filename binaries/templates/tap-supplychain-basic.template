@@ -3,7 +3,7 @@ supply_chain: basic
 ootb_supply_chain_basic:
   registry:
     server: "<CARTO_CATALOG_PVT_REGISTRY_SERVER>"
-    repository: "<PVT_REGISTRY_REPO>"
+    repository: "<PVT_REGISTRY_PROJECT_REPO>"
   gitops:
     server_address: <GITOPS_REPOSITORY_SERVER_ADDRESS>
     repository_owner: <GITOPS_REPOSITORY_OWNER>

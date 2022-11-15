@@ -70,11 +70,12 @@ fill out the necessary details (ignore the vsphere related variables for now)
 - `AWS_SESSION_TOKEN`=delete this variable or leave empty if not eks
 - `AWS_DEFAULT_REGION`=delete this variable or leave empty if not eks
 - `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: https://index.docker.io/v2/, for Harbor: my-harbor.example.com, for GCR: gcr.io, for ACR: azurecr.io etc.
-- `PVT_REGISTRY_REPO`=the repository where workload images (after container images are stored) are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: DockerHub: dockerhub-username, Harbor: my-project/supply-chain, GCR: my-project/supply-chain ACR: my-project/supply-chain
+- `PVT_REGISTRY_PROJECT_REPO`=the repository where workload images (after container images are stored) are stored in the registry. Images are written to SERVER-NAME/PVT_REGISTRY_PROJECT_REPO/WL_NAME-WL_NAMESPACE. EG: DockerHub: dockerhub-username, Harbor: allprojects/my-project, GCR: all-projects/my-project ACR: all-projects/my-project
+- `PVT_REGISTRY_INSTALL_REPO`=the repository where images for tap install are relocated during the process of TAP installation. Images are written to SERVER-NAME/PVT_REGISTRY_INSTALL_REPO/tap-packages. EG: DockerHub: dockerhub-username, Harbor: all-projects/installs, GCR: all-projects/installs ACR: all-projects/installs
 - `PVT_REGISTRY_USERNAME`=username of the above registry
 - `PVT_REGISTRY_PASSWORD`=password for the above username
 - TANZU_CLI_NO_INIT=true | leave it as it is
-- `TAP_VERSION`=1.2.1 | You MUST DELETE this variable if you want to use TCE app-toolkit. ONLY KEEP this variable if you want to use Tanzu TAP. Get the value from https://network.tanzu.vmware.com/products/tanzu-application-platform/
+- `TAP_VERSION`=1.3.0 | ONLY KEEP this variable if you want to use Tanzu TAP. Get the value from https://network.tanzu.vmware.com/products/tanzu-application-platform/. DELETE this variable if you want to use TCE app-toolkit.
 - `INSTALL_BUNDLE`=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d | delete the below variable for app-toolkit or if not TAP or get it from here: https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.2/cluster-essentials/GUID-deploy.html
 - `INSTALL_REGISTRY_HOSTNAME`=registry.tanzu.vmware.com | delete the below variable for app-toolkit or if not TAP
 - `INSTALL_REGISTRY_USERNAME`=username for tanzunet | delete this variable if not TAP

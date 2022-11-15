@@ -18,4 +18,4 @@ kpack:
 cartographer_catalog:
   registry:
     server: <CARTO_CATALOG_PVT_REGISTRY_SERVER>
-    repository: <PVT_REGISTRY_REPO>
+    repository: <PVT_REGISTRY_PROJECT_REPO>

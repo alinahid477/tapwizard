@@ -99,12 +99,26 @@ installTapPackageRepository()
         printf "\n....COMPLETE\n\n"
     fi
     
-    printf "\nCreate a registry secret...\n"
-    tanzu secret registry add tap-registry --username ${INSTALL_REGISTRY_USERNAME} --password ${INSTALL_REGISTRY_PASSWORD} --server ${INSTALL_REGISTRY_HOSTNAME} --export-to-all-namespaces --yes --namespace tap-install
+    printf "\nStarting image relocation for tap installation...\n"
+    isexist=$(imgpkg version)
+    if [[ -z $isexist ]]
+    then
+        printf "\nERROR: imgpgk is missing. This tool is required for image relocation.\n"
+        returnOrexit || return 1
+    fi
+    printf "\ndocker login to registry.tanzu.vmware.com...\n"
+    docker login registry.tanzu.vmware.com -u ${INSTALL_REGISTRY_USERNAME} -p ${INSTALL_REGISTRY_PASSWORD} && printf "DONE.\n"
+    printf "\nExecuting imgpkg copy...\n"
+    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${PVT_REGISTRY_SERVER}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages --registry-username ${PVT_REGISTRY_USERNAME} --registry-password ${PVT_REGISTRY_PASSWORD} && printf "\n\nCOPY COMPLETE.\n\n";
+
+
+
+    printf "\nCreate a registry secret for ${PVT_REGISTRY_SERVER}...\n"
+    tanzu secret registry add tap-registry --username ${PVT_REGISTRY_USERNAME} --password ${PVT_REGISTRY_PASSWORD} --server ${PVT_REGISTRY_SERVER} --export-to-all-namespaces --yes --namespace tap-install
     printf "\n...COMPLETE\n\n"
 
     printf "\nCreate tanzu-tap-repository...\n"
-    tanzu package repository add tanzu-tap-repository --url registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:$TAP_VERSION --namespace tap-install
+    tanzu package repository add tanzu-tap-repository --url ${PVT_REGISTRY_SERVER}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages:${TAP_VERSION} --namespace tap-install
 
     printf "\nWaiting 3m before checking...\n"
     sleep 3m

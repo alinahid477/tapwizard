@@ -36,7 +36,7 @@
         "isRecordAsEnvVar": true
     },
     {
-        "name": "<PVT_REGISTRY_REPO>",
+        "name": "<PVT_REGISTRY_PROJECT_REPO>",
         "hint": "the repository where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my-project/supply-chain, \nGCR: my-project/supply-chain \nACR: my-project/supply-chain",
         "isRecordAsEnvVar": true
     },
