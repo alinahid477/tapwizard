@@ -120,7 +120,7 @@ installTapPackageRepository()
     docker login ${myregistryserver} -u ${PVT_REGISTRY_USERNAME} -p ${PVT_REGISTRY_PASSWORD} && printf "DONE.\n"
     sleep 2
     printf "\nExecuting imgpkg copy...\n"
-    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages && printf "\n\nCOPY COMPLETE.\n\n";
+    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO} && printf "\n\nCOPY COMPLETE.\n\n";
 
 
 
@@ -129,7 +129,7 @@ installTapPackageRepository()
     printf "\n...COMPLETE\n\n"
 
     printf "\nCreate tanzu-tap-repository...\n"
-    tanzu package repository add tanzu-tap-repository --url ${PVT_REGISTRY_SERVER}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages:${TAP_VERSION} --namespace tap-install
+    tanzu package repository add tanzu-tap-repository --url ${PVT_REGISTRY_SERVER}/${PVT_REGISTRY_INSTALL_REPO}:${TAP_VERSION} --namespace tap-install
 
     printf "\nWaiting 3m before checking...\n"
     sleep 3m
