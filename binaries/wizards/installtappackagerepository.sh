@@ -106,13 +106,6 @@ installTapPackageRepository()
         printf "\nERROR: imgpgk is missing. This tool is required for image relocation.\n"
         returnOrexit || return 1
     fi
-    printf "\ndocker login to registry.tanzu.vmware.com...\n"
-    docker login registry.tanzu.vmware.com -u ${INSTALL_REGISTRY_USERNAME} -p ${INSTALL_REGISTRY_PASSWORD} && printf "DONE.\n"
-    sleep 1
-    printf "\ndocker login to ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}...\n"
-    docker login ${myregistryserver} -u ${PVT_REGISTRY_USERNAME} -p ${PVT_REGISTRY_PASSWORD} && printf "DONE.\n"
-    sleep 2
-    printf "\nExecuting imgpkg copy...\n"
     # PATCH: Dockerhub is special case
     # This patch is so that 
     local myregistryserver=$PVT_REGISTRY_SERVER
@@ -120,6 +113,13 @@ installTapPackageRepository()
     then
         myregistryserver="index.docker.io"        
     fi
+    printf "\ndocker login to registry.tanzu.vmware.com...\n"
+    docker login registry.tanzu.vmware.com -u ${INSTALL_REGISTRY_USERNAME} -p ${INSTALL_REGISTRY_PASSWORD} && printf "DONE.\n"
+    sleep 1
+    printf "\ndocker login to ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}...\n"
+    docker login ${myregistryserver} -u ${PVT_REGISTRY_USERNAME} -p ${PVT_REGISTRY_PASSWORD} && printf "DONE.\n"
+    sleep 2
+    printf "\nExecuting imgpkg copy...\n"
     imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages && printf "\n\nCOPY COMPLETE.\n\n";
 
 
