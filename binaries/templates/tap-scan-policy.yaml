@@ -1,14 +1,18 @@
+---
 apiVersion: scanning.apps.tanzu.vmware.com/v1beta1
 kind: ScanPolicy
 metadata:
   name: scan-policy
+  labels:
+    'app.kubernetes.io/part-of': 'enable-in-gui'
 spec:
   regoFile: |
     package main
 
     # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
-    notAllowedSeverities := ["Critical"]
-    ignoreCves := ["CVE-2021-26291","CVE-2016-1000027"]
+    notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
+    # ignoreCves := ["CVE-2021-26291","CVE-2016-1000027"] for spring boot application -- to ignore the false positive
+    ignoreCves := []
 
     contains(array, elem) = true {
       array[_] = elem

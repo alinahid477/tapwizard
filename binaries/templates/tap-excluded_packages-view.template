@@ -3,6 +3,7 @@ excluded_packages:
   - cnrs.tanzu.vmware.com
   - ootb-delivery-basic.tanzu.vmware.com
   - developer-conventions.tanzu.vmware.com
+  - policy.apps.tanzu.vmware.com
   - image-policy-webhook.signing.apps.tanzu.vmware.com
   - services-toolkit.tanzu.vmware.com
   - service-bindings.labs.vmware.com
@@ -19,6 +20,5 @@ excluded_packages:
   - spring-boot-conventions.tanzu.vmware.com
   - ootb-templates.tanzu.vmware.com
   - tekton.tanzu.vmware.com
-  - image-policy-webhook.signing.apps.tanzu.vmware.com
   - cartographer.tanzu.vmware.com
 <EXCLUDED-PACKAGES-LIST>

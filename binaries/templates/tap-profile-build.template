@@ -2,6 +2,10 @@ profile: build
 
 shared:
   ingress_domain: "<INGRESS-DOMAIN>"
+  image_registry:
+    project_path: "<PVT_REGISTRY_SERVER>/<PVT_REGISTRY_PROJECT_REPO>"
+    username: "<PVT_REGISTRY_USERNAME>"
+    password: "<PVT_REGISTRY_PASSWORD>"
 
 ceip_policy_disclosed: true 
 
@@ -13,10 +17,9 @@ buildservice:
   kp_default_repository: "<KP-DEFAULT-REPO>"
   kp_default_repository_username: "<KP-DEFAULT-REPO-USERNAME>"
   kp_default_repository_password: "<KP-DEFAULT-REPO-PASSWORD>"
-  tanzunet_username: "<INSTALL_REGISTRY_USERNAME>"
-  tanzunet_password: "<INSTALL_REGISTRY_PASSWORD>"
-  descriptor_name: "<DESCRIPTOR_NAME>"
-  enable_automatic_dependency_updates: true
+  include_legacy_bom: false
+  exclude_dependencies: true
+
 
 # contour:
 #   envoy:
@@ -26,6 +29,14 @@ buildservice:
 grype:
   namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
   targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>"
+  metadataStore:
+    url: <METADATA-STORE-URL-ON-VIEW-CLUSTER>
+    caSecret:
+        name: store-ca-cert
+        importFromNamespace: metadata-store-secrets
+    authSecret:
+        name: store-auth-token
+        importFromNamespace: metadata-store-secrets
 
 
 

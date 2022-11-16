@@ -32,7 +32,7 @@
     },
     {
         "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: https://index.docker.io/v1/ \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
+        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
     },
     {
@@ -293,5 +293,9 @@
     {
         "name": "<DOCKERHUB_PASSWORD>",
         "hint": "Dockerhub password or token (recommended)."
+    },
+    {
+        "name": "<METADATA-STORE-URL-ON-VIEW-CLUSTER>",
+        "hint": "This is the URL of the Supply Chain Security Tools (SCST) - Store deployed on the View cluster."
     }
 ]

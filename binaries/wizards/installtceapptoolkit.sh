@@ -224,9 +224,20 @@ installTCEAppToolkit()
         returnOrexit || return 1
     fi
 
+
+    # PATCH: Dockerhub is special case
+    # This patch is so that 
+    #   tanzu secret registry add registry-credentials --server PVT-REGISTRY-SERVER requires dockerhub to be: https://index.docker.io/v1/
+    #   BUT
+    #   Apptoolkit.values files AND tap-profile values file expects: index.docker.io.
+    local pvtRegistryServer=$PVT_REGISTRY_SERVER
+    if [[ -n $PVT_REGISTRY_SERVER && $PVT_REGISTRY_SERVER =~ .*"index.docker.io".* ]]
+    then
+        pvtRegistryServer='https://index.docker.io/v1/'
+    fi
     local dactedpass=$(echo ${PVT_REGISTRY_PASSWORD//[a-zA-Z\/0-9]/x})
-    printf "\nCreating secret called registry-credentials using\n\t--server $PVT_REGISTRY_SERVER\n\t--username $PVT_REGISTRY_USERNAME\n\t--password $dactedpass...\n"
-    tanzu secret registry add registry-credentials --server $PVT_REGISTRY_SERVER --username $PVT_REGISTRY_USERNAME --password $PVT_REGISTRY_PASSWORD --export-to-all-namespaces
+    printf "\nCreating secret called registry-credentials using\n\t--server $pvtRegistryServer\n\t--username $PVT_REGISTRY_USERNAME\n\t--password $dactedpass...\n"
+    tanzu secret registry add registry-credentials --server $pvtRegistryServer --username $PVT_REGISTRY_USERNAME --password $PVT_REGISTRY_PASSWORD --export-to-all-namespaces
     sleep 2
     printf "secret called registry-credentials...CREATED\n"
 

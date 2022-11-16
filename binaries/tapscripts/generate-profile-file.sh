@@ -24,7 +24,7 @@ generateProfile () {
     else
         # selected option
         selectedProfileType=${profileTypes[$ret]}
-        if [[ $selectedProfileType == 'customfile' || $selectedProfileType == 'full' || $selectedProfileType == 'iteration' || $selectedProfileType == 'build' || $selectedProfileType == 'build' || $selectedProfileType == 'run' || $selectedProfileType == 'view' ]]
+        if [[ $selectedProfileType == 'customfile' || $selectedProfileType == 'full' || $selectedProfileType == 'iteration' || $selectedProfileType == 'build' || $selectedProfileType == 'run' || $selectedProfileType == 'view' ]]
         then
             selectedProfileMainType='full'
         else 

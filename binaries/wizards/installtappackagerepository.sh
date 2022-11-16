@@ -109,7 +109,14 @@ installTapPackageRepository()
     printf "\ndocker login to registry.tanzu.vmware.com...\n"
     docker login registry.tanzu.vmware.com -u ${INSTALL_REGISTRY_USERNAME} -p ${INSTALL_REGISTRY_PASSWORD} && printf "DONE.\n"
     printf "\nExecuting imgpkg copy...\n"
-    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${PVT_REGISTRY_SERVER}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages --registry-username ${PVT_REGISTRY_USERNAME} --registry-password ${PVT_REGISTRY_PASSWORD} && printf "\n\nCOPY COMPLETE.\n\n";
+    # PATCH: Dockerhub is special case
+    # This patch is so that 
+    local myregistryserver=$PVT_REGISTRY_SERVER
+    if [[ -n $PVT_REGISTRY_SERVER && $PVT_REGISTRY_SERVER =~ .*"index.docker.io".* ]]
+    then
+        myregistryserver="index.docker.io"        
+    fi
+    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}/tap-packages --registry-username ${PVT_REGISTRY_USERNAME} --registry-password ${PVT_REGISTRY_PASSWORD} && printf "\n\nCOPY COMPLETE.\n\n";
 
 
 

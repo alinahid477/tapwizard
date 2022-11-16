@@ -69,7 +69,7 @@ fill out the necessary details (ignore the vsphere related variables for now)
 - `AWS_SECRET_ACCESS_KEY`=delete this variable or leave empty if not eks
 - `AWS_SESSION_TOKEN`=delete this variable or leave empty if not eks
 - `AWS_DEFAULT_REGION`=delete this variable or leave empty if not eks
-- `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: https://index.docker.io/v2/, for Harbor: my-harbor.example.com, for GCR: gcr.io, for ACR: azurecr.io etc.
+- `PVT_REGISTRY_SERVER`=the hostname of the registry server for cartographer used for supply chain. Examples: for DockerHub: index.docker.io, for Harbor: my-harbor.example.com, for GCR: gcr.io, for ACR: azurecr.io etc.
 - `PVT_REGISTRY_PROJECT_REPO`=the repository where workload images (after container images are stored) are stored in the registry. Images are written to SERVER-NAME/PVT_REGISTRY_PROJECT_REPO/WL_NAME-WL_NAMESPACE. EG: DockerHub: dockerhub-username, Harbor: allprojects/my-project, GCR: all-projects/my-project ACR: all-projects/my-project
 - `PVT_REGISTRY_INSTALL_REPO`=the repository where images for tap install are relocated during the process of TAP installation. Images are written to SERVER-NAME/PVT_REGISTRY_INSTALL_REPO/tap-packages. EG: DockerHub: dockerhub-username, Harbor: all-projects/installs, GCR: all-projects/installs ACR: all-projects/installs
 - `PVT_REGISTRY_USERNAME`=username of the above registry

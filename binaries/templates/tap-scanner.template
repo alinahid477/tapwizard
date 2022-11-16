@@ -5,4 +5,9 @@ grype:
 scanning:
   metadataStore:
     url: "" # Disable embedded integration since it's deprecated
-
+  source:
+    policy: scan-policy
+    template: blob-source-scan-template
+  image:
+    policy: scan-policy
+    template: private-image-scan-template
