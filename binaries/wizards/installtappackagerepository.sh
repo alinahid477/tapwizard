@@ -121,7 +121,7 @@ installTapPackageRepository()
 
 
     printf "\nCreate a registry secret for ${PVT_REGISTRY_SERVER}...\n"
-    tanzu secret registry add tap-registry --username ${PVT_REGISTRY_USERNAME} --password ${PVT_REGISTRY_PASSWORD} --server ${PVT_REGISTRY_SERVER} --export-to-all-namespaces --yes --namespace tap-install
+    tanzu secret registry add tap-registry --username ${PVT_REGISTRY_USERNAME} --password ${PVT_REGISTRY_PASSWORD} --server ${myregistryserver} --export-to-all-namespaces --yes --namespace tap-install
     printf "\n...COMPLETE\n\n"
 
     printf "\nCreate tanzu-tap-repository...\n"

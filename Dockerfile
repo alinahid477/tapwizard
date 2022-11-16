@@ -31,6 +31,8 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${
 	&& rm docker-${DOCKERVERSION}.tgz
 # RUN curl -sSL https://get.docker.com/ | sh
 
+RUN curl -L https://carvel.dev/install.sh | bash
+
 RUN curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash; exit 0 
 RUN  mv tilt /usr/local/bin/ && tilt version
 
