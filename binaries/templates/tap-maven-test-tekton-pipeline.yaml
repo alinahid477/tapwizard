@@ -4,6 +4,7 @@ metadata:
   name: maven-test-tekton-pipeline
   labels:
     apps.tanzu.vmware.com/pipeline: test     # (!) required
+    apps.tanzu.vmware.com/language: java      # tap1.3 multi-pipeline functionality
 spec:
   params:
     - name: source-url                       # (!) required

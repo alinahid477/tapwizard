@@ -46,7 +46,7 @@
     },
     {
         "name": "<GITOPS_REPOSITORY_OWNER>",
-        "hint": "username of the repository owner. (eg: https://github.com/OWNER meaning https://github.com/alinahid477)"
+        "hint": "username of the repository owner. (eg: https://github.com/OWNER meaning https://github.com/alinahid477 thus the value is alinahid477)"
     },
     {
         "name": "<GITOPS_REPOSITORY_NAME>",
@@ -67,6 +67,10 @@
     {
         "name": "<GITOPS_COMMIT_MESSAGE>",
         "hint": "Commit message for git-ops commit."
+    },
+    {
+        "name": "<GITOPS_SECRET_NAME>",
+        "hint": "name of the gitops secret. use value git-ssh here."
     },
     {
         "name": "<SUPPLY_CHAIN_TBS_CLUSTER_BUILDER_NAME>",

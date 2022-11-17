@@ -28,19 +28,19 @@ A wizard like UI (with automation) for
 
 This docker will server interface for
 - Tanzu CLI installed (Usage: `tanzu --help` in the bash prompt)
-- kapp cli (Usage: `kapp --help` in the bash prompt)
+- all carvel tools (Usage: `kapp --help, imppkg --help, ytt --help` etc in the bash prompt)
 - Merlin CLI for Tap or TCE App Toolkit (Usage: `merlin --help` in the bash prompt)
 
 ## Pre-Requisites 
 - docker ce or ee installed locally
 - kubeconfig file of a k8 cluster (aks, eks, tkg, tce managed, tce unmanaged).
+    - **if there's already a k8s cluster** get the kubeconfig file for the cluser and place it in the `.kube` directory with filename `config`
+        - this wizard will detect the available contexts and prompt for selecting the the right one.
+        - ***If the kubernetes control plane is private and requires accessing through bastion host*** please replace the control plane url/ip of `clusters.cluster.server` field with `kubernetes`. eg> `server: https://kubernetes:6443` in `kubeconfig` file placed in `.kube` directory of this dir. You may also be required to replace the value of `users.user.exec.env.name=CLUSTER_ENDPOINT` from private url/ip to `kubernetes`, eg> `value: https://kubernetes:6443`
     - **If k8s cluster is not pre-existing** you can create a new k8s cluster using this wizard
         - **This wizard can create aks k8s cluster** if there's no kubeconfig detected the wizard will prompt for creating a new cluster. Choose `aks` and the wizard will create an aks cluster. (post cluster create it will add the kubeconfig file in `.kube` directory). *creating aks cluster requires a service principle. If you do not have a service principal follow the wizard prompt to create a new one.*
         - You may also choose to **create a TCE cluster** using `tanzu cli` which will also place config file in the .kube dir. 
         - when you provide `AWS_ACCESS_KEY_ID` **the wizard will install `aws cli`**. You can create a **eks cluster** using the `aws cli`.
-    - **if there's already a k8s cluster** get the kubeconfig file for the cluser and place it in the `.kube` directory with filename `config`
-        - this wizard will detect the available contexts and prompt for selecting the the right one.
-        - ***If the kubernetes control plane is private and requires accessing through bastion host*** please replace the control plane url/ip of `clusters.cluster.server` field with `kubernetes`. eg> `server: https://kubernetes:6443` in `kubeconfig` file placed in `.kube` directory of this dir. You may also be required to replace the value of `users.user.exec.env.name=CLUSTER_ENDPOINT` from private url/ip to `kubernetes`, eg> `value: https://kubernetes:6443`
 - Container registry details (see below env variable)
 - .env file (see below)
 
@@ -48,12 +48,14 @@ This docker will server interface for
 
 - account in tanzunet (https://login.run.pivotal.io/login). If you dont have an account create one (it's free). ***NEEDED for TAP. NOT needed for TCE App Toolkit***
 - download `tanu framework` (https://network.pivotal.io/products/tanzu-application-platform/), and place the tar in `binaries` directory ***NEEDED for TAP. NOT needed for TCE App Toolkit***
-- download `cluster essential for vmware tanzu` (https://network.pivotal.io/products/tanzu-cluster-essentials) and place the tgz in `binaries` directory. ***NEEDED for TAP. NOT needed for TCE App Toolkit***
 - download `tap gui` (https://network.pivotal.io/products/tanzu-application-platform/#/releases/1095326/file_groups/6091) ***NEEDED for TAP. NOT needed for TCE App Toolkit***
     - untar the tar.gz
     - create a git public repository and clone it
     - add the untar-ed/inflated contents to the git repo and push the untar (eg: blank or yelp) 
     - grab the url of catalog-info.yaml (eg: https://github.com/alinahid477/tap-gui/blob/main/blank/catalog-info.yaml) and keep it handy.
+- If you are deploying TAP on a NON-TKG flavoured K8s cluser you may need `cluster essential for vmware tanzu`. Details in the doco: https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html
+    - If need to deploy cluster essential then Download `cluster essential for vmware tanzu` (https://network.pivotal.io/products/tanzu-cluster-essentials) and place the tgz in `binaries` directory. ***NEEDED for TAP. NOT needed for TCE App Toolkit***
+
 
 
 
@@ -101,7 +103,7 @@ start.bat
 follow the prompt of the UI for a guided experience of installing TAP on k8s
 
 ## Usage
-- `--install-tap` Signals the wizard to start the process for installing TAP for Tanzu Enterprise.
+- `--install-tap` Signals the wizard to start the process for installing TAP for Tanzu Enterprise. Optionally pass values file using -f or --file flag. There's a sample values file in the `template` directory called `tap-values-sample.yaml`
 - `--install-app-toolkit` Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag.
 - `--install-tap-package-repository` Signals the wizard to start the process for installing package repository for TAP.
 - `--install-tap-profile` Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag.

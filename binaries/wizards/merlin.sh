@@ -17,7 +17,7 @@ function helpFunction()
 {
     printf "\n"
     echo "Usage:"
-    echo -e "\t-t | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise."
+    echo -e "\t-t | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise. Optionally pass values file using -f or --file flag."
     echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag."
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
@@ -70,7 +70,13 @@ function executeCommand () {
     if [[ $tapInstall == 'y' ]]
     then
         unset tapInstall
-        installTap
+        if [[ -z $file ]]
+        then
+            installTap
+        else
+            printf "\nDBG: Argument file: $file\n"
+            installTap $file
+        fi
         returnOrexit || return 1
     fi
     

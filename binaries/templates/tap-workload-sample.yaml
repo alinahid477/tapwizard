@@ -13,3 +13,19 @@ spec:
       ref:
         branch: main
       url: https://github.com/alinahid477/demo-app-sc
+  params:
+    - name: testing_pipeline_matching_labels
+
+
+# tanzu apps workload create demoapp \
+#   --git-repo https://github.com/alinahid477/demo-app-sc \
+#   --git-branch main \
+#   --type web \
+#   --build-env BP_JVM_VERSION=17 \
+#   --label app.kubernetes.io/part-of=springboot-maven \
+#   --label apps.tanzu.vmware.com/has-tests=true \
+#   --param-yaml testing_pipeline_matching_labels='{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}'
+#   --annotation autoscaling.knative.dev/minScale=1 \
+#   --namespace default \
+#   --tail \
+#   --yes

@@ -1,0 +1,94 @@
+profile: full
+
+shared:
+  ingress_domain: "tap.corp.tanzu"
+  image_registry:
+    project_path: "YOURINPUT.azurecr.io/projects"
+    username: "YOURINPUT"
+    password: "YOURINPUT"
+
+ceip_policy_disclosed: true
+
+metadata_store:
+  app_service_type: ClusterIP # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
+  ns_for_export_app_cert: "*"
+buildservice:
+  kp_default_repository: "YOURINPUT.azurecr.io/build-service"
+  kp_default_repository_username: "YOURINPUT"
+  kp_default_repository_password: "YOURINPUT"
+  include_legacy_bom: false
+  exclude_dependencies: true
+
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+grype:
+  namespace: "default" # (optional) Defaults to default namespace.
+  targetImagePullSecret: "registry-credentials"
+
+scanning:
+  metadataStore:
+    url: "" # Disable embedded integration since it's deprecated
+  source:
+    policy: scan-policy
+    template: blob-source-scan-template
+  image:
+    policy: scan-policy
+    template: private-image-scan-template
+
+
+supply_chain: testing_scanning
+
+ootb_supply_chain_testing_scanning:
+  registry:
+    server: "YOURINPUT.azurecr.io"
+    repository: "projects"
+  gitops:
+    server_address: https://github.com
+    repository_owner: YOURINPUT
+    repository_name: https://github.com/YOURINPUT/gitops-repo
+    branch: "main"
+    user_name: "YOURINPUTNotRealUser"
+    user_email: "YOURINPUTNotRealUser@cluster.local"
+    commit_message: "tap-demo-commit-from-YOURINPUTNotRealUser"
+    ssh_secret: "git-ssh"
+    commit_strategy: direct
+  cluster_builder: default
+  service_account: default
+
+tap_gui:
+  service_type: ClusterIP
+  ingressEnabled: "true"
+  ingressDomain: "tap.corp.tanzu"
+  app_config:
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        headers:
+          Authorization: "Bearer TAPGUI_READONLY_CLIENT_SA_TOKEN" # Changing TAPGUI_READONLY_CLIENT_SA_TOKEN is optional. If not changed Merlin will auto detect this and deploy appropriate Service Account and replace TAPGUI_READONLY_CLIENT_SA_TOKEN with access token of the sercice account.
+          X-Custom-Source: project-star
+    app:
+      baseUrl: http://tap-gui.tap.corp.tanzu
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/YOURINPUT/tap-gui/blob/main/blank/catalog-info.yaml
+    backend:
+      baseUrl: http://tap-gui.tap.corp.tanzu
+      cors:
+        origin: http://tap-gui.tap.corp.tanzu
+
+cnrs:
+  domain_name: apps.tap.corp.tanzu
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+
+excluded_packages:
+  - policy.apps.tanzu.vmware.com
+  - image-policy-webhook.signing.apps.tanzu.vmware.com
+  - learningcenter.tanzu.vmware.com
+  - workshops.learningcenter.tanzu.vmware.com

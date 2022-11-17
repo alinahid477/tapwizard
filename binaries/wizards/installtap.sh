@@ -5,6 +5,9 @@ export $(cat $HOME/.env | xargs)
 
 installTap()
 {
+
+    local tapValueFile=$1
+
     printf "\n\n************Checking if TAP is already installed on k8s cluster**********\n"
     # This logic is flawd. Need to change to something solid
     sleep 1
@@ -128,7 +131,7 @@ installTap()
         if [[ $performinstall == 'y' ]]
         then
             source $HOME/binaries/wizards/installtapprofile.sh
-            installTapProfile
+            installTapProfile $tapValueFile
         fi
         sleep 3
 
