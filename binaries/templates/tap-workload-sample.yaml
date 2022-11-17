@@ -12,10 +12,18 @@ spec:
     git:
       ref:
         branch: main
-      url: https://github.com/alinahid477/demo-app-sc
+      url: https://github.com/YOURINPUT-GITUSERNAME/YOURINPUT-GIT-SOURCE-CODE-REPO
   params:
-    - name: testing_pipeline_matching_labels
-
+    - name: testing_pipeline_matching_labels # multi-pipeline functionality
+      value: '{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}' # multi-pipeline functionality
+    - name: gitops_ssh_secret
+      value: git-ssh
+    - name: gitops_server_address
+      value: https://github.com/
+    - name: gitops_repository_owner
+      value: YOURINPUT-GITOPS-WRITE-USERNAME
+    - name: gitops_repository_name
+      value: YOURINPUT-GITOPS-WRITE-REPO
 
 # tanzu apps workload create demoapp \
 #   --git-repo https://github.com/alinahid477/demo-app-sc \

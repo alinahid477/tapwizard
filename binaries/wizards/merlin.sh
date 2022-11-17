@@ -171,7 +171,12 @@ function executeCommand () {
     if [[ $wizardUTILCreateGitSSHSecret == 'y' ]]
     then
         unset wizardUTILCreateGitSSHSecret
-        createGitSSHSecret
+        if [[ -z $argFile ]]
+        then
+            createGitSSHSecret
+        else
+            createGitSSHSecret $argFile
+        fi
         returnOrexit || return 1
     fi
 
@@ -183,7 +188,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:csdvxyzh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:i:csdvxyzh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,input:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -257,6 +262,11 @@ while true ; do
             esac ;;
 
         -f | --file )
+            case "$2" in
+                "" ) argFile=''; shift 2 ;;
+                * ) argFile=$2;  shift 2 ;;
+            esac ;;
+        -i | --input )
             case "$2" in
                 "" ) argFile=''; shift 2 ;;
                 * ) argFile=$2;  shift 2 ;;

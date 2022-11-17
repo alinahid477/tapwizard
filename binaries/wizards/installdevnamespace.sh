@@ -6,6 +6,7 @@ export $(cat $HOME/.env | xargs)
 source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/tapscripts/extract-and-take-input.sh
 source $HOME/binaries/scripts/select-from-available-options.sh
+source $HOME/binaries/scripts/create-secrets.sh
 
 createDevNS () {
     local bluecolor=$(tput setaf 4)
@@ -165,17 +166,20 @@ createDevNS () {
                 # export GIT_SSH_PUBLIC_KEY=$(cat $HOME/.git-ops/identity.pub | base64 -w 0)
                 # export GIT_SERVER_HOST_FILE=$(cat $HOME/.git-ops/known_hosts | base64 -w 0)
 
-                printf "\nCreating secret for git repo access (both private source and gitops repo)...\n"
+                printf "\nCreating ssh secret for git repo access (both private source and gitops repo)...\n"
 
-                cp $HOME/binaries/templates/tap-git-secret.yaml /tmp/tap-git-secret.yaml
-                extractVariableAndTakeInput /tmp/tap-git-secret.yaml
+                # cp $HOME/binaries/templates/tap-git-secret.yaml /tmp/tap-git-secret.yaml
+                # extractVariableAndTakeInput /tmp/tap-git-secret.yaml
 
                 export $(cat $HOME/.env | xargs)
 
-                printf "\nApplying kubectl for new secret for private git repository access..."
-                kubectl apply -f /tmp/tap-git-secret.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
-                printf "\n\n\n"
-                sleep 3
+                # printf "\nApplying kubectl for new secret for private git repository access..."
+                # kubectl apply -f /tmp/tap-git-secret.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
+                # printf "\n\n\n"
+                # sleep 3
+
+                createGitSSHSecret $namespacename
+
                 # unset GIT_SERVER_HOST
                 # unset GIT_SSH_PRIVATE_KEY
                 # unset GIT_SSH_PUBLIC_KEY
