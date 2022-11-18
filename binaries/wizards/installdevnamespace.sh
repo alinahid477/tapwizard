@@ -259,8 +259,8 @@ createDevNS () {
             kubectl apply -f $HOME/binaries/templates/tap-scan-policy.yaml -n $namespacename
         fi
     fi
-
-
+    printf "\nScan policy creation ... COMPLETE\n"
+    printf "\nChecking whether it requires tekton pipeline for testing....\n"
     isexist=$(cat $profilefilename | grep -i 'supply_chain: testing')
     if [[ -n $isexist ]]
     then
