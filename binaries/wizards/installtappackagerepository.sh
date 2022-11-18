@@ -43,6 +43,12 @@ installTapPackageRepository()
     then
         source $HOME/binaries/scripts/install-cluster-essential.sh
         installClusterEssential
+        local ret=$?
+        if [[ $ret == 1 ]]
+        then
+            printf "\nERROR: TANZU CLUSTER ESSENTIAL installation failed.\n"
+            returnOrexit || return 1
+        fi
         sleep 2
     fi
     

@@ -51,23 +51,33 @@ fi
 printf "\n\n************Checking Tanzu CLI binaries**************\n\n"
 source $HOME/binaries/scripts/install-tanzu-cli.sh
 installTanzuCLI
+ret=$?
+if [[ $ret == 1 ]]
+then
+    printf "\nERROR: Tanzu CLI was not successfully installed. Merling will not function without Tanzu CLI. Please check if you have place right tar file in the binaries directory.\n"
+    exit 1
+fi
 printf "DONE\n\n\n"
 
 
+# UPDATE: 18/11/2022: Commenting the the beloe if block
+# -----------------------
+# No need to do the below (just to link the kapp binary). 
+# Because I have added carvel tooling installation in the docker file the kapp binary should already be available.
 
-if [[ $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
-then
-    # The purpose for calling installClusterEssential here again 
-    # is so that the script can perform cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp 
+# if [[ $INSTALL_TANZU_CLUSTER_ESSENTIAL == 'COMPLETED' ]]
+# then
+#     # The purpose for calling installClusterEssential here again 
+#     # is so that the script can perform cp $HOME/tanzu-cluster-essentials/kapp /usr/local/bin/kapp 
 
-    # The purpose for this code block here is NOT to trigger re-deploy of cluster-essential in k8s cluster
-    # BUT to only add kapp in /usr/local/bin/kapp
+#     # The purpose for this code block here is NOT to trigger re-deploy of cluster-essential in k8s cluster
+#     # BUT to only add kapp in /usr/local/bin/kapp
     
-    printf "\n\n************Checking Cluster Essential Kapp binaries**************\n\n"
-    source $HOME/binaries/scripts/install-cluster-essential.sh
-    installClusterEssential
-    printf "DONE\n\n\n"
-fi
+#     printf "\n\n************Checking Cluster Essential Kapp binaries**************\n\n"
+#     source $HOME/binaries/scripts/install-cluster-essential.sh
+#     installClusterEssential
+#     printf "DONE\n\n\n"
+# fi
 
 
 printf "\n\n************Checking essential CLIs...**************\n\n"
