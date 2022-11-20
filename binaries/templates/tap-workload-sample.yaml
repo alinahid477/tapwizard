@@ -17,7 +17,7 @@ spec:
     - name: testing_pipeline_matching_labels # multi-pipeline functionality
       value: '{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}' # multi-pipeline functionality
     - name: gitops_ssh_secret
-      value: git-ssh
+      value: src-git-ssh
     - name: gitops_server_address
       value: https://github.com/
     - name: gitops_repository_owner
