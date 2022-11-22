@@ -11,8 +11,41 @@ source $HOME/binaries/scripts/create-secrets.sh
 createDevNS () {
     local bluecolor=$(tput setaf 4)
     local normalcolor=$(tput sgr0)
-
+    local tapvaluesfile=$1
     local confirmed=''
+
+    if [[ -z $tapvaluesfile ]]
+    then
+        if [[ -n $TAP_PROFILE_FILE_NAME ]] 
+        then
+            tapvaluesfile=$TAP_PROFILE_FILE_NAME
+        else
+            while [[ -z $tapvaluesfile ]]; do
+                printf "\nHINT: requires full path of the tap values file. (eg: /root/configs/tap-profile-my.yaml)\n"
+                read -p "full path of the tap values file: " tapvaluesfile
+                if [[ -z $tapvaluesfile || ! -f $tapvaluesfile ]]
+                then
+                    printf "empty or invalid value is not allowed.\n"
+                fi
+            done        
+        fi
+    fi
+
+    printf "\nSet Tap Values File: $tapvaluesfile\n"
+
+    while true; do
+        read -p "confirm to continue? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+
+    if [[ $confirmed == 'n' ]]
+    then
+        returnOrexit || return 1
+    fi
 
     printf "\n*******Starting developer namespace wizard*******\n\n"
 
@@ -45,21 +78,24 @@ createDevNS () {
     fi
 
     local selectedSupplyChainType=''
-    if [[ -n $TAP_PROFILE_FILE_NAME ]]
+    if [[ -n $tapvaluesfile ]]
     then
-        isexist=$(cat $TAP_PROFILE_FILE_NAME | grep -w 'gitops:$')        
-        selectedSupplyChainType='gitops'
-    else
-        local supplyChainTypes=("local_iteration" "local_iteration_with_code_from_git" "gitops")
-        selectFromAvailableOptions ${supplyChainTypes[@]}
-        ret=$?
-        if [[ $ret == 255 ]]
+        isexist=$(cat $tapvaluesfile | grep -w 'gitops:$')
+        if [[ -n $isexist ]]
         then
-            printf "${redcolor}No selection were made. Remove the entry${normalcolor}\n"
-            returnOrexit || return 1
+            selectedSupplyChainType='gitops'
         else
-            # selected option
-            selectedSupplyChainType=${supplyChainTypes[$ret]}
+            local supplyChainTypes=("local_iteration" "local_iteration_with_code_from_git" "gitops")
+            selectFromAvailableOptions ${supplyChainTypes[@]}
+            ret=$?
+            if [[ $ret == 255 ]]
+            then
+                printf "${redcolor}No selection were made. Remove the entry${normalcolor}\n"
+                returnOrexit || return 1
+            else
+                # selected option
+                selectedSupplyChainType=${supplyChainTypes[$ret]}
+            fi
         fi
     fi
     
@@ -189,7 +225,7 @@ createDevNS () {
     fi
 
     
-
+    printf "\nCreating registry credential for pvt registry access...\n"
     local tmpCmdFile=/tmp/devnamespacecmd.tmp
     local cmdTemplate="tanzu secret registry add <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME> --server <PVT_REGISTRY_SERVER> --username <PVT_REGISTRY_USERNAME> --password <PVT_REGISTRY_PASSWORD> --yes --namespace ${namespacename}"
 
@@ -240,7 +276,7 @@ createDevNS () {
     printf "\n"
 
 
-    isexist=$(cat $TAP_PROFILE_FILE_NAME | grep -w 'grype:$')
+    isexist=$(cat $tapvaluesfile | grep -w 'grype:$')
     if [[ -n $isexist ]]
     then
         confirmed='n'
@@ -257,11 +293,12 @@ createDevNS () {
         then
             printf "\nApplying scan policy as per $HOME/binaries/templates/tap-scan-policy.yaml.\nThis is pre-configured for java app and only detects critical level severity. Please change accordingly.\n"
             kubectl apply -f $HOME/binaries/templates/tap-scan-policy.yaml -n $namespacename
+            printf "\nScan policy creation ... COMPLETE\n"
         fi
     fi
-    printf "\nScan policy creation ... COMPLETE\n"
+    
     printf "\nChecking whether it requires tekton pipeline for testing....\n"
-    isexist=$(cat $profilefilename | grep -i 'supply_chain: testing')
+    isexist=$(cat $tapvaluesfile | grep -i 'supply_chain: testing')
     if [[ -n $isexist ]]
     then
         printf "\nDetected user input for testing functionlity. Applying a maven test tekton pipeline based on file $HOME/binaries/templates/tap-maven-test-tekton-pipeline.yaml...\n"

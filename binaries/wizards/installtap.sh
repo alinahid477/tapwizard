@@ -150,7 +150,7 @@ installTap()
             if [[ $performinstall == 'y' ]]
             then
                 source $HOME/binaries/wizards/installdevnamespace.sh
-                createDevNS
+                createDevNS $tapValueFile
             fi
         fi
 

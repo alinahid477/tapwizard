@@ -23,3 +23,6 @@ appliveview_connector:
     ingressEnabled: true
     host: appliveview.<APP-LIVE-VIEW-INGRESS-DOMAIN>
 
+excluded_packages:
+  - policy.apps.tanzu.vmware.com
+  - image-policy-webhook.signing.apps.tanzu.vmware.com
