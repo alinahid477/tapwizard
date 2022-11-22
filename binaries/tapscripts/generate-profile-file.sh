@@ -82,12 +82,14 @@ generateProfile () {
         cp $templateFilesDIR/tap-profile-$selectedProfileType.template $tmpProfileFile && printf "ok." || printf "failed"
         printf "\n"
 
-        printf "generate profile file...\n"
-        buildProfileFile $tmpProfileFile
-        printf "\nprofile file generation...COMPLETE.\n"
+        if [[ $selectedProfileType == 'full' || $selectedProfileType == 'lite' ]]
+        then
+            printf "generate profile file...\n"
+            buildProfileFile $tmpProfileFile
+            printf "\nprofile file generation...COMPLETE.\n"
 
-        printf "\n\n\n"
-
+            printf "\n\n\n"
+        fi
 
         extractVariableAndTakeInput $tmpProfileFile
         printf "\nprofile value adjustment...COMPLETE\n"
