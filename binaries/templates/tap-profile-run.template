@@ -5,10 +5,8 @@ shared:
 
 ceip_policy_disclosed: true 
 
-metadata_store:
-  app_service_type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
-  ns_for_export_app_cert: "*"
-  
+supply_chain: basic
+
 contour:
   envoy:
     service:
@@ -22,5 +20,6 @@ cnrs:
 appliveview_connector:
   backend:
     sslDisabled: <IS-APP-LIVE-VIEW-SSL-DISABLED>
+    ingressEnabled: true
     host: appliveview.<APP-LIVE-VIEW-INGRESS-DOMAIN>
 
