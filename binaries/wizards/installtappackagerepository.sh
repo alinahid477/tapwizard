@@ -105,13 +105,7 @@ installTapPackageRepository()
         printf "\n....COMPLETE\n\n"
     fi
     
-    printf "\nStarting image relocation for tap installation...\n"
-    isexist=$(imgpkg version)
-    if [[ -z $isexist ]]
-    then
-        printf "\nERROR: imgpgk is missing. This tool is required for image relocation.\n"
-        returnOrexit || return 1
-    fi
+    printf "\nPerforming docker login for pvt registry and tanzu-net...\n"
     # PATCH: Dockerhub is special case
     # This patch is so that 
     local myregistryserver=$PVT_REGISTRY_SERVER
@@ -125,9 +119,35 @@ installTapPackageRepository()
     printf "\ndocker login to ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}...\n"
     docker login ${myregistryserver} -u ${PVT_REGISTRY_USERNAME} -p ${PVT_REGISTRY_PASSWORD} && printf "DONE.\n"
     sleep 2
-    printf "\nExecuting imgpkg copy...\n"
-    imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO} && printf "\n\nCOPY COMPLETE.\n\n";
 
+    confirmed=''
+    while true; do
+        read -p "Confirm to relocate tap-packages to your own pvt registry ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO}? [y/n]: " yn
+        case $yn in
+            [Yy]* ) confirmed='y'; printf "you confirmed yes\n"; break;;
+            [Nn]* ) confirmed='n'; printf "You said no.\n\nExiting...\n\n"; break;;
+            * ) echo "Please answer y or n.";;
+        esac
+    done
+
+    if [[ $confirmed == 'y' ]]
+    then
+        printf "\nChecking imgpkg..."
+        isexist=$(imgpkg version)
+        if [[ -z $isexist ]]
+        then
+            printf "\nERROR: imgpgk is missing. This tool is required for image relocation.\n"
+            returnOrexit || return 1
+        else
+            sleep 1
+            printf "FOUND.\n"
+        fi
+        printf "\nExecuting imgpkg copy...\n"
+        imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION} --to-repo ${myregistryserver}/${PVT_REGISTRY_INSTALL_REPO} && printf "\n\nCOPY COMPLETE.\n\n";
+    else
+        printf "\nSkipping image relocation for this installation as per user instruction\n"
+        sleep 1
+    fi
 
 
     printf "\nCreate a registry secret for ${PVT_REGISTRY_SERVER}...\n"
