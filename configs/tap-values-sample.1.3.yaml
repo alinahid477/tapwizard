@@ -1,9 +1,9 @@
 profile: full
 
 shared:
-  ingress_domain: "tap.corp.tanzu"
+  ingress_domain: "YOURINPUT_INGRESS_DOMAIN" # eg: tap.corp.tanzu
   image_registry:
-    project_path: "YOURINPUT.azurecr.io/projects"
+    project_path: "YOURINPUT.azurecr.io/myimages"
     username: "YOURINPUT"
     password: "YOURINPUT"
 
@@ -62,7 +62,7 @@ ootb_supply_chain_testing_scanning:
 tap_gui:
   service_type: ClusterIP
   ingressEnabled: "true"
-  ingressDomain: "tap.corp.tanzu"
+  ingressDomain: "YOURINPUT_INGRESS_DOMAIN" # eg: tap.corp.tanzu
   app_config:
     proxy:
       /metadata-store:
@@ -70,21 +70,21 @@ tap_gui:
         changeOrigin: true
         secure: false
         headers:
-          Authorization: "Bearer TAPGUI_READONLY_CLIENT_SA_TOKEN" # Changing TAPGUI_READONLY_CLIENT_SA_TOKEN is optional. If not changed Merlin will auto detect this and deploy appropriate Service Account and replace TAPGUI_READONLY_CLIENT_SA_TOKEN with access token of the sercice account.
+          Authorization: "Bearer TAPGUI_READONLY_CLIENT_SA_TOKEN" # No need to change TAPGUI_READONLY_CLIENT_SA_TOKEN. Replace is automate in merlin script. If not changed Merlin will auto detect this variable and deploy appropriate Service Account and replace TAPGUI_READONLY_CLIENT_SA_TOKEN with access token of the sercice account.
           X-Custom-Source: project-star
     app:
-      baseUrl: http://tap-gui.tap.corp.tanzu
+      baseUrl: http://tap-gui.YOURINPUT_INGRESS_DOMAIN #eg: http://tap-gui.tap.corp.tanzu
     catalog:
       locations:
         - type: url
           target: https://github.com/YOURINPUT/tap-gui/blob/main/blank/catalog-info.yaml
     backend:
-      baseUrl: http://tap-gui.tap.corp.tanzu
+      baseUrl: http://tap-gui.YOURINPUT_INGRESS_DOMAIN
       cors:
-        origin: http://tap-gui.tap.corp.tanzu
+        origin: http://tap-gui.YOURINPUT_INGRESS_DOMAIN
 
 cnrs:
-  domain_name: apps.tap.corp.tanzu
+  domain_name: apps.YOURINPUT_INGRESS_DOMAIN # eg: apps.tap.corp.tanzu
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 excluded_packages:

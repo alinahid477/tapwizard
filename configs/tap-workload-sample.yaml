@@ -1,0 +1,45 @@
+---
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: demoapp
+  labels:
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: demoapp
+spec:
+  source:
+    git:
+      ref:
+        branch: main
+      url: https://github.com/YOURINPUT-GITUSERNAME/YOURINPUT-GIT-SOURCE-CODE-REPO
+  params:
+    - name: testing_pipeline_matching_labels  # multi-pipeline functionality
+      value: '{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}' # multi-pipeline functionality, matching with tekton test pipeline
+    - name: gitops_ssh_secret
+      value: src-git-ssh                      # k8s secret name in the namespace for pulling source code. (eg: merlin --create-basic-auth-secret)
+    - name: gitops_server_address
+      value: https://github.com/ OR ssh://git@github.com:22     # if git secret (eg: git-ssh, NOT src-git-ssh which is added here for flux GitReposity source code pull, is of type kubernetes.io/ssh-auth then you must use like ssh://git@github.com:22. If k8s secret:git-ssh is of type http (kubernetes.io/basic-auth) then use https://github.com/)
+    - name: gitops_repository_owner
+      value: YOURINPUT-GITOPS-WRITE-USERNAME  # eg: alinahid477
+    - name: gitops_repository_name
+      value: YOURINPUT-GITOPS-WRITE-REPO-NAME # eg: myproject-deliverables
+    - name: gitops_branch
+      value: YOURINPUT-GITOPS-WRITE-REPO-BRANCH 
+    - name: gitops_user_name
+      value: dev1                             # eg: does not have to real user. An username that will show up in the git commit.
+    - name: gitops_user_email
+      value: dev1@cluster.local               # eg: does not have to real email. An email that will show up in the git commit.
+
+# tanzu apps workload create demoapp \
+#   --git-repo https://github.com/alinahid477/demo-app-sc \
+#   --git-branch main \
+#   --type web \
+#   --build-env BP_JVM_VERSION=17 \
+#   --label app.kubernetes.io/part-of=springboot-maven \
+#   --label apps.tanzu.vmware.com/has-tests=true \
+#   --param-yaml testing_pipeline_matching_labels='{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}'
+#   --annotation autoscaling.knative.dev/minScale=1 \
+#   --namespace default \
+#   --tail \
+#   --yes

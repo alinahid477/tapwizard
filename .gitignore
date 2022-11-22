@@ -41,3 +41,5 @@ binaries/scripts/*.sh
 
 configs/*
 !configs/.gitkeep
+!configs/tap-values-sample.1.3.yaml
+!configs/tap-workload-sample.yaml

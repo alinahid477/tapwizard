@@ -103,7 +103,7 @@ start.bat
 follow the prompt of the UI for a guided experience of installing TAP on k8s
 
 ## Usage
-- `--install-tap` Signals the wizard to start the process for installing TAP for Tanzu Enterprise. Optionally pass values file using -f or --file flag. There's a sample values file in the `template` directory called `tap-values-sample.yaml`
+- `--install-tap` Signals the wizard to start the process for installing TAP for Tanzu Enterprise. Optionally pass values file using -f or --file flag. There's a sample values file in the `configs` directory called `tap-values-sample.yaml`
 - `--install-app-toolkit` Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag.
 - `--install-tap-package-repository` Signals the wizard to start the process for installing package repository for TAP.
 - `--install-tap-profile` Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag.
