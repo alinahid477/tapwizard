@@ -18,6 +18,7 @@ createDevNS () {
     then
         if [[ -n $TAP_PROFILE_FILE_NAME ]] 
         then
+            printf "\nSetting tapvaluesfile from .env file TAP_PROFILE_FILE_NAME=$TAP_PROFILE_FILE_NAME\n"
             tapvaluesfile=$TAP_PROFILE_FILE_NAME
         else
             while [[ -z $tapvaluesfile ]]; do
@@ -202,45 +203,68 @@ createDevNS () {
                 # export GIT_SSH_PUBLIC_KEY=$(cat $HOME/.git-ops/identity.pub | base64 -w 0)
                 # export GIT_SERVER_HOST_FILE=$(cat $HOME/.git-ops/known_hosts | base64 -w 0)
 
+                confirmed=''
                 printf "\nCreating ssh secret for git repo access (both private source and gitops repo)...\n"
+                while true; do
+                    read -p "confirm to continue? [y/n] " yn
+                    case $yn in
+                        [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+                        [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+                        * ) echo "Please answer y or n.";
+                    esac
+                done
+                if [[ $confirmed == 'y' ]]
+                then
+                    # cp $HOME/binaries/templates/tap-git-secret.yaml /tmp/tap-git-secret.yaml
+                    # extractVariableAndTakeInput /tmp/tap-git-secret.yaml
 
-                # cp $HOME/binaries/templates/tap-git-secret.yaml /tmp/tap-git-secret.yaml
-                # extractVariableAndTakeInput /tmp/tap-git-secret.yaml
+                    export $(cat $HOME/.env | xargs)
 
-                export $(cat $HOME/.env | xargs)
+                    # printf "\nApplying kubectl for new secret for private git repository access..."
+                    # kubectl apply -f /tmp/tap-git-secret.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
+                    # printf "\n\n\n"
+                    # sleep 3
 
-                # printf "\nApplying kubectl for new secret for private git repository access..."
-                # kubectl apply -f /tmp/tap-git-secret.yaml --namespace $namespacename && printf "OK" || printf "FAILED"
-                # printf "\n\n\n"
-                # sleep 3
+                    createGitSSHSecret $namespacename
 
-                createGitSSHSecret $namespacename
-
-                # unset GIT_SERVER_HOST
-                # unset GIT_SSH_PRIVATE_KEY
-                # unset GIT_SSH_PUBLIC_KEY
-                # unset GIT_SERVER_HOST_FILE
+                    # unset GIT_SERVER_HOST
+                    # unset GIT_SSH_PRIVATE_KEY
+                    # unset GIT_SSH_PUBLIC_KEY
+                    # unset GIT_SERVER_HOST_FILE
+                fi
             fi
         fi
     fi
 
     
     printf "\nCreating registry credential for pvt registry access...\n"
-    local tmpCmdFile=/tmp/devnamespacecmd.tmp
-    local cmdTemplate="tanzu secret registry add <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME> --server <PVT_REGISTRY_SERVER> --username <PVT_REGISTRY_USERNAME> --password <PVT_REGISTRY_PASSWORD> --yes --namespace ${namespacename}"
+    confirmed=''
+    while true; do
+        read -p "confirm to continue? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+    if [[ $confirmed == 'y' ]]
+    then
+        local tmpCmdFile=/tmp/devnamespacecmd.tmp
+        local cmdTemplate="tanzu secret registry add <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME> --server <PVT_REGISTRY_SERVER> --username <PVT_REGISTRY_USERNAME> --password <PVT_REGISTRY_PASSWORD> --yes --namespace ${namespacename}"
 
-    echo $cmdTemplate > $tmpCmdFile
-    extractVariableAndTakeInput $tmpCmdFile
-    cmdTemplate=$(cat $tmpCmdFile)
+        echo $cmdTemplate > $tmpCmdFile
+        extractVariableAndTakeInput $tmpCmdFile
+        cmdTemplate=$(cat $tmpCmdFile)
 
-    printf "\nCreating new secret for private registry with name: $TARGET_REGISTRY_CREDENTIALS_SECRET_NAME..."
-    $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
-    printf "\n"
-    rm $tmpCmdFile
-    sleep 1
+        printf "\nCreating new secret for private registry with name: $TARGET_REGISTRY_CREDENTIALS_SECRET_NAME..."
+        $(echo $cmdTemplate) && printf "OK" || printf "FAILED"
+        printf "\n"
+        rm $tmpCmdFile
+        sleep 1
+    fi
 
     printf "\nAlso need to create a dockerhub secret called: dockerhubregcred for Dockerhub rate limiting issue. This credential is used for things like maven test tekton pipeline pulling maven base image etc\n"
-    confirmed='n'
+    confirmed=''
     while true; do
         read -p "Would you like to create docker hub secret called 'dockerhubregcred' now? [y/n] " yn
         case $yn in
@@ -266,15 +290,25 @@ createDevNS () {
 
 
     printf "\nGenerating RBAC, SA for associating TAP and registry using name: default..."
-    cp $HOME/binaries/templates/workload-ns-setup.yaml /tmp/workload-ns-setup-$namespacename.yaml
-    extractVariableAndTakeInput /tmp/workload-ns-setup-$namespacename.yaml
+    confirmed=''
+    while true; do
+        read -p "confirm to continue? [y/n] " yn
+        case $yn in
+            [Yy]* ) printf "you confirmed yes\n"; confirmed='y'; break;;
+            [Nn]* ) printf "You confirmed no.\n"; confirmed='n'; break;;
+            * ) echo "Please answer y or n.";
+        esac
+    done
+    if [[ $confirmed == 'y' ]]
+    then
+        cp $HOME/binaries/templates/workload-ns-setup.yaml /tmp/workload-ns-setup-$namespacename.yaml
+        extractVariableAndTakeInput /tmp/workload-ns-setup-$namespacename.yaml
 
-    printf "\n"
-
-    printf "\nCreating RBAC, RoleBinding and associating SA:default with it along with registry and repo credentials..."
-    kubectl apply -n $namespacename -f /tmp/workload-ns-setup-$namespacename.yaml && printf "OK" || printf "FAILED"
-    printf "\n"
-
+        printf "\n"
+        printf "\nCreating RBAC, RoleBinding and associating SA:default with it along with registry and repo credentials..."
+        kubectl apply -n $namespacename -f /tmp/workload-ns-setup-$namespacename.yaml && printf "OK" || printf "FAILED"
+        printf "\n"
+    fi
 
     isexist=$(cat $tapvaluesfile | grep -w 'grype:$')
     if [[ -n $isexist ]]
