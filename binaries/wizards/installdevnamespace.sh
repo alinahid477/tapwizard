@@ -331,11 +331,11 @@ createDevNS () {
         fi
     fi
     
-    printf "\nChecking whether it requires tekton pipeline for testing....\n"
+    printf "\nChecking whether it requires tekton pipeline for testing...."
     isexist=$(cat $tapvaluesfile | grep -i 'supply_chain: testing')
     if [[ -n $isexist ]]
     then
-        printf "\nDetected user input for testing functionlity. Applying a maven test tekton pipeline based on file $HOME/binaries/templates/tap-maven-test-tekton-pipeline.yaml...\n"
+        printf "Yes.\nSupply Chain detected with testing functionlity. Applying a maven test tekton pipeline based on file $HOME/binaries/templates/tap-maven-test-tekton-pipeline.yaml...\n"
         confirmed='n'
         while true; do
             read -p "Would you create maven-test-tekton-pipeline? [y/n] " yn
@@ -350,6 +350,8 @@ createDevNS () {
             printf "\nCreating pipeline..\n"
             kubectl apply -f $HOME/binaries/templates/tap-maven-test-tekton-pipeline.yaml -n $namespacename
         fi
+    else
+        printf "NO.\nNo supply chain detected with testing functionlity."
     fi
 
     printf "\n\n**** Developer namespace: $namespacename setup...COMPLETE\n\n\n"
