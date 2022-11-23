@@ -4,7 +4,7 @@
 export $(cat $HOME/.env | xargs)
 
 source $HOME/binaries/scripts/returnOrexit.sh
-source $HOME/binaries/tapscripts/extract-and-take-input.sh
+source $HOME/binaries/scripts/extract-and-take-input.sh
 source $HOME/binaries/scripts/select-from-available-options.sh
 source $HOME/binaries/scripts/create-secrets.sh
 
