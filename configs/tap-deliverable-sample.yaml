@@ -1,0 +1,12 @@
+apiVersion: carto.run/v1alpha1
+kind: Deliverable
+metadata:
+  name: YOURINPUT
+  labels:
+    app.tanzu.vmware.com/deliverable-type: web #! required to select ootb-delivery-basic
+spec:
+  source:
+    git:
+      url: https://github.com/YOUINPUT-USERNAME/YOURINPUT-GITOPS-DELIVERY-REPO.git or ssh://git@github.com:22/YOUINPUT-USERNAME/YOURINPUT-GITOPS-DELIVERY-REPO.git # whether to use https or ssh url depends on the type of k8s secret (ssh or http) associated with default service account on the namespace of this deliverable. Merlin by default creates an ssh git secret during the setup of developerNS.
+      ref:
+        branch: YOURINPUT-GITOPS-DELIVERY-REPO-BRANCH
