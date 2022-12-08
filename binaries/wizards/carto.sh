@@ -250,7 +250,13 @@ function createCartoTemplates () {
         returnOrexit || return 1
     fi
 
-    resolveServiceAccountClusterRolesAndBindings $cartoValuesFile $HOME/binaries/templates/carto-rbac.yaml
+    if [[ -n $TAP_VERSION ]]
+    then
+        resolveServiceAccountClusterRolesAndBindings $cartoValuesFile $HOME/binaries/templates/tap-rbac.yaml
+    else
+        resolveServiceAccountClusterRolesAndBindings $cartoValuesFile $HOME/binaries/templates/carto-rbac.yaml
+    fi
+    
 
     mkdir -p /tmp/carto
     local isexist=''
