@@ -234,7 +234,7 @@ while true ; do
                 "" ) wizardCreateCartoSupplychain='y'; shift 2 ;;
                 * ) wizardCreateCartoSupplychain='y' ; shift 1 ;;
             esac ;;
-        -s | --create-carto-delivery )
+        -d | --create-carto-delivery )
             case "$2" in
                 "" ) wizardCreateCartoDelivery='y'; shift 2 ;;
                 * ) wizardCreateCartoDelivery='y' ; shift 1 ;;
