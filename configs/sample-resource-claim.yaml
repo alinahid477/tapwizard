@@ -49,6 +49,6 @@ metadata:
 spec:
   ref:
     apiVersion: v1
-    kind: secret
+    kind: Secret
     name: db-access-secret
     namespace: external-resources-secrets
