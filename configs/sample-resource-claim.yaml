@@ -11,6 +11,8 @@ metadata:
   namespace: external-resources-secrets
 type: Opaque
 stringData:
+  type: postgresql
+  provider: elephantsql
   url: "r2dbc:postgres://aqyqfuxg:sm_efk_LoZn8xK7VbU76bHPWOSZp-M1Z@rosie.db.elephantsql.com/aqyqfuxg"
 ---
 apiVersion: services.apps.tanzu.vmware.com/v1alpha1
