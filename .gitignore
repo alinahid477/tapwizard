@@ -45,4 +45,5 @@ configs/*
 !configs/tap-values-sample.1.3.multi.yaml
 !configs/tap-workload-sample.yaml
 !configs/tap-deliverable-sample.yaml
+!configs/sample-resource-claim.yaml
 !configs/tap-useful-links.md
