@@ -13,7 +13,12 @@ type: Opaque
 stringData:
   type: postgresql
   provider: elephantsql
-  url: "r2dbc:postgres://aqyqfuxg:sm_efk_LoZn8xK7VbU76bHPWOSZp-M1Z@rosie.db.elephantsql.com/aqyqfuxg"
+  r2dbc-url: "r2dbc:postgres://aqyqfuxg:sm_efk_LoZn8xK7VbU76bHPWOSZp-M1Z@rosie.db.elephantsql.com/aqyqfuxg" # either this (must be either r2dbc-url or jdbc-url) or below all
+  host: rosie.db.elephantsql.com
+  port: "5432"
+  database: "aqyqfuxg"
+  username: "aqyqfuxg"
+  password: "sm_efk_LoZn8xK7VbU76bHPWOSZp-M1Z"
 ---
 apiVersion: services.apps.tanzu.vmware.com/v1alpha1
 kind: ResourceClaimPolicy
