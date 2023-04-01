@@ -139,10 +139,10 @@ installTapProfile()
 
         printf "\n\n"
         
-        local isexist=$(cat $profilefilename | grep -w 'grype:$')
+        local isexist=$(cat $profilefilename | grep -w 'scanning:$')
         if [[ -n $isexist ]]
         then
-            printf "\nDetected user input for scanning functionlity (grype). Metadata store needs to be wired with TAP-GUI in order for scan result to get displayed in the GUI supply chain."
+            printf "\nDetected user input for scanning functionlity. Metadata store needs to be wired with TAP-GUI in order for scan result to get displayed in the GUI supply chain."
             printf "\nCreating readonly service account name 'metadata-store-read-client' and rolebindings for it...\n"
             kubectl apply -f $HOME/binaries/templates/tap-metadata-store-readonly-sa.yaml
             printf "\nCreated===\nServiceAccount: metadata-store-read-client in NS: metadata-store\nClusterRoleBinding: metadata-store-ready-only with RoleRef: metadata-store-read-only for SA: metadata-store-read-client\n"
