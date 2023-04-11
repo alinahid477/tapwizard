@@ -2,7 +2,7 @@
 
 export $(cat $HOME/.env | xargs)
 
-source $HOME/binaries/tapscripts/extract-and-take-input.sh
+source $HOME/binaries/scripts/extract-and-take-input.sh
 
 installTCEAppToolkit() 
 {

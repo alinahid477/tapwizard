@@ -3,22 +3,22 @@
 source $HOME/binaries/scripts/returnOrexit.sh
 source $HOME/binaries/scripts/color-file.sh
 
-source $HOME/binaries/wizards/installtceapptoolkit.sh 
-source $HOME/binaries/wizards/installtap.sh 
+# source $HOME/binaries/wizards/installtceapptoolkit.sh 
+source $HOME/binaries/scripts/tap/installtap.sh 
 
-source $HOME/binaries/wizards/installtappackagerepository.sh
-source $HOME/binaries/wizards/installtapprofile.sh
-source $HOME/binaries/wizards/installdevnamespace.sh
+source $HOME/binaries/scripts/tap/installtappackagerepository.sh
+source $HOME/binaries/scripts/tap/installtapprofile.sh
+source $HOME/binaries/scripts/tap/installdevnamespace.sh
 
-source $HOME/binaries/wizards/configurekpack.sh
-source $HOME/binaries/wizards/carto.sh
+source $HOME/binaries/scripts/kpack/configurekpack.sh
+source $HOME/binaries/scripts/carto/carto.sh
 
 function helpFunction()
 {
     printf "\n"
     echo "Usage:"
     echo -e "\t-t | --install-tap no paramater needed. Signals the wizard to start the process for installing TAP for Tanzu Enterprise. Optionally pass values file using -f or --file flag."
-    echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag."
+    # echo -e "\t-a | --install-app-toolkit no paramater needed. Signals the wizard to start the process for installing App Toolkit package for TCE. Optionally pass values file using -f or --file flag."
     echo -e "\t-r | --install-tap-package-repository no paramater needed. Signals the wizard to start the process for installing package repository for TAP."
     echo -e "\t-p | --install-tap-profile Signals the wizard to launch the UI for user input to take necessary inputs and deploy TAP based on profile curated from user input. Optionally pass profile file using -f or --file flag."
     echo -e "\t-n | --create-developer-namespace signals the wizard create developer namespace."
@@ -188,7 +188,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:i:csdvxyzh --long install-tap,install-app-toolkit,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,input:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:i:csdvxyzh --long install-tap,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,input:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -199,11 +199,11 @@ while true ; do
                 "" ) tapInstall='y';  shift 2 ;;
                 * ) tapInstall='y' ;  shift 1 ;;
             esac ;;
-        -a | --install-app-toolkit )
-            case "$2" in
-                "" ) tceAppToolkitInstall='y'; shift 2 ;;
-                * ) tceAppToolkitInstall='y' ; shift 1 ;;
-            esac ;;
+        # -a | --install-app-toolkit )
+        #     case "$2" in
+        #         "" ) tceAppToolkitInstall='y'; shift 2 ;;
+        #         * ) tceAppToolkitInstall='y' ; shift 1 ;;
+        #     esac ;;
         -n | --create-developer-namespace )
             case "$2" in
                 "" ) tapDeveloperNamespaceCreate='y'; shift 2 ;;

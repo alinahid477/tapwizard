@@ -13,6 +13,12 @@ then
     chmod +x $HOME/binaries/scripts/download-common-scripts.sh
     $HOME/binaries/scripts/download-common-scripts.sh tap scripts
     sleep 1
+    $HOME/binaries/scripts/download-common-scripts.sh tapwizard scripts/tap
+    sleep 1
+    $HOME/binaries/scripts/download-common-scripts.sh carto scripts/carto
+    sleep 1
+    $HOME/binaries/scripts/download-common-scripts.sh kpack scripts/kpack
+    sleep 1
     if [[ -n $BASTION_HOST ]]
     then
         $HOME/binaries/scripts/download-common-scripts.sh bastion scripts/bastion
@@ -26,6 +32,7 @@ printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/tapscripts/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/wizards/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/scripts/tap/*.sh | awk '{print $9}' | xargs chmod +x
 
 ## housekeeping
 rm /tmp/checkedConnectedK8s > /dev/null 2>&1
