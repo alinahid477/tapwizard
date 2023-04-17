@@ -29,10 +29,11 @@ then
 fi
 
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
-ls -l $HOME/binaries/tapscripts/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/wizards/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/tap/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/scripts/carto/*.sh | awk '{print $9}' | xargs chmod +x
+ls -l $HOME/binaries/scripts/kpack/*.sh | awk '{print $9}' | xargs chmod +x
 
 ## housekeeping
 rm /tmp/checkedConnectedK8s > /dev/null 2>&1
@@ -45,15 +46,15 @@ source $HOME/binaries/scripts/init-prechecks.sh
 ## Below code BINDs the CLI tools.
 ## Then provide bash / shell access where user executed merlin or tanzu command to perform necessary actions.
 
-
-printf "\n\n************Checking cloud CLI if needed**************\n\n"
-source $HOME/binaries/scripts/install-cloud-cli.sh
-if [[ -n $AWS_ACCESS_KEY_ID ]]
-then
-    # aks cluster does NOT require az cli to be present
-    # BUT eks cluster does. Hence installing aws cli
-    installAWSCLI
-fi
+## 17/04/2023 --- Below is commented out as I am not creating k8s cluster as part of this any more. 
+# printf "\n\n************Checking cloud CLI if needed**************\n\n"
+# source $HOME/binaries/scripts/install-cloud-cli.sh
+# if [[ -n $AWS_ACCESS_KEY_ID ]]
+# then
+#     # aks cluster does NOT require az cli to be present
+#     # BUT eks cluster does. Hence installing aws cli
+#     installAWSCLI
+# fi
 
 printf "\n\n************Checking Tanzu CLI binaries**************\n\n"
 source $HOME/binaries/scripts/install-tanzu-cli.sh
@@ -94,7 +95,12 @@ printf "\n\n************Checking essential CLIs...**************\n\n"
 # eg: kapp-cli will get installed as part to cluster-essential. so the install-essential-tools.sh will take care of that and will NOT install kapp agani.
 source $HOME/binaries/scripts/install-essential-tools.sh
 sleep 1
-installEssentialTools
+if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+then
+    installEssentialTools
+else
+    installEssentialToolsLite
+fi
 # if [ "$(ls -A $HOME/essential-clis)" ]
 # then
 #     installEssentialTools 
@@ -123,14 +129,16 @@ installEssentialTools
 # fi
 
 
+if [[ -z $SILENTMODE || $SILENTMODE != 'YES' ]]
+then
+    printf "\n\n\n"
 
-printf "\n\n\n"
+    printf "\nUsage:\n"
+    printf "\ttanzu --help\n"
+    printf "\tmerlin --help\n"
 
-printf "\nUsage:\n"
-printf "\ttanzu --help\n"
-printf "\tmerlin --help\n"
+    printf "\n\n\n"
 
-printf "\n\n\n"
-
-cd ~
-/bin/bash
+    cd ~
+    /bin/bash
+fi

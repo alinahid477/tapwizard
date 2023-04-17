@@ -50,6 +50,8 @@ unset wizardUTILCreateBasicAuthSecret
 unset wizardUTILCreateGitSSHSecret
 unset argFile
 unset ishelp
+unset isSkipK8sCheck
+
 
 function doCheckK8sOnlyOnce()
 {
@@ -63,9 +65,15 @@ function doCheckK8sOnlyOnce()
 
 function executeCommand () {
     
-    doCheckK8sOnlyOnce
-
     local file=$1
+    local skipK8sTest=$2
+
+    if [[ -z $skipK8sTest || $skipK8sTest != 'y'  ]]
+    then
+        doCheckK8sOnlyOnce
+    fi
+
+    
 
     if [[ $tapInstall == 'y' ]]
     then
@@ -188,7 +196,7 @@ function executeCommand () {
 output=""
 
 # read the options
-TEMP=`getopt -o tarpnkf:i:csdvxyzh --long install-tap,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,input:,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
+TEMP=`getopt -o tarpnkf:i:bcsdvxyzh --long install-tap,install-tap-package-repository,install-tap-profile,create-developer-namespace,configure-kpack,file:,input:,skip-k8s-check,configure-carto-templates,create-carto-supplychain,create-carto-delivery,create-service-account,create-docker-registry-secret,create-basic-auth-secret,create-git-ssh-secret,help -n $0 -- "$@"`
 eval set -- "$TEMP"
 # echo $TEMP;
 while true ; do
@@ -271,6 +279,11 @@ while true ; do
                 "" ) argFile=''; shift 2 ;;
                 * ) argFile=$2;  shift 2 ;;
             esac ;;
+        -b | --skip-k8s-check )
+            case "$2" in
+                "" ) isSkipK8sCheck='y'; shift 2 ;;
+                * ) isSkipK8sCheck='y';  shift 1 ;;
+            esac ;;
         -h | --help ) ishelp='y'; helpFunction; break;; 
         -- ) shift; break;; 
         * ) break;;
@@ -279,7 +292,8 @@ done
 
 if [[ $ishelp != 'y' ]]
 then
-    executeCommand $argFile
+    executeCommand $argFile $isSkipK8sCheck
     unset argFile
+    unset isSkipK8sCheck
 fi
 unset ishelp
