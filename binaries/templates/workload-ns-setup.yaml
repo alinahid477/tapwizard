@@ -13,12 +13,12 @@ kind: ServiceAccount
 metadata:
   name: default
 secrets:
-  - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
+  - name: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME>
   - name: <GITOPS-SECRET-NAME>
   - name: tap-registry
   - name: dockerhubregcred
 imagePullSecrets:
-  - name: <TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>
+  - name: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME>
   - name: tap-registry
   - name: dockerhubregcred
 ---

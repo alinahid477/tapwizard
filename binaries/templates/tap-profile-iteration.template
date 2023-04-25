@@ -24,7 +24,7 @@ contour:
 
 grype:
   namespace: "<SCANNER-DEV-NAMESPACE>" # (optional) Defaults to default namespace.
-  targetImagePullSecret: "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>"
+  targetImagePullSecret: "<PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME>"
 
 tap_gui:
   service_type: ClusterIP

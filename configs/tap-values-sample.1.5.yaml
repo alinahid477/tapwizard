@@ -1,23 +1,23 @@
 profile: full
 
 shared:
-  ingress_domain: "YOURINPUT_INGRESS_DOMAIN" # eg: tap.corp.tanzu
+  ingress_domain: "<INGRESS_DOMAIN>" # eg: tap.corp.tanzu
   image_registry:
-    project_path: "YOURINPUT.azurecr.io/myimages"
+    project_path: "<PVT_PROJECT_REGISTRY_SERVER>/<PVT_PROJECT_REGISTRY_REPO>" #"YOURINPUT.azurecr.io/myimages"
     secret:
-      name: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
-      namespace: tap-install
-
+      name: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME> #registry-credentials
+      namespace: <PVT_INSTALL_REGISTRY_SECRET_NAMESPACE> # tap-install
+  kubernetes_version: <K8S_VERSION> # Required when Kubernetes version is 1.25 or later.
 ceip_policy_disclosed: true
 
 metadata_store:
   app_service_type: ClusterIP # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
   ns_for_export_app_cert: "*"
 buildservice:
-  kp_default_repository: "YOURINPUT.azurecr.io/build-service"
+  kp_default_repository: "<PVT_PROJECT_REGISTRY_SERVER>/<PVT_BUILD_SERVICE_REGISTRY_REPO>" # "YOURINPUT.azurecr.io/build-service"
   kp_default_repository_secret:
-    name: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
-    namespace: tap-install
+    name: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME> #registry-credentials
+    namespace: <PVT_INSTALL_REGISTRY_SECRET_NAMESPACE> # tap-install
   include_legacy_bom: false
   exclude_dependencies: true
 
@@ -31,24 +31,24 @@ contour:
       type: LoadBalancer
 
 grype:
-  namespace: NAMESPACE_WHERE_SCANNING_WILL_RUN
-  targetImagePullSecret: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
+  namespace: <NAMESPACE_WHERE_SCANNING_WILL_RUN> #default
+  targetImagePullSecret: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME> #registry-credentials
 
-supply_chain: testing_scanning
+supply_chain: <OOTB_SUPPLY_CHAIN> #basic
 
-ootb_supply_chain_testing_scanning:
+ootb_supply_chain_<OOTB_SUPPLY_CHAIN>:
   registry:
-    server: "YOURINPUT.azurecr.io"
-    repository: "projects"
+    server: "<PVT_PROJECT_REGISTRY_SERVER>" # YOURINPUT.azurecr.io
+    repository: "<PVT_PROJECT_REGISTRY_REPO>" # myimages
   gitops:
-    server_address: https://github.com
-    repository_owner: YOURINPUT
-    repository_name: https://github.com/YOURINPUT/gitops-repo
-    branch: "main"
-    user_name: "YOURINPUTNotRealUser"
-    user_email: "YOURINPUTNotRealUser@cluster.local"
-    commit_message: "tap-demo-commit-from-YOURINPUTNotRealUser"
-    ssh_secret: "GIT_SSH_SECRET"
+    server_address: <GITOPS_SERVER_ADDRESS> # https://github.com
+    repository_owner: <GITOPS_REPO_OWNER> # according-to-ali
+    repository_name: <GITOPS_SERVER_ADDRESS>/<GITOPS_REPO_OWNER>/<GITOPS_REPO_NAME> # https://github.com/according-to-ali/gitops-repo
+    branch: "<GITOPS_REPO_BRANCH_NAME>" # main
+    user_name: "<GITOPS_COMMITING_USERNAME>" # YOURINPUTNotRealUser
+    user_email: "<GITOPS_COMMITING_USEREMAIL>" # YOURINPUTNotRealUser@cluster.local
+    commit_message: "<GITOPS_COMMIT_TEXT>" # tap-demo-commit-from-YOURINPUTNotRealUser
+    ssh_secret: "<GIT_SSH_SECRET>" # git-ssh
     commit_strategy: direct
   scanning:
     source:
@@ -63,29 +63,22 @@ ootb_supply_chain_testing_scanning:
 tap_gui:
   service_type: ClusterIP
   ingressEnabled: "true"
-  ingressDomain: "YOURINPUT_INGRESS_DOMAIN" # eg: tap.corp.tanzu
+  ingressDomain: "<INGRESS_DOMAIN>" # eg: tap.corp.tanzu
+  metadataStoreAutoconfiguration: true # Create a service account, the Kubernetes control plane token and the requisite app_config block to enable communications between Tanzu Application Platform GUI and SCST - Store.
   app_config:
-    proxy:
-      /metadata-store:
-        target: https://metadata-store-app.metadata-store:8443/api/v1
-        changeOrigin: true
-        secure: false
-        headers:
-          Authorization: "Bearer TAPGUI_READONLY_CLIENT_SA_TOKEN" # No need to change TAPGUI_READONLY_CLIENT_SA_TOKEN. Replace is automate in merlin script. If not changed Merlin will auto detect this variable and deploy appropriate Service Account and replace TAPGUI_READONLY_CLIENT_SA_TOKEN with access token of the sercice account.
-          X-Custom-Source: project-star
     app:
-      baseUrl: http://tap-gui.YOURINPUT_INGRESS_DOMAIN #eg: http://tap-gui.tap.corp.tanzu
+      baseUrl: http://tap-gui.<INGRESS_DOMAIN> #eg: http://tap-gui.tap.corp.tanzu
     catalog:
       locations:
         - type: url
-          target: https://github.com/YOURINPUT/tap-gui/blob/main/blank/catalog-info.yaml
+          target: <CATALOG_URL> # https://github.com/YOURINPUT/tap-gui/blob/main/blank/catalog-info.yaml
     backend:
-      baseUrl: http://tap-gui.YOURINPUT_INGRESS_DOMAIN
+      baseUrl: http://tap-gui.<INGRESS_DOMAIN>
       cors:
-        origin: http://tap-gui.YOURINPUT_INGRESS_DOMAIN
+        origin: http://tap-gui.<INGRESS_DOMAIN>
 
 cnrs:
-  domain_name: apps.YOURINPUT_INGRESS_DOMAIN # eg: apps.tap.corp.tanzu
+  domain_name: apps.<INGRESS_DOMAIN> # eg: apps.tap.corp.tanzu
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 excluded_packages:

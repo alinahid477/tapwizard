@@ -31,15 +31,47 @@
         "use_special_replace": true
     },
     {
-        "name": "<PVT_REGISTRY_SERVER>",
-        "hint": "the hostname of the registry server for cartographer used for supply chain. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
+        "name": "<PVT_INSTALL_REGISTRY_SERVER>",
+        "hint": "the hostname of the container registry server that will be used during installation of TAP/Cartographer (This is also where images will be relocated from TanzuNet). Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
     },
     {
-        "name": "<PVT_REGISTRY_PROJECT_REPO>",
-        "hint": "the repository where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my-project/supply-chain, \nGCR: my-project/supply-chain \nACR: my-project/supply-chain",
+        "name": "<PVT_INSTALL_REGISTRY_USERNAME>",
+        "hint": "Username for the private registry (for install images)."
+    },
+    {
+        "name": "<PVT_INSTALL_REGISTRY_PASSWORD>",
+        "hint": "Password for the private registry (for install images)."
+    },
+    {
+        "name": "<PVT_INSTALL_REGISTRY_SECRET_NAMESPACE>",
+        "hint": "Namespace of the secret created for private install registry. eg: tap-install",
+        "defaultvalue": "tap-install"
+    },
+    {
+        "name": "<PVT_PROJECT_REGISTRY_SERVER>",
+        "hint": "the hostname of the container registry server where workload images (from pipelines) will be stored. Examples:\nDockerHub: index.docker.io \nHarbor: my-harbor.example.com, \nGCR: gcr.io \nACR: azurecr.io",
         "isRecordAsEnvVar": true
     },
+    {
+        "name": "<PVT_PROJECT_REGISTRY_REPO>",
+        "hint": "the repository (in the private registry) where workload images are stored in the registry. Images are written to SERVER-NAME/REPO-NAME/WL_NAME-WL_NAMESPACE. EG: \nDockerHub: dockerhub-username \nHarbor: my.harbor.io/my-org-images-repository, \nGCR: gcr.io/my-org-images-repository \nACR: myorg.azurecr.io/my-org-images-repository",
+        "isRecordAsEnvVar": true
+    },
+    {
+        "name": "<PVT_PROJECT_REGISTRY_USERNAME>",
+        "hint": "Username for the private registry (for workload images)."
+    },
+    {
+        "name": "<PVT_PROJECT_REGISTRY_PASSWORD>",
+        "hint": "Password for the private registry (for workload images)."
+    },
+    {
+        "name": "<PVT_PROJECT_REGISTRY_SECRET_NAMESPACE>",
+        "hint": "Namespace of the secret created for private project registry. eg: tap-install",
+        "defaultvalue": "tap-install"
+    },
+    
     {
         "name": "<GITOPS_REPOSITORY_SERVER_ADDRESS>",
         "hint": "the git repository server address (eg: https://github.com) where deliverable will be written as per git-ops process."
@@ -97,7 +129,7 @@
         "hint": "This is the namespace where you want the ScanTemplates to be deployed to and scanning feature is going to run."
     },
     {
-        "name": "<TARGET-REGISTRY-CREDENTIALS-SECRET-NAME>",
+        "name": "<PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME>",
         "hint": "This is the name of the secret that contains the credentials to pull an image from the registry for scanning.\nThis secret is created when creatin developer namespace.\nUse the value: registry-credentials here.",
         "isRecordAsEnvVar": true
     },
