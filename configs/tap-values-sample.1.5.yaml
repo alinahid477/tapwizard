@@ -4,8 +4,9 @@ shared:
   ingress_domain: "YOURINPUT_INGRESS_DOMAIN" # eg: tap.corp.tanzu
   image_registry:
     project_path: "YOURINPUT.azurecr.io/myimages"
-    username: "YOURINPUT"
-    password: "YOURINPUT"
+    secret:
+      name: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
+      namespace: tap-install
 
 ceip_policy_disclosed: true
 
@@ -14,11 +15,15 @@ metadata_store:
   ns_for_export_app_cert: "*"
 buildservice:
   kp_default_repository: "YOURINPUT.azurecr.io/build-service"
-  kp_default_repository_username: "YOURINPUT"
-  kp_default_repository_password: "YOURINPUT"
+  kp_default_repository_secret:
+    name: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
+    namespace: tap-install
   include_legacy_bom: false
   exclude_dependencies: true
 
+scanning:
+  metadataStore:
+    url: ""
 
 contour:
   envoy:
@@ -26,8 +31,8 @@ contour:
       type: LoadBalancer
 
 grype:
-  namespace: "default" # (optional) Defaults to default namespace.
-  targetImagePullSecret: "registry-credentials"
+  namespace: NAMESPACE_WHERE_SCANNING_WILL_RUN
+  targetImagePullSecret: TARGET_REGISTRY_CREDENTIALS_SECRET_NAME
 
 supply_chain: testing_scanning
 
@@ -43,7 +48,7 @@ ootb_supply_chain_testing_scanning:
     user_name: "YOURINPUTNotRealUser"
     user_email: "YOURINPUTNotRealUser@cluster.local"
     commit_message: "tap-demo-commit-from-YOURINPUTNotRealUser"
-    ssh_secret: "git-ssh"
+    ssh_secret: "GIT_SSH_SECRET"
     commit_strategy: direct
   scanning:
     source:
