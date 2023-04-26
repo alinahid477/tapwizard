@@ -2,6 +2,22 @@
 
 export $(cat $HOME/.env | xargs)
 
+
+if [[ ! -f $HOME/binaries/scripts/download-common-scripts.sh ]]
+then
+    if [[ ! -d  "$HOME/binaries/scripts" ]]
+    then
+        mkdir -p $HOME/binaries/scripts
+    fi
+    printf "\n\n************Downloading Merlin file Getter**************\n\n"
+    curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o $HOME/binaries/scripts/download-common-scripts.sh
+    sleep 1
+    chmod +x $HOME/binaries/scripts/download-common-scripts.sh
+    sleep 1
+    printf "\n\n\n///////////// COMPLETED //////////////////\n\n\n"
+    printf "\n\n"
+fi
+
 if [[ ! -f $HOME/binaries/scripts/returnOrexit.sh ]]
 then
     if [[ ! -d  "$HOME/binaries/scripts" ]]
@@ -9,8 +25,6 @@ then
         mkdir -p $HOME/binaries/scripts
     fi
     printf "\n\n************Downloading Common Scripts**************\n\n"
-    curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o $HOME/binaries/scripts/download-common-scripts.sh
-    chmod +x $HOME/binaries/scripts/download-common-scripts.sh
     $HOME/binaries/scripts/download-common-scripts.sh tap scripts
     sleep 1
     $HOME/binaries/scripts/download-common-scripts.sh tapwizard scripts/tap
@@ -28,13 +42,30 @@ then
     printf "\n\n"
 fi
 
+
+if [[ ! -f $HOME/binaries/templates/tap-profile-full.template ]]
+then
+    if [[ ! -d  "$HOME/binaries/templates" ]]
+    then
+        mkdir -p $HOME/binaries/templates
+    fi
+    printf "\n\n************Downloading templates and values files**************\n\n"
+    $HOME/binaries/scripts/download-common-scripts.sh templates.tapwizard templates/tapwizard templates 
+    sleep 1
+    printf "\n\n\n///////////// COMPLETED //////////////////\n\n\n"
+    printf "\n\n"
+fi
+
 printf "\n\nsetting executable permssion to all binaries sh\n\n"
 ls -l $HOME/binaries/wizards/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/tap/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/carto/*.sh | awk '{print $9}' | xargs chmod +x
 ls -l $HOME/binaries/scripts/kpack/*.sh | awk '{print $9}' | xargs chmod +x
-
+sleep 1
+printf "\n\nsetting r+w permssion to all templates and files\n\n"
+ls -l $HOME/binaries/templates/* | awk '{print $9}' | xargs chmod +rw
+sleep 1
 ## housekeeping
 rm /tmp/checkedConnectedK8s > /dev/null 2>&1
 
