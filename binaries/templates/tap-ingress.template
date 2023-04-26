@@ -1,4 +1,0 @@
-contour:
-  envoy:
-    service:
-      type: LoadBalancer

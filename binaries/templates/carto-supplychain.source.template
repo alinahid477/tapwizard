@@ -1,4 +1,0 @@
-    - name: source-provider
-      templateRef:
-        kind: ClusterSourceTemplate
-        name: <SOURCE_TEMPLATE_NAME>

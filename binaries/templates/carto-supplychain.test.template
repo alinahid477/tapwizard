@@ -1,7 +1,0 @@
-    - name: source-tester
-      templateRef:
-        kind: ClusterSourceTemplate
-        name: <TEST_TEMPLATE_NAME>
-      sources:
-        - resource: source-provider
-          name: <SOURCE_TEMPLATE_NAME>

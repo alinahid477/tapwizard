@@ -1,3 +1,0 @@
-cnrs:
-  domain_name: apps.<INGRESS-DOMAIN>
-  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"

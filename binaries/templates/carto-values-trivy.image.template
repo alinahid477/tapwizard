@@ -1,7 +1,0 @@
-image_trivy:
-  template_name: <CARTO_IMAGE_TRIVY_TEMPLATE_NAME>
-  tekton_task_type: <CARTO_TRIVY_TEKTON_TASK_TYPE>
-  tekton_task_name: <CARTO_TRIVY_TEKTON_TASK_NAME>
-  registry_secret: <CARTO_TRIVY_REGISTRY_SECRET_NAME>
-
-

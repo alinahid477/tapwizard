@@ -1,6 +1,0 @@
-kpack:
-  template_name: <CARTO_IMAGE_TEMPLATE_NAME>
-  image_prefix: <CARTO_IMAGE_PREFIX>
-  builder_type: <CARTO_IMAGE_KPACK_BUILDER_TYPE>
-  builder_name: <CARTO_IMAGE_KPACK_BUILDER_NAME>
-  service_account: <CARTO_IMAGE_KPACK_SERVICE_ACCOUNT>

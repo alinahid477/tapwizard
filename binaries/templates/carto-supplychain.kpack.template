@@ -1,7 +1,0 @@
-    - name: image-builder
-      templateRef:
-        kind: ClusterImageTemplate
-        name: <IMAGE_TEMPLATE_NAME>
-      sources:
-        - resource: <IMAGE_BUILDER_DEPENDENCY_RESOURCE_NAME>
-          name: source

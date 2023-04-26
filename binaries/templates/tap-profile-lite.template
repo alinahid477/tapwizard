@@ -1,6 +1,0 @@
-profile: lite
-ceip_policy_disclosed: true # Installation fails if this not set to `true`
-
-metadata_store:
-  app_service_type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
-  ns_for_export_app_cert: "*"

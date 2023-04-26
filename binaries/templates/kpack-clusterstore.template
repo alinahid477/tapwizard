@@ -1,7 +1,0 @@
-apiVersion: kpack.io/v1alpha2
-kind: ClusterStore
-metadata:
-  name: <KPACK_CLUSTERSTORE_NAME>
-spec:
-  sources:
-<KPACK_CLUSTERSTORE_BUILDPACKS>

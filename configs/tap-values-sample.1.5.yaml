@@ -34,7 +34,7 @@ grype:
   namespace: <NAMESPACE_WHERE_SCANNING_WILL_RUN> #default
   targetImagePullSecret: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME> #registry-credentials
 
-supply_chain: <OOTB_SUPPLY_CHAIN> #basic
+supply_chain: <OOTB_SUPPLY_CHAIN> #basic #testing #testing_scanning
 
 ootb_supply_chain_<OOTB_SUPPLY_CHAIN>:
   registry:
