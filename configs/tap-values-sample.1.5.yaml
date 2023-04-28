@@ -14,7 +14,7 @@ metadata_store:
   app_service_type: ClusterIP # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
   ns_for_export_app_cert: "*"
 buildservice:
-  kp_default_repository: "<PVT_PROJECT_REGISTRY_SERVER>/<PVT_BUILD_SERVICE_REGISTRY_REPO>" # "YOURINPUT.azurecr.io/build-service"
+  kp_default_repository: "<PVT_PROJECT_REGISTRY_SERVER>/<BUILD_SERVICE_REPO>" # "YOURINPUT.azurecr.io/build-service"
   kp_default_repository_secret:
     name: <PVT_PROJECT_REGISTRY_CREDENTIALS_NAME> #registry-credentials
     namespace: <PVT_PROJECT_REGISTRY_CREDENTIALS_NAMESPACE> # tap-install
@@ -31,12 +31,12 @@ contour:
       type: LoadBalancer
 
 grype:
-  namespace: <NAMESPACE_WHERE_SCANNING_WILL_RUN> #default
-  targetImagePullSecret: <PVT_PROJECT_REGISTRY_CREDENTIALS_SECRET_NAME> #registry-credentials
+  namespace: <GRYPE_SCANNING_NAMESPACE> #default
+  targetImagePullSecret: <PVT_PROJECT_REGISTRY_CREDENTIALS_NAME> #registry-credentials
 
-supply_chain: <OOTB_SUPPLY_CHAIN> #basic #testing #testing_scanning
+supply_chain: <SUPPLY_CHAIN> #basic #testing #testing_scanning
 
-ootb_supply_chain_<OOTB_SUPPLY_CHAIN>:
+ootb_supply_chain_<SUPPLY_CHAIN>:
   registry:
     server: "<PVT_PROJECT_REGISTRY_SERVER>" # YOURINPUT.azurecr.io
     repository: "<PVT_PROJECT_REGISTRY_REPO>" # myimages
@@ -48,7 +48,7 @@ ootb_supply_chain_<OOTB_SUPPLY_CHAIN>:
     user_name: "<GITOPS_COMMITING_USERNAME>" # YOURINPUTNotRealUser
     user_email: "<GITOPS_COMMITING_USEREMAIL>" # YOURINPUTNotRealUser@cluster.local
     commit_message: "<GITOPS_COMMIT_TEXT>" # tap-demo-commit-from-YOURINPUTNotRealUser
-    ssh_secret: "<GIT_SSH_SECRET>" # git-ssh
+    ssh_secret: "<GITOPS_SECRET_NAME>" # git-ssh
     commit_strategy: direct
   scanning:
     source:
