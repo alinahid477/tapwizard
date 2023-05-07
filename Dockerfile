@@ -37,11 +37,18 @@ RUN curl -L https://carvel.dev/install.sh | bash
 # RUN curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash; exit 0 
 # RUN  mv tilt /usr/local/bin/ && tilt version
 
-COPY binaries/wizards/init.sh /usr/local/
-RUN chmod +x /usr/local/init.sh
 
-COPY binaries/wizards/merlin.sh /usr/local/bin/merlin
-RUN chmod +x /usr/local/bin/merlin
+RUN curl -L https://raw.githubusercontent.com/alinahid477/common-merlin-scripts/main/scripts/download-common-scripts.sh -o /tmp/download-common-scripts.sh \
+    && chmod +x /tmp/download-common-scripts.sh \
+	&& /tmp/download-common-scripts.sh wizards.tap scripts/wizards/tap /tmp/binaries/wizards \
+	&& sleep 1 \
+	&& cp /tmp/binaries/wizards/init.sh /usr/local/ \
+	&& cat /usr/local/init.sh \
+	&& sleep 1 \
+	&& cp /tmp/binaries/wizards/merlin.sh /usr/local/bin/merlin \
+	&& sleep 1 \
+	&& chmod +x /usr/local/init.sh \
+	&& chmod +x /usr/local/bin/merlin
 
 # COPY .ssh/id_rsa /root/.ssh/
 # RUN chmod 600 /root/.ssh/id_rsa
