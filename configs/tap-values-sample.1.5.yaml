@@ -43,7 +43,7 @@ ootb_supply_chain_<SUPPLY_CHAIN>:
   gitops:
     server_address: <GITOPS_SERVER_ADDRESS> # https://github.com
     repository_owner: <GITOPS_REPO_OWNER> # according-to-ali
-    repository_name: <GITOPS_SERVER_ADDRESS>/<GITOPS_REPO_OWNER>/<GITOPS_REPO_NAME> # https://github.com/according-to-ali/gitops-repo
+    repository_name: https://github.com/YOURINPUT/gitops-repo # https://github.com/according-to-ali/gitops-repo
     branch: "<GITOPS_REPO_BRANCH_NAME>" # main
     user_name: "<GITOPS_COMMITING_USERNAME>" # YOURINPUTNotRealUser
     user_email: "<GITOPS_COMMITING_USEREMAIL>" # YOURINPUTNotRealUser@cluster.local
