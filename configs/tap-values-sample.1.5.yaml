@@ -18,8 +18,9 @@ buildservice:
   kp_default_repository_secret:
     name: <PVT_PROJECT_REGISTRY_CREDENTIALS_NAME> #registry-credentials
     namespace: <PVT_PROJECT_REGISTRY_CREDENTIALS_NAMESPACE> # tap-install
-  include_legacy_bom: false
-  exclude_dependencies: true
+  # exclude_dependencies: true ---> install tbs:light for faster installation
+  # must image relocate separately for tbs:full. more: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-online-profile.html#install-the-full-dependencies-package-6
+  # lite vs full here: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/tanzu-build-service-dependencies.html#lite-vs-full
 
 scanning:
   metadataStore:
