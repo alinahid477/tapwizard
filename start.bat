@@ -17,15 +17,15 @@ if "%name%" == "" (
 )
 
 
-set isexists=
-FOR /F "delims=" %%i IN ('docker images  ^| findstr /i "%name%"') DO set isexists=%%i
+set isexistsdi=
+FOR /F "delims=" %%i IN ('docker images  ^| findstr /i "%name%"') DO set isexistsdi=%%i
 
-if "%name%" == "%isexists%" (
-    echo "docker image name %isexists% already exists. Will avoide build if not forcebuild..."
+if "%name%" == "%isexistsdi%" (
+    echo "docker image name %isexistsdi% already exists. Will avoide build if not forcebuild..."
 )
 
 set dobuild=
-if "%isexists%" == "" (set dobuild=y)
+if "%isexistsdi%" == "" (set dobuild=y)
 
 if "%doforcebuild%" == "forcebuild" (set dobuild=y)
 if "%dobuild%" == "y" (docker build . -t %name%)

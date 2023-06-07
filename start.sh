@@ -11,8 +11,8 @@ then
     sleep 2
     name='merlin-tapwizard'
 fi
-isexists=$(docker images | grep "\<$name\>")
-if [[ -z $isexists || $forcebuild == "forcebuild" ]]
+isexistsdi=$(docker images | grep "\<$name\>")
+if [[ -z $isexistsdi || $forcebuild == "forcebuild" ]]
 then
     docker build . -t $name
 fi
